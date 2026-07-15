@@ -39,6 +39,7 @@ function feedWindow(controller, state, fps, duration = 1_100) {
 
 try {
   const mainSource = await readFile(path.join(root, "src/main.ts"), "utf8");
+  const streamerSource = await readFile(path.join(root, "src/world/WorldStreamer.ts"), "utf8");
   const frameLoopStart = mainSource.indexOf("scene.onBeforeRenderObservable.add");
   const throttledDiagnosticsStart = mainSource.indexOf(
     "if (now - lastHudUpdate > 200)",
@@ -99,6 +100,32 @@ try {
     2,
     "optional detail construction must wait until the playable state has painted",
   );
+  assert.ok(
+    streamerSource.includes("updateDistanceLod(built.detailMeshes"),
+    "new storefront meshes must receive distance LOD before entering the scene",
+  );
+  assert.ok(
+    streamerSource.includes("this.updateDetailVisibility(this.latestPosition)"),
+    "streamed storefront visibility must follow the latest player position",
+  );
+
+  const { STOREFRONT_DETAIL_LOD, updateDistanceLod } = await vite.ssrLoadModule(
+    "/src/performance/DistanceLod.ts",
+  );
+  assert.deepEqual(STOREFRONT_DETAIL_LOD, { enableDistance: 350, disableDistance: 400 });
+  let detailEnabled = true;
+  const detailTarget = {
+    position: { x: 399, z: 0 },
+    isEnabled: () => detailEnabled,
+    setEnabled: (enabled) => { detailEnabled = enabled; },
+  };
+  assert.equal(updateDistanceLod([detailTarget], { x: 0, z: 0 }, STOREFRONT_DETAIL_LOD), 1);
+  detailTarget.position.x = 401;
+  assert.equal(updateDistanceLod([detailTarget], { x: 0, z: 0 }, STOREFRONT_DETAIL_LOD), 0);
+  detailTarget.position.x = 351;
+  assert.equal(updateDistanceLod([detailTarget], { x: 0, z: 0 }, STOREFRONT_DETAIL_LOD), 0);
+  detailTarget.position.x = 349;
+  assert.equal(updateDistanceLod([detailTarget], { x: 0, z: 0 }, STOREFRONT_DETAIL_LOD), 1);
 
   const { AdaptivePerformanceController } = await vite.ssrLoadModule(
     "/src/performance/AdaptivePerformanceController.ts",

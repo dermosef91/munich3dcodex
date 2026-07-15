@@ -275,6 +275,7 @@ scene.onBeforeRenderObservable.add(() => {
     canvas.dataset.shadowCasters = String(sunShadows.casterCount);
     canvas.dataset.treeShadows = String(sunShadows.treeShadowsEnabled);
     canvas.dataset.groundShadows = String(groundShadows.visibleCount);
+    canvas.dataset.storefrontDetails = `${streamer.visibleStorefrontDetailMeshes}/${streamer.totalStorefrontDetailMeshes}`;
     canvas.dataset.performanceMode = adaptivePerformance.mode;
     canvas.dataset.renderPixelRatio = adaptivePerformance.renderPixelRatio.toFixed(2);
     const district = closestDistrict(camera.position);
@@ -344,6 +345,7 @@ function revealWorld(): void {
   firstLoad = false;
   keyboardMovement.setEnabled(true);
   canvas.dataset.startupPhase = "playable";
+  canvas.dataset.storefrontDetails = `${streamer.visibleStorefrontDetailMeshes}/${streamer.totalStorefrontDetailMeshes}`;
   loadingProgress.style.width = "100%";
   window.setTimeout(() => loading.classList.add("is-hidden"), 350);
 }

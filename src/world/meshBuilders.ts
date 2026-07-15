@@ -89,6 +89,7 @@ interface SharedMaterials {
 export interface TileMeshSet {
   meshes: Mesh[];
   buildingShadowCasters: Mesh[];
+  detailMeshes: Mesh[];
   shadowReceivers: Mesh[];
   parkingLayout: ParkingLayout;
 }
@@ -1974,6 +1975,7 @@ export function buildTileMeshSet(
   return {
     meshes: meshes.filter((mesh): mesh is Mesh => mesh !== null),
     buildingShadowCasters: buildings,
+    detailMeshes: storefronts,
     parkingLayout,
     // Water, glass, signs, and small facade fittings remain outside the
     // receiver set. This confines shadow shader work to the large surfaces

@@ -12,6 +12,7 @@ import { loadTreeAssets, type TreeAssetRenderer } from "./treeAssets";
 import type { ParkingLayout } from "./parkingLayout";
 import type { MunichManifest, MunichTile, TileManifestEntry } from "./types";
 import { publicUrl } from "../publicUrl";
+import { STOREFRONT_DETAIL_LOD, updateDistanceLod } from "../performance/DistanceLod";
 
 type StatusCallback = (message: string, loaded: number, total: number) => void;
 type WorldPosition = Pick<Vector3, "x" | "z">;
@@ -24,6 +25,7 @@ export interface StreamedTileShadowMeshes {
 
 interface LoadedTileMeshes {
   meshes: AbstractMesh[];
+  detailMeshes: AbstractMesh[];
   shadows: StreamedTileShadowMeshes;
 }
 
@@ -34,6 +36,8 @@ export class WorldStreamer {
   private lastUpdate = 0;
   private loadGeneration = 0;
   private latestPosition: WorldPosition = { x: 0, z: 0 };
+  private storefrontDetailCount = 0;
+  private visibleStorefrontDetailCount = 0;
   private treeAssets: TreeAssetRenderer | null = null;
   private onTileLoaded?: (
     tile: MunichTile,
@@ -122,6 +126,8 @@ export class WorldStreamer {
       }
     }
 
+    this.updateDetailVisibility(this.latestPosition);
+
     if (generation === this.loadGeneration) {
       this.onStatus("Munich is ready", this.loaded.size, this.manifest.tiles.length);
     }
@@ -129,6 +135,25 @@ export class WorldStreamer {
 
   getAttribution(): string {
     return this.manifest?.attribution ?? "Map data © OpenStreetMap contributors";
+  }
+
+  get totalStorefrontDetailMeshes(): number {
+    return this.storefrontDetailCount;
+  }
+
+  get visibleStorefrontDetailMeshes(): number {
+    return this.visibleStorefrontDetailCount;
+  }
+
+  private updateDetailVisibility(position: WorldPosition): void {
+    let total = 0;
+    let visible = 0;
+    for (const tile of this.loaded.values()) {
+      total += tile.detailMeshes.length;
+      visible += updateDistanceLod(tile.detailMeshes, position, STOREFRONT_DETAIL_LOD);
+    }
+    this.storefrontDetailCount = total;
+    this.visibleStorefrontDetailCount = visible;
   }
 
   private distanceTo(tile: TileManifestEntry, position: WorldPosition): number {
@@ -166,7 +191,8 @@ export class WorldStreamer {
         treeCasters: treeMeshes.shadowCasters,
         receivers: built.shadowReceivers,
       };
-      this.loaded.set(entry.id, { meshes, shadows });
+      updateDistanceLod(built.detailMeshes, this.latestPosition, STOREFRONT_DETAIL_LOD);
+      this.loaded.set(entry.id, { meshes, detailMeshes: built.detailMeshes, shadows });
       try {
         this.onTileLoaded?.(tile, shadows, built.parkingLayout);
       } catch (error) {

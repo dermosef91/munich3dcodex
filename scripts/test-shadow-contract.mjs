@@ -83,6 +83,7 @@ try {
   fallbackTile.benches = [{ id: 2, point: [22, 20], direction: 90, sourceRefs: [] }];
   const tileMeshes = meshModule.buildTileMeshSet(fallbackTile, 100, scene);
   const tileMeshNames = new Set(tileMeshes.meshes.map((mesh) => mesh.name));
+  const detailMeshNames = new Set(tileMeshes.detailMeshes.map((mesh) => mesh.name));
   const receiverNames = new Set(tileMeshes.shadowReceivers.map((mesh) => mesh.name));
   assert.ok(tileMeshes.buildingShadowCasters.length > 0, "fallback buildings must cast sun shadows");
   assert.ok(
@@ -105,6 +106,16 @@ try {
   assert.ok(
     [...tileMeshNames].some((name) => name.startsWith("storefront-")),
     "the fixture must include storefront detail so its exclusion is meaningful",
+  );
+  assert.ok(detailMeshNames.size > 0, "storefront meshes must be exposed for distance LOD");
+  assert.ok(
+    [...detailMeshNames].every((name) => name.startsWith("storefront-")),
+    "only storefront meshes may enter the distance-detail list",
+  );
+  assert.deepEqual(
+    detailMeshNames,
+    new Set([...tileMeshNames].filter((name) => name.startsWith("storefront-"))),
+    "the distance-detail list must contain every storefront mesh",
   );
   assert.ok(
     tileMeshNames.has("street-furniture-shadow-contract")
