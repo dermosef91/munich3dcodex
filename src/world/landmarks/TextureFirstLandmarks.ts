@@ -179,95 +179,6 @@ function createMuseumBrandhorst(scene: Scene, parent: TransformNode): TransformN
   return root;
 }
 
-function drawAltePinakothekWindow(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-): void {
-  const trim = width * 0.12;
-  context.fillStyle = "#d8c39b";
-  context.fillRect(x - trim, y - trim, width + trim * 2, height + trim * 2);
-  context.fillStyle = "#252f31";
-  context.fillRect(x, y, width, height);
-  context.strokeStyle = "#715a42";
-  context.lineWidth = Math.max(2, width * 0.045);
-  context.beginPath();
-  context.moveTo(x + width * 0.5, y + 1);
-  context.lineTo(x + width * 0.5, y + height - 1);
-  context.moveTo(x + 1, y + height * 0.52);
-  context.lineTo(x + width - 1, y + height * 0.52);
-  context.stroke();
-  context.fillStyle = "rgba(183, 212, 218, 0.13)";
-  context.fillRect(x + width * 0.09, y + height * 0.06, width * 0.10, height * 0.82);
-}
-
-function altePinakothekMaterial(
-  scene: Scene,
-  name: string,
-  options: { readonly bays: number; readonly entrance: boolean },
-): StandardMaterial {
-  return dynamicMaterial(scene, name, { width: 2048, height: 1024 }, (context, width, height) => {
-    context.fillStyle = "#b45f3f";
-    context.fillRect(0, 0, width, height);
-    context.fillStyle = "#cfb17c";
-    context.fillRect(0, 0, width * 0.31, height);
-    context.fillRect(width * 0.69, 0, width * 0.31, height);
-
-    context.strokeStyle = "rgba(96, 48, 36, 0.32)";
-    context.lineWidth = 2;
-    for (let y = 7; y < height; y += 20) {
-      context.beginPath();
-      context.moveTo(0, y);
-      context.lineTo(width, y);
-      context.stroke();
-    }
-    for (let x = 0; x < width; x += 42) {
-      context.beginPath();
-      context.moveTo(x, 0);
-      context.lineTo(x, height);
-      context.stroke();
-    }
-
-    context.fillStyle = "#9f8565";
-    context.fillRect(0, height * 0.86, width, height * 0.14);
-    context.fillStyle = "rgba(238, 217, 179, 0.72)";
-    for (const y of [height * 0.25, height * 0.53, height * 0.84]) {
-      context.fillRect(0, y, width, 9);
-    }
-
-    const bayWidth = width / options.bays;
-    const floors = [0.075, 0.33, 0.60];
-    for (let bay = 0; bay < options.bays; bay += 1) {
-      const centerX = (bay + 0.5) * bayWidth;
-      context.fillStyle = "rgba(226, 205, 168, 0.72)";
-      context.fillRect(centerX - 4, 0, 8, height * 0.86);
-      for (let floor = 0; floor < floors.length; floor += 1) {
-        const windowWidth = bayWidth * 0.43;
-        const windowHeight = height * (floor === 2 ? 0.18 : 0.15);
-        drawAltePinakothekWindow(
-          context,
-          centerX - windowWidth * 0.5,
-          height * floors[floor],
-          windowWidth,
-          windowHeight,
-        );
-      }
-    }
-
-    if (options.entrance) {
-      context.fillStyle = "#cdb486";
-      context.fillRect(width * 0.43, height * 0.50, width * 0.14, height * 0.38);
-      for (const offset of [-0.035, 0, 0.035]) {
-        const centerX = width * (0.5 + offset);
-        context.fillStyle = "#252728";
-        context.fillRect(centerX - width * 0.014, height * 0.62, width * 0.028, height * 0.26);
-      }
-    }
-  });
-}
-
 function createAltePinakothek(scene: Scene, parent: TransformNode): TransformNode {
   const existing = scene.getTransformNodeByName("landmark-alte-pinakothek");
   if (existing) return existing;
@@ -275,9 +186,9 @@ function createAltePinakothek(scene: Scene, parent: TransformNode): TransformNod
   const root = new TransformNode("landmark-alte-pinakothek", scene);
   root.parent = parent;
   const interior: FacadePoint = [-151.1, 302.8];
-  const theresien = altePinakothekMaterial(scene, "alte-pinakothek-theresien-material", { bays: 19, entrance: true });
-  const gabelsberger = altePinakothekMaterial(scene, "alte-pinakothek-gabelsberger-material", { bays: 19, entrance: false });
-  const end = altePinakothekMaterial(scene, "alte-pinakothek-end-material", { bays: 6, entrance: false });
+  const theresien = getLandmarkFacadeMaterial(scene, "alte-pinakothek-theresienstrasse");
+  const gabelsberger = getLandmarkFacadeMaterial(scene, "alte-pinakothek-gabelsbergerstrasse");
+  const end = getLandmarkFacadeMaterial(scene, "alte-pinakothek-end");
 
   // Current public entrance: the long north elevation on Theresienstraße.
   addFacadePlane(scene, root, "alte-pinakothek-theresien-facade", [-210.251, 250.052], [-72.126, 307.952], interior, 22.0, theresien);

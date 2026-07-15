@@ -581,7 +581,38 @@
           "fov": 0.96
         }
       ],
-      "textures": [],
+      "textures": [
+        {
+          "id": "alte-pinakothek-theresienstrasse",
+          "file": "alte-pinakothek-theresienstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 1983,
+          "minimumHeight": 793,
+          "roughness": 0.91,
+          "specularIntensity": 0.18,
+          "promptSummary": "Rectified neutral-lit nineteen-bay Theresienstrasse elevation with ochre rendered wings, muted exposed-brick reconstruction, pale stone bands, dark windows, and a central three-door entrance."
+        },
+        {
+          "id": "alte-pinakothek-gabelsbergerstrasse",
+          "file": "alte-pinakothek-gabelsbergerstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 1774,
+          "minimumHeight": 887,
+          "roughness": 0.93,
+          "specularIntensity": 0.16,
+          "promptSummary": "Rectified neutral-lit nineteen-bay Gabelsbergerstrasse elevation emphasizing the muted red exposed-brick reconstruction and ochre historic end bays without an entrance focal point."
+        },
+        {
+          "id": "alte-pinakothek-end",
+          "file": "alte-pinakothek-end.png",
+          "status": "integrated",
+          "minimumWidth": 1536,
+          "minimumHeight": 1024,
+          "roughness": 0.91,
+          "specularIntensity": 0.18,
+          "promptSummary": "Rectified neutral-lit six-bay short museum elevation with ochre render, stone pilasters and cornices, dark arched windows, and subtle brick repair areas."
+        }
+      ],
       "references": [
         {
           "url": "https://www.pinakothek.de/en/alte-pinakothek",
@@ -591,10 +622,10 @@
         }
       ],
       "provenance": {
-        "method": "procedural",
+        "method": "original-art",
         "reviewStatus": "needs-user-review",
         "pixelsEmbedded": false,
-        "note": "Original procedural facade art distinguishes Klenze-era rendered bays from Doellgast's exposed-brick reconstruction without embedding reference photography."
+        "note": "Three original generated facade sheets distinguish the historic rendered bays from the exposed-brick reconstruction; official imagery was used as reference only and contributed no pixels."
       }
     },
     {

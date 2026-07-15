@@ -12,7 +12,10 @@ export type LandmarkFacadeTextureId =
   | "kreuzkirche"
   | "hermann-frieb-realschule"
   | "cafe-franca"
-  | "hofbraeuhaus";
+  | "hofbraeuhaus"
+  | "alte-pinakothek-theresienstrasse"
+  | "alte-pinakothek-gabelsbergerstrasse"
+  | "alte-pinakothek-end";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -65,6 +68,21 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "hofbraeuhaus-facade.png",
     roughness: 0.88,
     specularIntensity: 0.22,
+  },
+  "alte-pinakothek-theresienstrasse": {
+    file: "alte-pinakothek-theresienstrasse.png",
+    roughness: 0.91,
+    specularIntensity: 0.18,
+  },
+  "alte-pinakothek-gabelsbergerstrasse": {
+    file: "alte-pinakothek-gabelsbergerstrasse.png",
+    roughness: 0.93,
+    specularIntensity: 0.16,
+  },
+  "alte-pinakothek-end": {
+    file: "alte-pinakothek-end.png",
+    roughness: 0.91,
+    specularIntensity: 0.18,
   },
 };
 
