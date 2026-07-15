@@ -20,7 +20,10 @@ export type LandmarkFacadeTextureId =
   | "museum-brandhorst-tuerken"
   | "museum-brandhorst-theresien"
   | "museum-brandhorst-south"
-  | "bayerische-staatsbibliothek-ludwigstrasse";
+  | "bayerische-staatsbibliothek-ludwigstrasse"
+  | "haus-der-kunst-prinzregentenstrasse-main"
+  | "haus-der-kunst-prinzregentenstrasse-inner-wing"
+  | "haus-der-kunst-prinzregentenstrasse-outer-wing";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -112,6 +115,21 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
   "bayerische-staatsbibliothek-ludwigstrasse": {
     file: "bayerische-staatsbibliothek-ludwigstrasse.png",
     roughness: 0.91,
+    specularIntensity: 0.18,
+  },
+  "haus-der-kunst-prinzregentenstrasse-main": {
+    file: "haus-der-kunst-prinzregentenstrasse-main.png",
+    roughness: 0.90,
+    specularIntensity: 0.18,
+  },
+  "haus-der-kunst-prinzregentenstrasse-inner-wing": {
+    file: "haus-der-kunst-prinzregentenstrasse-inner-wing.png",
+    roughness: 0.90,
+    specularIntensity: 0.18,
+  },
+  "haus-der-kunst-prinzregentenstrasse-outer-wing": {
+    file: "haus-der-kunst-prinzregentenstrasse-outer-wing.png",
+    roughness: 0.90,
     specularIntensity: 0.18,
   },
 };

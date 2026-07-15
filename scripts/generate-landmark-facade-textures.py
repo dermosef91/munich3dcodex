@@ -167,14 +167,86 @@ def generate_staatsbibliothek() -> None:
     staatsbibliothek_sheet()
 
 
+def haus_der_kunst_sheet(
+    file_name: str,
+    width: int,
+    height: int,
+    bays: int,
+    *,
+    central_entrance: bool = False,
+) -> None:
+    """Render the neutral travertine colonnade and stepped front wings."""
+    image = Image.new("RGB", (width, height), "#b9aa8e")
+    draw = ImageDraw.Draw(image)
+    stone_dark = "#8e826e"
+    stone_mid = "#b9aa8e"
+    stone_light = "#d2c5aa"
+    recess = "#292d2c"
+    glass = "#394442"
+
+    # Subtle horizontal stone joints, kept neutral so lighting comes from PBR.
+    joint_step = max(18, height // 28)
+    for y in range(0, height, joint_step):
+        draw.line((0, y, width, y), fill="#a89a82", width=max(1, height // 500))
+    draw.rectangle((0, 0, width, round(height * 0.205)), fill=stone_mid)
+    draw.rectangle((0, round(height * 0.175), width, round(height * 0.215)), fill=stone_light)
+    draw.rectangle((0, round(height * 0.225), width, round(height * 0.815)), fill=recess)
+    draw.rectangle((0, round(height * 0.815), width, height), fill=stone_mid)
+    draw.rectangle((0, round(height * 0.885), width, height), fill=stone_dark)
+    draw.line((0, round(height * 0.815), width, round(height * 0.815)), fill=stone_light, width=max(3, height // 100))
+
+    bay_width = width / bays
+    column_width = max(8, round(bay_width * 0.18))
+    for axis in range(bays + 1):
+        center_x = round(axis * bay_width)
+        left = max(0, center_x - column_width // 2)
+        right = min(width, center_x + column_width // 2)
+        draw.rectangle((left, round(height * 0.205), right, round(height * 0.835)), fill=stone_mid)
+        draw.line((left, round(height * 0.205), left, round(height * 0.835)), fill=stone_light, width=max(2, column_width // 8))
+        draw.line((right, round(height * 0.205), right, round(height * 0.835)), fill=stone_dark, width=max(2, column_width // 9))
+        capital = max(column_width + 8, round(bay_width * 0.27))
+        draw.rectangle((max(0, center_x - capital // 2), round(height * 0.195), min(width, center_x + capital // 2), round(height * 0.235)), fill=stone_light)
+        draw.rectangle((max(0, center_x - capital // 2), round(height * 0.800), min(width, center_x + capital // 2), round(height * 0.845)), fill=stone_dark)
+
+    # Dark glass and doors sit behind the columns rather than on their faces.
+    for bay in range(bays):
+        left = round((bay + 0.20) * bay_width)
+        right = round((bay + 0.80) * bay_width)
+        draw.rectangle((left, round(height * 0.395), right, round(height * 0.790)), fill=glass)
+        draw.line((round((left + right) / 2), round(height * 0.395), round((left + right) / 2), round(height * 0.790)), fill="#1f2827", width=max(2, width // 900))
+    if central_entrance:
+        center = width // 2
+        entrance_width = round(bay_width * 1.45)
+        draw.rectangle((center - entrance_width // 2, round(height * 0.340), center + entrance_width // 2, round(height * 0.835)), fill="#202624")
+        for offset in (-0.28, 0, 0.28):
+            x = round(center + entrance_width * offset)
+            draw.line((x, round(height * 0.360), x, round(height * 0.835)), fill="#6e7975", width=max(2, width // 1000))
+
+    output = TEXTURE_ROOT / file_name
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_haus_der_kunst() -> None:
+    haus_der_kunst_sheet("haus-der-kunst-prinzregentenstrasse-main.png", 4096, 596, 21, central_entrance=True)
+    haus_der_kunst_sheet("haus-der-kunst-prinzregentenstrasse-inner-wing.png", 376, 768, 2)
+    haus_der_kunst_sheet("haus-der-kunst-prinzregentenstrasse-outer-wing.png", 728, 768, 4)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("recipe", choices=("museum-brandhorst", "bayerische-staatsbibliothek"))
+    parser.add_argument("recipe", choices=(
+        "museum-brandhorst",
+        "bayerische-staatsbibliothek",
+        "haus-der-kunst",
+    ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
         generate_brandhorst()
     elif args.recipe == "bayerische-staatsbibliothek":
         generate_staatsbibliothek()
+    elif args.recipe == "haus-der-kunst":
+        generate_haus_der_kunst()
 
 
 if __name__ == "__main__":

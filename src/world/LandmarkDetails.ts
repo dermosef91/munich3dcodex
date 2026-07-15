@@ -69,6 +69,7 @@ export type LandmarkPreviewId =
   | "museum-brandhorst"
   | "alte-pinakothek"
   | "bayerische-staatsbibliothek"
+  | "haus-der-kunst"
   | "hofbraeuhaus"
   | "asamkirche";
 
@@ -99,6 +100,7 @@ const LANDMARK_PREVIEW_SPECS: Readonly<Record<LandmarkPreviewId, {
   "museum-brandhorst": { position: [143.31, 4.2, 289.02], target: [158, 11.5, 311], fov: 0.94 },
   "alte-pinakothek": { position: [-113, 5.2, 214], target: [-141, 11.5, 279], fov: 0.96 },
   "bayerische-staatsbibliothek": { position: [531, 5.4, 368], target: [606, 12.2, 391], fov: 0.92 },
+  "haus-der-kunst": { position: [1017.466, 4.6, 826.098], target: [1025.852, 8.4, 797.892], fov: 1.10 },
   hofbraeuhaus: { position: [563.98, 4.2, 1491.94], target: [577.54, 10.2, 1481.55], fov: 0.96 },
   asamkirche: { position: [-161.6, 4.1, 1762.21], target: [-173.7, 11.4, 1769.17], fov: 0.90 },
 };

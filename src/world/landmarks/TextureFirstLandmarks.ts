@@ -26,6 +26,7 @@ interface FacadeFrame {
 export const MUSEUM_BRANDHORST_BUILDING_ID = 28_026_817;
 export const ALTE_PINAKOTHEK_BUILDING_ID = 4_647_135;
 export const BAYERISCHE_STAATSBIBLIOTHEK_BUILDING_ID = -52_412_001;
+export const HAUS_DER_KUNST_BUILDING_ID = 150_797_531;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -192,6 +193,26 @@ function createBayerischeStaatsbibliothek(scene: Scene, parent: TransformNode): 
     getLandmarkFacadeMaterial(scene, "bayerische-staatsbibliothek-ludwigstrasse"),
     0.45,
   );
+  return root;
+}
+
+function createHausDerKunst(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-haus-der-kunst");
+  if (existing) return existing;
+
+  const root = new TransformNode("landmark-haus-der-kunst", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [1035.546, 765.853];
+  const main = getLandmarkFacadeMaterial(scene, "haus-der-kunst-prinzregentenstrasse-main");
+  const innerWing = getLandmarkFacadeMaterial(scene, "haus-der-kunst-prinzregentenstrasse-inner-wing");
+  const outerWing = getLandmarkFacadeMaterial(scene, "haus-der-kunst-prinzregentenstrasse-outer-wing");
+
+  // Five coplanar steps reproduce the long portico and its two set-back wings.
+  addFacadePlane(scene, root, "haus-der-kunst-main-facade", [1078.920, 814.056], [972.784, 781.728], interior, 16.15, main, 0.18);
+  addFacadePlane(scene, root, "haus-der-kunst-west-inner-wing", [974.275, 776.850], [966.852, 774.586], interior, 16.15, innerWing, 0.14);
+  addFacadePlane(scene, root, "haus-der-kunst-east-inner-wing", [1087.957, 811.677], [1080.258, 809.638], interior, 16.15, innerWing, 0.14);
+  addFacadePlane(scene, root, "haus-der-kunst-west-outer-wing", [969.758, 765.038], [954.963, 760.502], interior, 16.15, outerWing, 0.14);
+  addFacadePlane(scene, root, "haus-der-kunst-east-outer-wing", [1105.727, 806.117], [1091.376, 801.726], interior, 16.15, outerWing, 0.14);
   return root;
 }
 
@@ -367,6 +388,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createMuseumBrandhorst(scene, root);
   createAltePinakothek(scene, root);
   createBayerischeStaatsbibliothek(scene, root);
+  createHausDerKunst(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

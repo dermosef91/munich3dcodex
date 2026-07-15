@@ -768,6 +768,81 @@
       }
     },
     {
+      "id": "haus-der-kunst",
+      "label": "Haus der Kunst",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-haus-der-kunst"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [150797531],
+        "replacementBuildingIds": [],
+        "note": "Preserve the complete Bavarian LoD2 museum shell; add five thin non-colliding bitmap planes to the stepped Prinzregentenstrasse portico and front wings."
+      },
+      "previews": [
+        {
+          "id": "haus-der-kunst",
+          "position": [1017.466, 4.6, 826.098],
+          "target": [1025.852, 8.4, 797.892],
+          "fov": 1.10
+        }
+      ],
+      "textures": [
+        {
+          "id": "haus-der-kunst-prinzregentenstrasse-main",
+          "file": "haus-der-kunst-prinzregentenstrasse-main.png",
+          "status": "integrated",
+          "minimumWidth": 4096,
+          "minimumHeight": 596,
+          "roughness": 0.90,
+          "specularIntensity": 0.18,
+          "promptSummary": "Deterministic neutral-lit travertine main portico sheet with a twenty-one-bay dark colonnade, heavy entablature, plinth, and central entrance; no temporary banners or source pixels."
+        },
+        {
+          "id": "haus-der-kunst-prinzregentenstrasse-inner-wing",
+          "file": "haus-der-kunst-prinzregentenstrasse-inner-wing.png",
+          "status": "integrated",
+          "minimumWidth": 376,
+          "minimumHeight": 768,
+          "roughness": 0.90,
+          "specularIntensity": 0.18,
+          "promptSummary": "Deterministic symmetric two-bay travertine inner-wing sheet matching the main portico's courses, recessed glazing, and monolithic supports."
+        },
+        {
+          "id": "haus-der-kunst-prinzregentenstrasse-outer-wing",
+          "file": "haus-der-kunst-prinzregentenstrasse-outer-wing.png",
+          "status": "integrated",
+          "minimumWidth": 728,
+          "minimumHeight": 768,
+          "roughness": 0.90,
+          "specularIntensity": 0.18,
+          "promptSummary": "Deterministic symmetric four-bay travertine outer-wing sheet matching the main portico without temporary exhibition graphics."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.hausderkunst.de/en/about-us/history/chronicle",
+          "publisher": "Haus der Kunst",
+          "usage": "official-building-history-and-architecture-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        },
+        {
+          "url": "https://www.hausderkunst.de/en/presse/news/david-chipperfield-architects-erh%C3%A4lt-planungsauftrag-zur-sanierung-des-haus",
+          "publisher": "Haus der Kunst",
+          "usage": "official-restoration-and-building-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Three offline-generated bitmap sheets cover five stepped facade planes and reproduce the permanent stone portico rhythm; temporary banners were excluded and no reference pixels are embedded."
+      }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",
