@@ -928,6 +928,91 @@
       }
     },
     {
+      "id": "ns-dokumentationszentrum",
+      "label": "NS-Dokumentationszentrum München",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-nsdoku"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [280336045],
+        "replacementBuildingIds": [],
+        "note": "Preserve the Bavarian LoD2 cube and add four thin non-colliding elevation sheets with deep window cuts."
+      },
+      "previews": [
+        {
+          "id": "ns-dokumentationszentrum",
+          "position": [-329.060, 4.6, 652.549],
+          "target": [-323.602, 13.6, 639.396],
+          "fov": 1.20
+        }
+      ],
+      "textures": [
+        {
+          "id": "nsdoku-briennerstrasse",
+          "file": "nsdoku-briennerstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 1024,
+          "minimumHeight": 1244,
+          "roughness": 0.88,
+          "specularIntensity": 0.20,
+          "promptSummary": "Deterministic white-concrete Briennerstrasse elevation with irregular deep rectangular window cuts, bevel shadows, and a recessed public entrance."
+        },
+        {
+          "id": "nsdoku-west",
+          "file": "nsdoku-west.png",
+          "status": "integrated",
+          "minimumWidth": 1024,
+          "minimumHeight": 1244,
+          "roughness": 0.88,
+          "specularIntensity": 0.20,
+          "promptSummary": "Deterministic west elevation with distinct asymmetrical punched openings in pale cast concrete."
+        },
+        {
+          "id": "nsdoku-north",
+          "file": "nsdoku-north.png",
+          "status": "integrated",
+          "minimumWidth": 1024,
+          "minimumHeight": 1244,
+          "roughness": 0.88,
+          "specularIntensity": 0.20,
+          "promptSummary": "Deterministic north elevation with a distinct pattern of deep horizontal and vertical window cuts."
+        },
+        {
+          "id": "nsdoku-east",
+          "file": "nsdoku-east.png",
+          "status": "integrated",
+          "minimumWidth": 1024,
+          "minimumHeight": 1244,
+          "roughness": 0.88,
+          "specularIntensity": 0.20,
+          "promptSummary": "Deterministic east elevation with asymmetrical recessed glazing, subtle cast-panel seams, and neutral lighting."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.nsdoku.de/en/about-us/the-nsdoku",
+          "publisher": "NS-Dokumentationszentrum München",
+          "usage": "official-building-and-institution-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        },
+        {
+          "url": "https://www.scheelwetzel.com/projekte/ns-dokumentationszentrum-munchen",
+          "publisher": "Georg Scheel Wetzel Architekten",
+          "usage": "architect-building-reference",
+          "license": "Copyrighted architect reference; reference-only, no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Four offline-generated bitmap elevations give the white cube distinct punched-opening patterns; the exact institutional wordmark remains procedural and no reference pixels are embedded."
+      }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",

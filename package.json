@@ -19,6 +19,7 @@
     "test:orientation": "node scripts/test-world-orientation.mjs",
     "test:data-pipeline": "node scripts/test-rebuild-munich-data.mjs && node scripts/test-osm-grounding.mjs && node scripts/test-osm-multipolygon-rendering.mjs && pnpm data:lod2:test && pnpm data:validate",
     "test:materials": "node scripts/test-surface-materials.mjs",
+    "test:performance": "node scripts/test-performance-controller.mjs && node scripts/test-shadow-contract.mjs",
     "test:shadows": "node scripts/test-shadow-contract.mjs",
     "test:facades": "node scripts/test-facade-contract.mjs",
     "test:neutral-facades": "node scripts/test-neutral-facades.mjs",

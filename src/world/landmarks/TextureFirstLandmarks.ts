@@ -28,6 +28,7 @@ export const ALTE_PINAKOTHEK_BUILDING_ID = 4_647_135;
 export const BAYERISCHE_STAATSBIBLIOTHEK_BUILDING_ID = -52_412_001;
 export const HAUS_DER_KUNST_BUILDING_ID = 150_797_531;
 export const PINAKOTHEK_DER_MODERNE_BUILDING_ID = 10_053_440;
+export const NSDOKU_BUILDING_ID = 280_336_045;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -255,6 +256,39 @@ function createPinakothekDerModerne(scene: Scene, parent: TransformNode): Transf
   return root;
 }
 
+function nsdokuSignMaterial(scene: Scene): StandardMaterial {
+  const material = dynamicMaterial(scene, "nsdoku-sign-material", { width: 1536, height: 160 }, (context, width, height) => {
+    context.fillStyle = "#e9e8e3";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#303436";
+    context.font = `600 ${Math.round(height * 0.34)}px Arial, sans-serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("NS-DOKUMENTATIONSZENTRUM MÜNCHEN", width * 0.5, height * 0.52);
+  }, new Color3(0.10, 0.10, 0.10));
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
+}
+
+function createNsdoku(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-nsdoku");
+  if (existing) return existing;
+
+  const root = new TransformNode("landmark-nsdoku", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [-319.194, 629.071];
+  const briennerStart: FacadePoint = [-313.309, 643.802];
+  const briennerEnd: FacadePoint = [-333.895, 634.989];
+  addFacadePlane(scene, root, "nsdoku-brienner-facade", briennerStart, briennerEnd, interior, 27.1, getLandmarkFacadeMaterial(scene, "nsdoku-briennerstrasse"), 0.14);
+  addFacadePlane(scene, root, "nsdoku-west-facade", [-333.895, 634.989], [-325.109, 614.339], interior, 27.1, getLandmarkFacadeMaterial(scene, "nsdoku-west"), 0.14);
+  addFacadePlane(scene, root, "nsdoku-north-facade", [-325.109, 614.339], [-304.493, 623.163], interior, 27.1, getLandmarkFacadeMaterial(scene, "nsdoku-north"), 0.14);
+  addFacadePlane(scene, root, "nsdoku-east-facade", [-304.493, 623.163], [-313.309, 643.802], interior, 27.1, getLandmarkFacadeMaterial(scene, "nsdoku-east"), 0.14);
+  addFacadeSign(scene, root, "nsdoku-brienner-wordmark", briennerStart, briennerEnd, interior, 2.5, 11.5, 0.72, nsdokuSignMaterial(scene));
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -429,6 +463,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createBayerischeStaatsbibliothek(scene, root);
   createHausDerKunst(scene, root);
   createPinakothekDerModerne(scene, root);
+  createNsdoku(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

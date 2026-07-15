@@ -300,6 +300,77 @@ def generate_pinakothek_der_moderne() -> None:
     pinakothek_der_moderne_sheet("pinakothek-der-moderne-barerstrasse.png", 1952, 720, "barerstrasse")
 
 
+def nsdoku_sheet(file_name: str, variant: str) -> None:
+    """Render one elevation of the white NS documentation centre cube."""
+    width, height = 1024, 1244
+    image = Image.new("RGB", (width, height), "#e4e3de")
+    draw = ImageDraw.Draw(image)
+    concrete = "#e4e3de"
+    highlight = "#f1f0ec"
+    shadow = "#b5b5b1"
+    recess = "#222b2e"
+    glass = "#334146"
+
+    # Large cast-concrete panels stay visible without turning into a grid.
+    for y in range(0, height, 156):
+        draw.line((0, y, width, y), fill="#cac9c5", width=2)
+    for x in (256, 512, 768):
+        draw.line((x, 0, x, height), fill="#d2d1cc", width=1)
+
+    openings: dict[str, tuple[tuple[float, float, float, float], ...]] = {
+        "briennerstrasse": (
+            (0.12, 0.13, 0.18, 0.19), (0.53, 0.08, 0.27, 0.14),
+            (0.29, 0.37, 0.37, 0.12), (0.69, 0.53, 0.18, 0.22),
+            (0.08, 0.65, 0.28, 0.12), (0.40, 0.80, 0.25, 0.20),
+        ),
+        "west": (
+            (0.17, 0.09, 0.19, 0.27), (0.58, 0.18, 0.27, 0.12),
+            (0.12, 0.48, 0.36, 0.13), (0.62, 0.55, 0.17, 0.26),
+            (0.26, 0.78, 0.26, 0.13),
+        ),
+        "north": (
+            (0.11, 0.16, 0.29, 0.12), (0.60, 0.08, 0.16, 0.25),
+            (0.33, 0.43, 0.35, 0.13), (0.09, 0.62, 0.18, 0.23),
+            (0.56, 0.75, 0.31, 0.13),
+        ),
+        "east": (
+            (0.18, 0.08, 0.16, 0.24), (0.52, 0.19, 0.34, 0.12),
+            (0.10, 0.42, 0.25, 0.15), (0.48, 0.55, 0.20, 0.25),
+            (0.18, 0.78, 0.25, 0.12), (0.73, 0.80, 0.14, 0.16),
+        ),
+    }
+    for left_f, top_f, width_f, height_f in openings[variant]:
+        left = round(width * left_f)
+        top = round(height * top_f)
+        right = round(width * (left_f + width_f))
+        bottom = round(height * (top_f + height_f))
+        bevel = 13
+        draw.rectangle((left - bevel, top - bevel, right + bevel, bottom + bevel), fill=shadow)
+        draw.polygon(((left - bevel, top - bevel), (right + bevel, top - bevel), (right, top), (left, top)), fill=highlight)
+        draw.polygon(((left - bevel, top - bevel), (left, top), (left, bottom), (left - bevel, bottom + bevel)), fill="#aaa9a5")
+        draw.rectangle((left, top, right, bottom), fill=recess)
+        draw.rectangle((left + 8, top + 8, right - 8, bottom - 8), fill=glass)
+        draw.line((left + 16, top + 8, left + 16, bottom - 8), fill="#53646a", width=4)
+
+    if variant == "briennerstrasse":
+        # Street entrance is a deep ground-level cut, separate from the windows.
+        draw.rectangle((round(width * 0.42), round(height * 0.825), round(width * 0.68), height), fill=recess)
+        draw.rectangle((round(width * 0.46), round(height * 0.865), round(width * 0.64), height), fill=glass)
+        draw.line((round(width * 0.55), round(height * 0.865), round(width * 0.55), height), fill="#66777c", width=4)
+
+    draw.rectangle((0, round(height * 0.985), width, height), fill="#b9b9b5")
+    output = TEXTURE_ROOT / file_name
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_nsdoku() -> None:
+    nsdoku_sheet("nsdoku-briennerstrasse.png", "briennerstrasse")
+    nsdoku_sheet("nsdoku-west.png", "west")
+    nsdoku_sheet("nsdoku-north.png", "north")
+    nsdoku_sheet("nsdoku-east.png", "east")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recipe", choices=(
@@ -307,6 +378,7 @@ def main() -> None:
         "bayerische-staatsbibliothek",
         "haus-der-kunst",
         "pinakothek-der-moderne",
+        "ns-dokumentationszentrum",
     ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
@@ -317,6 +389,8 @@ def main() -> None:
         generate_haus_der_kunst()
     elif args.recipe == "pinakothek-der-moderne":
         generate_pinakothek_der_moderne()
+    elif args.recipe == "ns-dokumentationszentrum":
+        generate_nsdoku()
 
 
 if __name__ == "__main__":

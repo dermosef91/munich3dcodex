@@ -179,6 +179,12 @@ try {
   controller.registerTile("shadow-controller", controllerMeshes);
   assert.equal(fakeShadowMap.renderList.length, 3, "medium must register one building and two tree batches");
   assert.equal(controllerMeshes.receivers[0].receiveShadows, true);
+  controller.setTreeCastersEnabled(false);
+  assert.equal(fakeShadowMap.renderList.length, 1, "adaptive fallback must retain buildings while removing trees");
+  assert.equal(controller.treeShadowsEnabled, false);
+  controller.setTreeCastersEnabled(true);
+  assert.equal(fakeShadowMap.renderList.length, 3, "tree shadows must recover without rebuilding the tile");
+  assert.equal(controller.treeShadowsEnabled, true);
   controller.registerTile("shadow-controller", controllerMeshes);
   assert.equal(fakeShadowMap.renderList.length, 3, "re-registering a streamed tile must not duplicate casters");
   assert.deepEqual(freezeTransitions.slice(-2), [false, true], "streaming must refreeze caster bounds");

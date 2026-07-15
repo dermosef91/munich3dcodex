@@ -27,7 +27,11 @@ export type LandmarkFacadeTextureId =
   | "pinakothek-der-moderne-marianne"
   | "pinakothek-der-moderne-tuerkenstrasse"
   | "pinakothek-der-moderne-gabelsbergerstrasse"
-  | "pinakothek-der-moderne-barerstrasse";
+  | "pinakothek-der-moderne-barerstrasse"
+  | "nsdoku-briennerstrasse"
+  | "nsdoku-west"
+  | "nsdoku-north"
+  | "nsdoku-east";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -155,6 +159,26 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "pinakothek-der-moderne-barerstrasse.png",
     roughness: 0.80,
     specularIntensity: 0.30,
+  },
+  "nsdoku-briennerstrasse": {
+    file: "nsdoku-briennerstrasse.png",
+    roughness: 0.88,
+    specularIntensity: 0.20,
+  },
+  "nsdoku-west": {
+    file: "nsdoku-west.png",
+    roughness: 0.88,
+    specularIntensity: 0.20,
+  },
+  "nsdoku-north": {
+    file: "nsdoku-north.png",
+    roughness: 0.88,
+    specularIntensity: 0.20,
+  },
+  "nsdoku-east": {
+    file: "nsdoku-east.png",
+    roughness: 0.88,
+    specularIntensity: 0.20,
   },
 };
 

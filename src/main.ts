@@ -29,6 +29,7 @@ import {
   resolveShadowQuality,
   SunShadowController,
 } from "./world/SunShadowController";
+import { AdaptivePerformanceController } from "./performance/AdaptivePerformanceController";
 
 function element<T extends HTMLElement>(selector: string): T {
   const value = document.querySelector<T>(selector);
@@ -62,6 +63,8 @@ const engine = new Engine(canvas, true, {
   powerPreference: "high-performance",
   stencil: false,
 });
+engine.renderEvenInBackground = false;
+engine.disablePerformanceMonitorInBackground = true;
 
 const scene = new Scene(engine);
 // Source coordinates are X=east, Y=up, Z=south: a right-handed frame.
@@ -164,6 +167,13 @@ sun.diffuse = new Color3(1.0, 0.92, 0.80);
 // with no control explaining why.
 const requestedShadowQuality = resolveShadowQuality(searchParams);
 const sunShadows = new SunShadowController(scene, camera, sun, requestedShadowQuality);
+const adaptivePerformance = new AdaptivePerformanceController(engine, window.devicePixelRatio, {
+  onConstrainedModeChange: (constrained) => {
+    // An explicit shadow query is a visual-quality contract for screenshots
+    // and comparisons; automatic fallback only applies to ordinary play.
+    if (!searchParams.has("shadows")) sunShadows.setTreeCastersEnabled(!constrained);
+  },
+});
 const groundShadows = new GroundShadowSystem(scene, camera, sunShadows.maxDistance);
 const vehicles = new VehicleSystem(scene, camera, engine, {
   hintElement: vehicleHint,
@@ -177,6 +187,8 @@ const vehicles = new VehicleSystem(scene, camera, engine, {
 });
 const trams = new TramSystem(scene, engine, groundShadows);
 canvas.dataset.shadowQuality = sunShadows.enabled ? requestedShadowQuality : "off";
+canvas.dataset.performanceMode = adaptivePerformance.mode;
+canvas.dataset.renderPixelRatio = adaptivePerformance.renderPixelRatio.toFixed(2);
 
 let firstLoad = true;
 const streamer = new WorldStreamer(scene, (message, loadedCount, totalCount) => {
@@ -244,6 +256,7 @@ scene.onBeforeRenderObservable.add(() => {
   trams.update();
   groundShadows.update();
   keyboardMovement.update();
+  if (!document.hidden) adaptivePerformance.update(engine.getDeltaTime(), performance.now());
   canvas.dataset.playerX = camera.position.x.toFixed(3);
   canvas.dataset.playerY = camera.position.y.toFixed(3);
   canvas.dataset.playerZ = camera.position.z.toFixed(3);
@@ -261,7 +274,10 @@ scene.onBeforeRenderObservable.add(() => {
     lastHudUpdate = now;
     canvas.dataset.fps = engine.getFps().toFixed(1);
     canvas.dataset.shadowCasters = String(sunShadows.casterCount);
+    canvas.dataset.treeShadows = String(sunShadows.treeShadowsEnabled);
     canvas.dataset.groundShadows = String(groundShadows.visibleCount);
+    canvas.dataset.performanceMode = adaptivePerformance.mode;
+    canvas.dataset.renderPixelRatio = adaptivePerformance.renderPixelRatio.toFixed(2);
     const district = closestDistrict(camera.position);
     const location = worldToLonLat(camera.position);
     districtLabel.textContent = `${DISTRICTS[district].label} · ${DISTRICTS[district].subtitle}`;
@@ -272,7 +288,13 @@ scene.onBeforeRenderObservable.add(() => {
   }
 });
 
-window.addEventListener("resize", () => engine.resize());
+window.addEventListener("resize", () => {
+  adaptivePerformance.handleDevicePixelRatio(window.devicePixelRatio);
+  engine.resize();
+});
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) adaptivePerformance.resetSampling(performance.now());
+});
 
 async function start(): Promise<void> {
   await Promise.all([

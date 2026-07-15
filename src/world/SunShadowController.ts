@@ -59,7 +59,8 @@ export interface TileShadowMeshes {
 }
 
 interface RegisteredTile {
-  casters: AbstractMesh[];
+  buildingCasters: AbstractMesh[];
+  treeCasters: AbstractMesh[];
   receivers: AbstractMesh[];
 }
 
@@ -82,6 +83,7 @@ export class SunShadowController {
   readonly generator: CascadedShadowGenerator | null;
   private readonly tiles = new Map<string, RegisteredTile>();
   private readonly dynamicCasters = new Map<string, AbstractMesh[]>();
+  private treeCastersEnabled: boolean;
 
   constructor(
     private readonly scene: Scene,
@@ -90,6 +92,7 @@ export class SunShadowController {
     readonly quality: ShadowQuality,
   ) {
     this.profile = quality === "off" ? null : SHADOW_PROFILES[quality];
+    this.treeCastersEnabled = this.profile?.includeTrees ?? false;
     if (!this.profile || !CascadedShadowGenerator.IsSupported) {
       this.generator = null;
       if (this.profile) console.warn("Cascaded sun shadows are unavailable on this graphics device.");
@@ -132,19 +135,26 @@ export class SunShadowController {
     return this.generator?.getShadowMap()?.renderList?.length ?? 0;
   }
 
+  get treeShadowsEnabled(): boolean {
+    return this.generator !== null && this.treeCastersEnabled;
+  }
+
   registerTile(tileId: string, meshes: TileShadowMeshes): void {
     this.unregisterTile(tileId);
     if (!this.generator || !this.profile) return;
 
-    const casters = [
-      ...meshes.buildingCasters,
-      ...(this.profile.includeTrees ? meshes.treeCasters : []),
-    ].filter((mesh) => !mesh.isDisposed());
+    const buildingCasters = [...meshes.buildingCasters].filter((mesh) => !mesh.isDisposed());
+    const treeCasters = this.profile.includeTrees
+      ? [...meshes.treeCasters].filter((mesh) => !mesh.isDisposed())
+      : [];
     const receivers = [...meshes.receivers].filter((mesh) => !mesh.isDisposed());
 
     for (const receiver of receivers) receiver.receiveShadows = true;
-    for (const caster of casters) this.generator.addShadowCaster(caster, false);
-    this.tiles.set(tileId, { casters, receivers });
+    for (const caster of buildingCasters) this.generator.addShadowCaster(caster, false);
+    if (this.treeCastersEnabled) {
+      for (const caster of treeCasters) this.generator.addShadowCaster(caster, false);
+    }
+    this.tiles.set(tileId, { buildingCasters, treeCasters, receivers });
     this.refreshCasterBounds();
   }
 
@@ -152,7 +162,7 @@ export class SunShadowController {
     const registered = this.tiles.get(tileId);
     if (!registered) return;
     if (this.generator) {
-      for (const caster of registered.casters) {
+      for (const caster of [...registered.buildingCasters, ...registered.treeCasters]) {
         if (!caster.isDisposed()) this.generator.removeShadowCaster(caster, false);
       }
       for (const receiver of registered.receivers) {
@@ -160,6 +170,22 @@ export class SunShadowController {
       }
     }
     this.tiles.delete(tileId);
+    this.refreshCasterBounds();
+  }
+
+  /** Removes the broad tree pass before sacrificing nearby building shadows. */
+  setTreeCastersEnabled(enabled: boolean): void {
+    const next = Boolean(this.generator && this.profile?.includeTrees && enabled);
+    if (next === this.treeCastersEnabled) return;
+    this.treeCastersEnabled = next;
+    if (!this.generator) return;
+    for (const tile of this.tiles.values()) {
+      for (const caster of tile.treeCasters) {
+        if (caster.isDisposed()) continue;
+        if (next) this.generator.addShadowCaster(caster, false);
+        else this.generator.removeShadowCaster(caster, false);
+      }
+    }
     this.refreshCasterBounds();
   }
 
