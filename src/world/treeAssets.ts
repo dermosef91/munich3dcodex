@@ -6,8 +6,7 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import type { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import type { Scene } from "@babylonjs/core/scene";
-import { sampleTerrainHeightClamped } from "./terrain";
-import type { TerrainHeightGrid, TreeFeature } from "./types";
+import type { TreeFeature } from "./types";
 
 const MIN_TREE_HEIGHT = 2.5;
 const MAX_TREE_HEIGHT = 22;
@@ -147,7 +146,6 @@ function createTreeTransforms(
   trees: readonly TreeFeature[],
   baseHeight: number,
   baseCrownWidth: number,
-  terrain: TerrainHeightGrid | undefined,
 ): TreeTransform[] {
   const transforms: TreeTransform[] = [];
 
@@ -173,7 +171,7 @@ function createTreeTransforms(
       id: tree.id,
       position: new Vector3(
         tree.point[0],
-        terrain ? sampleTerrainHeightClamped(terrain, tree.point[0], tree.point[1]) : 0,
+        0,
         tree.point[1],
       ),
       rotation,
@@ -276,7 +274,6 @@ export class TreeAssetRenderer {
   createTileMeshes(
     tileId: string,
     trees: readonly TreeFeature[] | undefined,
-    terrain?: TerrainHeightGrid,
   ): TreeTileMeshes {
     if (this.disposed || !trees || trees.length === 0) return { meshes: [], shadowCasters: [] };
     const safeTileId = tileId.replace(/[^a-zA-Z0-9_-]/g, "-");
@@ -284,7 +281,6 @@ export class TreeAssetRenderer {
       trees,
       this.templates.baseHeight,
       this.templates.baseCrownWidth,
-      terrain,
     );
     return this.createBatch(safeTileId, this.templates.stem, this.templates.leaves, transforms);
   }

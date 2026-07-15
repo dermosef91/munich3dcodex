@@ -75,6 +75,8 @@ export interface StreetSurfaceDetailGeometryOptions {
   inferStopLines?: boolean;
   /** Opt-in center dashes, limited to mapped multi-lane or major roads. */
   includeWornCenterMarkings?: boolean;
+  /** Disable the repair-atlas decals when a cleaner road surface is preferred. */
+  includeAsphaltPatches?: boolean;
 }
 
 export interface StreetSurfaceDetailBuildOptions extends StreetSurfaceDetailGeometryOptions {
@@ -1400,7 +1402,9 @@ export function buildStreetSurfaceDetailGeometry(
     addStopLines(geometry, carriageways, segments, generatedBlockers, crossingExclusions);
   }
   addUtilities(geometry, carriageways, generatedBlockers, crossingExclusions);
-  addAsphaltPatches(geometry, carriageways, generatedBlockers, crossingExclusions);
+  if (options.includeAsphaltPatches !== false) {
+    addAsphaltPatches(geometry, carriageways, generatedBlockers, crossingExclusions);
+  }
   if (options.includeWornCenterMarkings === true) {
     addCenterMarkings(geometry, carriageways, generatedBlockers, crossingExclusions);
   }
@@ -1451,7 +1455,11 @@ function defaultMaterial(
     material.alphaCutOff = kind === "paint" ? 0.055 : 0.08;
     material.needDepthPrePass = true;
   }
-  material.freeze();
+  // Textures load asynchronously. Freezing a decal material before that
+  // upload completes can lock Babylon into its black fallback sampler.
+  // Keep textured paint/repair materials live; the small shared cache still
+  // limits them to one material per scene and detail batch.
+  if (!resolvedTextureUrl) material.freeze();
   sceneMaterials.set(key, material);
   return material;
 }

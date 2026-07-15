@@ -7,14 +7,12 @@ import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import type { Scene } from "@babylonjs/core/scene";
-import { buildingTerrainBase, sampleTerrainHeightClamped } from "./terrain";
 import type {
   BuildingFeature,
   BusinessCategory,
   BusinessFeature,
   BusinessFrontage,
   Point2,
-  TerrainHeightGrid,
 } from "./types";
 
 interface StorefrontStyle {
@@ -492,27 +490,9 @@ export function buildStorefronts(
   businesses: BusinessFeature[] | undefined,
   buildings: BuildingFeature[],
   scene: Scene,
-  terrain?: TerrainHeightGrid,
 ): Mesh[] {
   if (!businesses?.length) return [];
   const shared = sharedMaterials(scene);
   const buildingsById = new Map(buildings.map((building) => [building.id, building]));
-  return businesses.flatMap((business) => {
-    const meshes = buildStorefront(scene, business, buildingsById, shared);
-    if (!terrain || meshes.length === 0 || !business.frontage) return meshes;
-    const building = buildingsById.get(business.frontage.buildingId);
-    const elevation = building
-      ? buildingTerrainBase(building, terrain)
-      : sampleTerrainHeightClamped(
-        terrain,
-        business.frontage.anchor[0],
-        business.frontage.anchor[1],
-      );
-    for (const mesh of meshes) {
-      mesh.unfreezeWorldMatrix();
-      mesh.position.y += elevation;
-      mesh.freezeWorldMatrix();
-    }
-    return meshes;
-  });
+  return businesses.flatMap((business) => buildStorefront(scene, business, buildingsById, shared));
 }

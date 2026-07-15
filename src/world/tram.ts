@@ -11,7 +11,6 @@ import type { Scene } from "@babylonjs/core/scene";
 import type { Engine } from "@babylonjs/core/Engines/engine";
 import type { GroundShadowSystem } from "./GroundShadowSystem";
 import type { MunichTile, Point2, TramTrackFeature } from "./types";
-import { terrainHeightFromGrids } from "./terrain";
 
 interface Route {
   key: string;
@@ -52,8 +51,6 @@ interface RailBuffers {
   normals: number[];
   colors: number[];
 }
-
-type TerrainHeightResolver = (x: number, z: number) => number;
 
 function material(scene: Scene, name: string, color: Color3, emissive?: Color3): StandardMaterial {
   const result = new StandardMaterial(name, scene);
@@ -248,30 +245,10 @@ function renderTangent(points: Point2[], index: number): Point2 {
   return [next[0] - previous[0], next[1] - previous[1]];
 }
 
-function subdivideTerrainPolyline(points: Point2[], maximumSegmentLength = 5): Point2[] {
-  if (points.length < 2) return points;
-  const result: Point2[] = [[...points[0]] as Point2];
-  for (let index = 0; index < points.length - 1; index += 1) {
-    const start = points[index];
-    const end = points[index + 1];
-    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
-    const segments = Math.max(1, Math.ceil(length / maximumSegmentLength));
-    for (let segment = 1; segment <= segments; segment += 1) {
-      const amount = segment / segments;
-      result.push([
-        start[0] + (end[0] - start[0]) * amount,
-        start[1] + (end[1] - start[1]) * amount,
-      ]);
-    }
-  }
-  return result;
-}
-
 function offsetTrack(
   points: Point2[],
   lateralOffset: number,
   y: number,
-  terrainHeight: TerrainHeightResolver,
 ): Vector3[] {
   return points.map(([x, z], index) => {
     const previous = significantNeighbor(points, index, -1);
@@ -309,7 +286,7 @@ function offsetTrack(
     }
     const worldX = x + normalX * offset;
     const worldZ = z + normalZ * offset;
-    return new Vector3(worldX, terrainHeight(worldX, worldZ) + y, worldZ);
+    return new Vector3(worldX, y, worldZ);
   });
 }
 
@@ -337,25 +314,22 @@ function appendRail(
   buffers: RailBuffers,
   points: Point2[],
   centerOffset: number,
-  terrainHeight: TerrainHeightResolver,
 ): void {
   const halfWidth = RAIL_HEAD_WIDTH * 0.5;
-  const positiveTop = offsetTrack(points, centerOffset + halfWidth, RAIL_TOP_Y, terrainHeight);
-  const negativeTop = offsetTrack(points, centerOffset - halfWidth, RAIL_TOP_Y, terrainHeight);
-  const positiveBase = offsetTrack(points, centerOffset + halfWidth, RAIL_BASE_Y, terrainHeight);
-  const negativeBase = offsetTrack(points, centerOffset - halfWidth, RAIL_BASE_Y, terrainHeight);
+  const positiveTop = offsetTrack(points, centerOffset + halfWidth, RAIL_TOP_Y);
+  const negativeTop = offsetTrack(points, centerOffset - halfWidth, RAIL_TOP_Y);
+  const positiveBase = offsetTrack(points, centerOffset + halfWidth, RAIL_BASE_Y);
+  const negativeBase = offsetTrack(points, centerOffset - halfWidth, RAIL_BASE_Y);
   const grooveCenter = centerOffset - Math.sign(centerOffset) * RAIL_HEAD_WIDTH * 0.27;
   const groovePositive = offsetTrack(
     points,
     grooveCenter + RAIL_GROOVE_WIDTH * 0.5,
     RAIL_TOP_Y + 0.001,
-    terrainHeight,
   );
   const grooveNegative = offsetTrack(
     points,
     grooveCenter - RAIL_GROOVE_WIDTH * 0.5,
     RAIL_TOP_Y + 0.001,
-    terrainHeight,
   );
 
   for (let index = 0; index < points.length - 1; index += 1) {
@@ -416,12 +390,6 @@ export class TramSystem {
     }
   }
 
-  private terrainHeightAt = (x: number, z: number): number => terrainHeightFromGrids(
-    [...this.tiles.values()].map((tile) => tile.terrainData),
-    x,
-    z,
-  );
-
   removeTile(tileId: string): void {
     const hadTracks = (this.tiles.get(tileId)?.tramTracks?.length ?? 0) > 0;
     this.tiles.delete(tileId);
@@ -466,11 +434,7 @@ export class TramSystem {
         continue;
       }
       const point = sample(tram.route, tram.distance);
-      tram.anchor.position.set(
-        point.x,
-        this.terrainHeightAt(point.x, point.z) + 0.16,
-        point.z,
-      );
+      tram.anchor.position.set(point.x, 0.16, point.z);
       tram.anchor.rotation.y = heading(point.dx, point.dz);
     }
   }
@@ -483,12 +447,9 @@ export class TramSystem {
 
     for (const track of tracks) {
       if (track.points.length < 2) continue;
-      const renderPoints = subdivideTerrainPolyline(track.points);
-      appendRail(railBuffers, renderPoints, -TRACK_GAUGE * 0.5, this.terrainHeightAt);
-      appendRail(railBuffers, renderPoints, TRACK_GAUGE * 0.5, this.terrainHeightAt);
-      catenaryLines.push(renderPoints.map(([x, z]) => (
-        new Vector3(x, this.terrainHeightAt(x, z) + 5.45, z)
-      )));
+      appendRail(railBuffers, track.points, -TRACK_GAUGE * 0.5);
+      appendRail(railBuffers, track.points, TRACK_GAUGE * 0.5);
+      catenaryLines.push(track.points.map(([x, z]) => new Vector3(x, 5.45, z)));
       const last = track.points.length - 1;
       const endpoints: Array<{ points: Point2[]; index: number }> = [
         { points: track.points, index: 0 },
@@ -506,13 +467,11 @@ export class TramSystem {
       const length = Math.max(Math.hypot(dx, dz), 1e-6);
       const poleX = x - dz / length * 2.2;
       const poleZ = z + dx / length * 2.2;
-      const poleGround = this.terrainHeightAt(poleX, poleZ);
-      const trackGround = this.terrainHeightAt(x, z);
       catenaryLines.push([
-        new Vector3(poleX, poleGround + 0.1, poleZ),
-        new Vector3(poleX, poleGround + 5.52, poleZ),
-        new Vector3(x, trackGround + 5.52, z),
-        new Vector3(x, trackGround + 5.45, z),
+        new Vector3(poleX, 0.1, poleZ),
+        new Vector3(poleX, 5.52, poleZ),
+        new Vector3(x, 5.52, z),
+        new Vector3(x, 5.45, z),
       ]);
     }
 
@@ -548,17 +507,13 @@ export class TramSystem {
     anchor.setEnabled(true);
     anchor.metadata = { transit: "tram", route: route.label };
     const initial = sample(route, route.length * 0.27);
-    anchor.position.set(
-      initial.x,
-      this.terrainHeightAt(initial.x, initial.z) + 0.16,
-      initial.z,
-    );
+    anchor.position.set(initial.x, 0.16, initial.z);
     anchor.rotation.y = heading(initial.dx, initial.dz);
     const shadowId = `tram:${tileId}`;
     this.groundShadows?.register(shadowId, anchor, {
       width: 2.58,
       length: 32.2,
-      groundOffsetY: -0.095,
+      groundY: 0.065,
     });
     return { anchor, shadowId, route, distance: route.length * 0.27, dwellUntil: 0 };
   }

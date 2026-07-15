@@ -13,15 +13,12 @@ interface GroundShadowRegistration {
   width: number;
   length: number;
   groundY: number;
-  groundOffsetY?: number;
 }
 
 export interface GroundShadowOptions {
   width: number;
   length: number;
   groundY?: number;
-  /** Follow a moving node over terrain instead of using a fixed world Y. */
-  groundOffsetY?: number;
 }
 
 const SEGMENTS = 24;
@@ -108,7 +105,6 @@ export class GroundShadowSystem {
       width: options.width,
       length: options.length,
       groundY: options.groundY ?? 0.072,
-      groundOffsetY: options.groundOffsetY,
     });
   }
 
@@ -142,13 +138,7 @@ export class GroundShadowSystem {
       const registration = visible[index];
       const position = registration.node.getAbsolutePosition();
       scale.set(registration.width * 0.5, 1, registration.length * 0.5);
-      translation.set(
-        position.x,
-        registration.groundOffsetY === undefined
-          ? registration.groundY
-          : position.y + registration.groundOffsetY,
-        position.z,
-      );
+      translation.set(position.x, registration.groundY, position.z);
       Matrix.ComposeToRef(
         scale,
         registration.node.absoluteRotationQuaternion,

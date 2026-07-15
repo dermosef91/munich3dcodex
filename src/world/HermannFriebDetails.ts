@@ -10,10 +10,6 @@ import type { Scene } from "@babylonjs/core/scene";
 import { getLandmarkFacadeMaterial } from "./landmarkFacadeTextures";
 
 type FacadePoint = readonly [x: number, z: number];
-export type TerrainHeightProvider = (x: number, z: number) => number;
-
-const FLAT_TERRAIN_HEIGHT: TerrainHeightProvider = () => 0;
-const terrainOffsets = new WeakMap<TransformNode, number>();
 
 interface FacadeFrame {
   readonly start: Vector3;
@@ -59,33 +55,6 @@ const GYM_COURTYARD_START: FacadePoint = [-458.544, -1176.222];
 const GYM_COURTYARD_END: FacadePoint = [-431.513, -1173.531];
 const ENTRANCE_START: FacadePoint = [-417.536, -1128.562];
 const ENTRANCE_END: FacadePoint = [-412.049, -1129.270];
-const TERRAIN_ANCHOR: FacadePoint = [
-  (ENTRANCE_START[0] + ENTRANCE_END[0]) * 0.5,
-  (ENTRANCE_START[1] + ENTRANCE_END[1]) * 0.5,
-];
-
-function sampledTerrainHeight(
-  heightAt: TerrainHeightProvider,
-  x: number,
-  z: number,
-): number {
-  const height = heightAt(x, z);
-  return Number.isFinite(height) ? height : 0;
-}
-
-export function groundHermannFriebDetails(
-  scene: Scene,
-  heightAt: TerrainHeightProvider = FLAT_TERRAIN_HEIGHT,
-): void {
-  const root = scene.getTransformNodeByName("hermann-frieb-details");
-  if (!root) return;
-  let offset = terrainOffsets.get(root);
-  if (offset === undefined) {
-    offset = root.position.y;
-    terrainOffsets.set(root, offset);
-  }
-  root.position.y = offset + sampledTerrainHeight(heightAt, TERRAIN_ANCHOR[0], TERRAIN_ANCHOR[1]);
-}
 
 function facadeFrame(startPoint: FacadePoint, endPoint: FacadePoint): FacadeFrame {
   const start = new Vector3(startPoint[0], 0, startPoint[1]);

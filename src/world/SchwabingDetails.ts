@@ -7,23 +7,7 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import type { Scene } from "@babylonjs/core/scene";
 import { ELISABETHSTRASSE_46_ID, getBuildingFacade } from "./facadeRegistry";
-import {
-  createHermannFriebDetails,
-  groundHermannFriebDetails,
-  type TerrainHeightProvider,
-} from "./HermannFriebDetails";
-
-const FLAT_TERRAIN_HEIGHT: TerrainHeightProvider = () => 0;
-const terrainOffsets = new WeakMap<TransformNode, number>();
-
-function sampledTerrainHeight(
-  heightAt: TerrainHeightProvider,
-  x: number,
-  z: number,
-): number {
-  const height = heightAt(x, z);
-  return Number.isFinite(height) ? height : 0;
-}
+import { createHermannFriebDetails } from "./HermannFriebDetails";
 
 function material(scene: Scene, name: string, diffuse: Color3, specular = Color3.Black()): StandardMaterial {
   const result = new StandardMaterial(name, scene);
@@ -40,14 +24,12 @@ function parentMesh(mesh: Mesh, root: TransformNode, position: Vector3, yaw = 0)
   return mesh;
 }
 
-function createElisabethstrasse46Facade(scene: Scene, parent: TransformNode): void {
+function createElisabethstrasse46Facade(scene: Scene, root: TransformNode): void {
   const definition = getBuildingFacade(ELISABETHSTRASSE_46_ID);
   if (!definition?.frontEdge) return;
   const [startPoint, endPoint] = definition.frontEdge;
   const start = new Vector3(startPoint[0], 0, startPoint[1]);
   const end = new Vector3(endPoint[0], 0, endPoint[1]);
-  const root = new TransformNode("elisabethstrasse-46-details", scene);
-  root.parent = parent;
   const along = end.subtract(start).normalize();
   const outward = new Vector3(-along.z, 0, along.x);
   const yaw = -Math.atan2(along.z, along.x);
@@ -128,26 +110,6 @@ function createElisabethstrasse46Facade(scene: Scene, parent: TransformNode): vo
   ).material = plaqueMaterial;
 }
 
-export function groundSchwabingDetails(
-  scene: Scene,
-  heightAt: TerrainHeightProvider = FLAT_TERRAIN_HEIGHT,
-): void {
-  const elisabethRoot = scene.getTransformNodeByName("elisabethstrasse-46-details");
-  const definition = getBuildingFacade(ELISABETHSTRASSE_46_ID);
-  if (elisabethRoot && definition?.frontEdge) {
-    let offset = terrainOffsets.get(elisabethRoot);
-    if (offset === undefined) {
-      offset = elisabethRoot.position.y;
-      terrainOffsets.set(elisabethRoot, offset);
-    }
-    const [start, end] = definition.frontEdge;
-    const x = (start[0] + end[0]) * 0.5;
-    const z = (start[1] + end[1]) * 0.5;
-    elisabethRoot.position.y = offset + sampledTerrainHeight(heightAt, x, z);
-  }
-  groundHermannFriebDetails(scene, heightAt);
-}
-
 export function createSchwabingDetails(scene: Scene): TransformNode {
   const existing = scene.getTransformNodeByName("schwabing-details");
   if (existing) return existing;
@@ -158,6 +120,5 @@ export function createSchwabingDetails(scene: Scene): TransformNode {
   // details that cannot be derived from public map semantics.
   createElisabethstrasse46Facade(scene, root);
   createHermannFriebDetails(scene, root);
-  groundSchwabingDetails(scene);
   return root;
 }

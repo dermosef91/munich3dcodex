@@ -22,7 +22,6 @@ import {
   type ParkingLayoutSlot,
 } from "./parkingLayout";
 import { VehicleAudio } from "./VehicleAudio";
-import { sampleTerrainHeightClamped, terrainHeightFromGrids } from "./terrain";
 
 const MODEL_NAMES = [
   "armor",
@@ -493,16 +492,6 @@ export class VehicleSystem {
     void this.audio.unlock();
   }
 
-  private terrainHeightAt(x: number, z: number, tileId?: string | null): number {
-    const tileTerrain = tileId ? this.tiles.get(tileId)?.terrainData : undefined;
-    if (tileTerrain) return sampleTerrainHeightClamped(tileTerrain, x, z);
-    return terrainHeightFromGrids(
-      [...this.tiles.values()].map((tile) => tile.terrainData),
-      x,
-      z,
-    );
-  }
-
   async initialize(): Promise<void> {
     await import("@babylonjs/loaders/glTF");
     const results = await Promise.allSettled(MODEL_NAMES.map(async (model) => {
@@ -731,7 +720,7 @@ export class VehicleSystem {
     if (!container) return null;
     const id = `vehicle-${this.sequence++}-${model}`;
     const anchor = new TransformNode(id, this.scene);
-    anchor.position.set(x, this.terrainHeightAt(x, z, tileId) + 0.055, z);
+    anchor.position.set(x, 0.055, z);
     anchor.rotation.y = normalizeAngle(heading);
     anchor.metadata = { vehicle: true, vehicleId: id, parkingSlotId };
 
@@ -768,7 +757,7 @@ export class VehicleSystem {
     this.options.groundShadows?.register(id, anchor, {
       width: MODEL_SHADOW_SIZE[model].width * visualScale,
       length: MODEL_SHADOW_SIZE[model].length * visualScale,
-      groundOffsetY: 0.013,
+      groundY: 0.068,
     });
     this.setVehicleCollision(vehicle, kind === "parked" || kind === "stopped");
     this.vehicles.add(vehicle);
@@ -872,11 +861,7 @@ export class VehicleSystem {
     const directionZ = sample.tangentZ * vehicle.travelDirection;
     vehicle.anchor.position.x = sample.x - directionZ * laneOffset;
     vehicle.anchor.position.z = sample.z + directionX * laneOffset;
-    vehicle.anchor.position.y = this.terrainHeightAt(
-      vehicle.anchor.position.x,
-      vehicle.anchor.position.z,
-      vehicle.tileId,
-    ) + 0.055;
+    vehicle.anchor.position.y = 0.055;
     vehicle.heading = lerpAngle(
       vehicle.heading,
       headingFromDirection(directionX, directionZ),
@@ -1009,7 +994,7 @@ export class VehicleSystem {
     } else {
       vehicle.anchor.position.x = nextX;
       vehicle.anchor.position.z = nextZ;
-      vehicle.anchor.position.y = this.terrainHeightAt(nextX, nextZ) + 0.055;
+      vehicle.anchor.position.y = 0.055;
     }
     vehicle.anchor.rotation.y = vehicle.heading;
     vehicle.impactStrength = moveToward(vehicle.impactStrength, 0, 2.4 * deltaSeconds);
@@ -1027,7 +1012,7 @@ export class VehicleSystem {
     if (distance < 0.01) return null;
     delta.scaleInPlace(1 / distance);
     const ray = new Ray(
-      new Vector3(fromX, this.terrainHeightAt(fromX, fromZ) + 0.72, fromZ),
+      new Vector3(fromX, 0.72, fromZ),
       delta,
       distance + 0.9,
     );
@@ -1280,7 +1265,7 @@ export class VehicleSystem {
 
       const ground = this.scene.pickWithRay(
         new Ray(
-          new Vector3(candidate.x, this.terrainHeightAt(candidate.x, candidate.z) + 4.5, candidate.z),
+          new Vector3(candidate.x, 4.5, candidate.z),
           Vector3.Down(),
           9,
         ),

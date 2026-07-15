@@ -18,14 +18,10 @@ import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { PhotoDome } from "@babylonjs/core/Helpers/photoDome";
 import { WorldStreamer } from "./world/WorldStreamer";
 import { closestDistrict, DISTRICTS, type DistrictId, worldToLonLat } from "./world/geo";
-import { groundCustomAssets, loadCustomAssets } from "./customAssets";
+import { loadCustomAssets } from "./customAssets";
 import { KeyboardMovement } from "./player/KeyboardMovement";
-import { createSchwabingDetails, groundSchwabingDetails } from "./world/SchwabingDetails";
-import {
-  createLandmarkDetails,
-  groundLandmarkDetails,
-  landmarkPreview,
-} from "./world/LandmarkDetails";
+import { createSchwabingDetails } from "./world/SchwabingDetails";
+import { createLandmarkDetails, landmarkPreview } from "./world/LandmarkDetails";
 import { VehicleSystem } from "./world/vehicles";
 import { TramSystem } from "./world/tram";
 import { GroundShadowSystem } from "./world/GroundShadowSystem";
@@ -133,8 +129,7 @@ camera.keysRight = [];
 camera.rotation.y = districtYaw(DEFAULT_DISTRICT);
 skyDome.position.copyFrom(camera.position);
 scene.onBeforeRenderObservable.add(() => skyDome.position.copyFrom(camera.position));
-const previewId = searchParams.get("landmark");
-const preview = landmarkPreview(previewId);
+const preview = landmarkPreview(searchParams.get("landmark"));
 if (preview) {
   camera.position.copyFrom(preview.position);
   camera.setTarget(preview.target);
@@ -192,22 +187,16 @@ const streamer = new WorldStreamer(scene, (message, loadedCount, totalCount) => 
     window.setTimeout(() => loading.classList.add("is-hidden"), 350);
   }
 });
-let refreshStaticTerrainGrounding: (() => void) | null = null;
-let staticTerrainGroundingDirty = true;
 streamer.setTileLifecycleHandlers(
   (tile, shadowMeshes, parkingLayout) => {
     sunShadows.registerTile(tile.id, shadowMeshes);
     vehicles.addTile(tile, parkingLayout);
     trams.addTile(tile);
-    staticTerrainGroundingDirty = true;
   },
   (tileId) => {
     sunShadows.unregisterTile(tileId);
     vehicles.removeTile(tileId);
     trams.removeTile(tileId);
-    // WorldStreamer deletes the terrain grid immediately after this callback;
-    // defer re-grounding until the next frame so heightAt sees the final set.
-    staticTerrainGroundingDirty = true;
   },
 );
 
@@ -242,8 +231,6 @@ for (const button of districtButtons) {
     camera.cameraDirection.set(0, 0, 0);
     camera.rotation.x = 0;
     camera.rotation.y = districtYaw(id);
-    // Forced streaming interprets this Y as eye clearance, then adds the
-    // surveyed terrain height once the destination tile is ready.
     void streamer.loadAround(camera.position, true);
   });
 }
@@ -254,10 +241,6 @@ scene.onBeforeRenderObservable.add(() => {
   trams.update();
   groundShadows.update();
   keyboardMovement.update();
-  if (staticTerrainGroundingDirty && refreshStaticTerrainGrounding) {
-    refreshStaticTerrainGrounding();
-    staticTerrainGroundingDirty = false;
-  }
   canvas.dataset.playerX = camera.position.x.toFixed(3);
   canvas.dataset.playerY = camera.position.y.toFixed(3);
   canvas.dataset.playerZ = camera.position.z.toFixed(3);
@@ -287,26 +270,11 @@ async function start(): Promise<void> {
     streamer.initialize(camera.position),
     vehicles.initialize(),
   ]);
-  const terrainHeight = (x: number, z: number): number => streamer.heightAt(x, z);
-  const groundedPreview = landmarkPreview(previewId, terrainHeight);
-  if (groundedPreview) {
-    // initialize() loads the preview's tile; now both eye and look target can
-    // use their own terrain sample while retaining their authored clearances.
-    camera.position.copyFrom(groundedPreview.position);
-    camera.setTarget(groundedPreview.target);
-  }
   await sunShadows.compile();
   attribution.textContent = streamer.getAttribution();
   createSchwabingDetails(scene);
   createLandmarkDetails(scene);
   await loadCustomAssets(scene);
-  refreshStaticTerrainGrounding = () => {
-    groundSchwabingDetails(scene, terrainHeight);
-    groundLandmarkDetails(scene, terrainHeight);
-    groundCustomAssets(scene, terrainHeight);
-  };
-  refreshStaticTerrainGrounding();
-  staticTerrainGroundingDirty = false;
   engine.runRenderLoop(() => scene.render());
 }
 

@@ -78,28 +78,6 @@ interface LandmarkPreview {
   fov?: number;
 }
 
-export type TerrainHeightProvider = (x: number, z: number) => number;
-
-const FLAT_TERRAIN_HEIGHT: TerrainHeightProvider = () => 0;
-const terrainOffsets = new WeakMap<TransformNode, number>();
-
-function sampledTerrainHeight(
-  heightAt: TerrainHeightProvider,
-  x: number,
-  z: number,
-): number {
-  const height = heightAt(x, z);
-  return Number.isFinite(height) ? height : 0;
-}
-
-function terrainOffsetPosition(
-  position: Vector3,
-  heightAt: TerrainHeightProvider,
-): Vector3 {
-  position.y += sampledTerrainHeight(heightAt, position.x, position.z);
-  return position;
-}
-
 const LANDMARK_PREVIEW_SPECS: Readonly<Record<LandmarkPreviewId, {
   position: readonly [number, number, number];
   target: readonly [number, number, number];
@@ -125,15 +103,12 @@ const LANDMARK_PREVIEW_SPECS: Readonly<Record<LandmarkPreviewId, {
   asamkirche: { position: [-161.6, 4.1, 1762.21], target: [-173.7, 11.4, 1769.17], fov: 0.90 },
 };
 
-export function landmarkPreview(
-  id: string | null,
-  heightAt: TerrainHeightProvider = FLAT_TERRAIN_HEIGHT,
-): LandmarkPreview | null {
+export function landmarkPreview(id: string | null): LandmarkPreview | null {
   if (!id || !(id in LANDMARK_PREVIEW_SPECS)) return null;
   const spec = LANDMARK_PREVIEW_SPECS[id as LandmarkPreviewId];
   return {
-    position: terrainOffsetPosition(Vector3.FromArray(spec.position), heightAt),
-    target: terrainOffsetPosition(Vector3.FromArray(spec.target), heightAt),
+    position: Vector3.FromArray(spec.position),
+    target: Vector3.FromArray(spec.target),
     fov: spec.fov,
   };
 }
@@ -150,58 +125,6 @@ const MARKET_PAVILIONS: readonly PavilionSpec[] = [
   { id: 1_193_386_932, center: [212.622, -659.714], width: 15.8, depth: 9.1, yaw: 0.084, label: "BÄCKEREI" },
   { id: 1_288_780_265, center: [187.512, -639.706], width: 10.8, depth: 12.9, yaw: 0.084, label: "ELISABETH MARKT" },
 ];
-
-interface LandmarkTerrainAnchor {
-  readonly name: string;
-  readonly x: number;
-  readonly z: number;
-}
-
-function landmarkTerrainAnchors(): readonly LandmarkTerrainAnchor[] {
-  const baerenbrunnen = lonLatToWorld(11.574_029_9, 48.157_201_2);
-  const hohenzollernplatz = lonLatToWorld(11.568_20, 48.161_60);
-  return [
-    ...MARKET_PAVILIONS.map((pavilion) => ({
-      name: `elisabethmarkt-pavilion-${pavilion.id}`,
-      x: pavilion.center[0],
-      z: pavilion.center[1],
-    })),
-    { name: "elisabethmarkt-wintergarten", x: 156.847, z: -640.357 },
-    { name: "elisabethmarkt-kiosk", x: 187.512, z: -639.706 },
-    { name: "elisabethmarkt-totem", x: 226.2, z: -652.5 },
-    { name: "landmark-baerenbrunnen", x: baerenbrunnen.x, z: baerenbrunnen.z },
-    { name: "landmark-elisabethplatz-biergarten", x: 98.185, z: -680.98 },
-    { name: "landmark-st-joseph", x: -321.7, z: -494.4 },
-    { name: "landmark-nordbad", x: -611.0, z: -1035.0 },
-    { name: "landmark-munich-mma-nordbad", x: -618.626, z: -992.432 },
-    { name: "landmark-stadtarchiv-extension", x: -676.6, z: -1053.6 },
-    { name: "landmark-kreuzkirche", x: -445.766, z: -1279.584 },
-    { name: "landmark-cafe-franca", x: -401.486, z: -845.934 },
-    { name: "landmark-hohenzollernplatz", x: hohenzollernplatz.x, z: hohenzollernplatz.z },
-    { name: "landmark-museum-brandhorst", x: 141.367, z: 365.311 },
-    { name: "landmark-alte-pinakothek", x: -151.1, z: 302.8 },
-    { name: "landmark-bayerische-staatsbibliothek", x: 606, z: 391 },
-    { name: "landmark-hofbraeuhaus", x: 589.415, z: 1490.816 },
-    { name: "landmark-asamkirche", x: -173.697, z: 1769.170 },
-  ];
-}
-
-/** Grounds each rigid reviewed site once, preserving all of its local child elevations. */
-export function groundLandmarkDetails(
-  scene: Scene,
-  heightAt: TerrainHeightProvider = FLAT_TERRAIN_HEIGHT,
-): void {
-  for (const anchor of landmarkTerrainAnchors()) {
-    const node = scene.getTransformNodeByName(anchor.name);
-    if (!node) continue;
-    let offset = terrainOffsets.get(node);
-    if (offset === undefined) {
-      offset = node.position.y;
-      terrainOffsets.set(node, offset);
-    }
-    node.position.y = offset + sampledTerrainHeight(heightAt, anchor.x, anchor.z);
-  }
-}
 
 function colorMaterial(
   scene: Scene,
@@ -1422,6 +1345,5 @@ export function createLandmarkDetails(scene: Scene): TransformNode {
   createCafeFranca(scene, root, materials);
   createHohenzollernplatz(scene, root, materials);
   createTextureFirstLandmarks(scene, root);
-  groundLandmarkDetails(scene);
   return root;
 }

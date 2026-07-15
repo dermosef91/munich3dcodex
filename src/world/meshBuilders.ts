@@ -31,11 +31,6 @@ import { buildParkingSurfaceMeshes } from "./parkingSurfaces";
 import { buildStreetSurfaceDetails } from "./streetSurfaceDetails";
 import { buildCurbsideDetailMeshes } from "./curbsideDetails";
 import {
-  buildingTerrainBase,
-  createTerrainMesh,
-  drapeMeshToTerrain,
-} from "./terrain";
-import {
   deriveParkingLayout,
   type ParkingLayout,
   type ParkingSurfaceExclusion,
@@ -599,7 +594,6 @@ function appendSurfacePolygon(
   polygon: SurfaceVertex[],
   color: Color4,
   spec: FacadeSpec,
-  baseElevation: number,
 ): void {
   if (polygon.length < 3) return;
   const uScale = 3 / spec.facade.preferredBayWidthM;
@@ -624,7 +618,7 @@ function appendSurfacePolygon(
 
     const vertexIndices = triangle.map((vertex) => {
       const vertexIndex = target.positions.length / 3;
-      target.positions.push(vertex.x, vertex.y + baseElevation, vertex.z);
+      target.positions.push(vertex.x, vertex.y, vertex.z);
       target.uvs.push(vertex.u * uScale, vertex.v * vScale);
       target.colors.push(color.r, color.g, color.b, color.a);
       return vertexIndex;
@@ -716,10 +710,9 @@ function appendLayeredWallSurface(
   color: Color4,
   spec: FacadeSpec,
   whollyNeutral: boolean,
-  baseElevation: number,
 ): void {
   if (whollyNeutral) {
-    appendSurfaceMesh(neutralTarget, surface, color, spec, true, baseElevation);
+    appendSurfaceMesh(neutralTarget, surface, color, spec, true);
     return;
   }
 
@@ -733,23 +726,21 @@ function appendLayeredWallSurface(
         surface.indices[triangle * 3 + corner],
       ));
       if (narrow) {
-        appendSurfacePolygon(neutralTarget, polygon, color, spec, baseElevation);
+        appendSurfacePolygon(neutralTarget, polygon, color, spec);
       } else if (eave === undefined) {
-        appendSurfacePolygon(upperTarget, polygon, color, spec, baseElevation);
+        appendSurfacePolygon(upperTarget, polygon, color, spec);
       } else {
         appendSurfacePolygon(
           upperTarget,
           clipSurfacePolygonAtHeight(polygon, eave, true),
           color,
           spec,
-          baseElevation,
         );
         appendSurfacePolygon(
           neutralTarget,
           clipSurfacePolygonAtHeight(polygon, eave, false),
           color,
           spec,
-          baseElevation,
         );
       }
     }
@@ -762,18 +753,11 @@ function appendSurfaceMesh(
   color: Color4,
   spec: FacadeSpec,
   rescaleFacadeUvs: boolean,
-  baseElevation: number,
 ): void {
   if (surface.positions.length === 0 || surface.indices.length === 0) return;
   const vertexOffset = target.positions.length / 3;
   const vertexCount = surface.positions.length / 3;
-  for (let index = 0; index < surface.positions.length; index += 3) {
-    target.positions.push(
-      surface.positions[index],
-      surface.positions[index + 1] + baseElevation,
-      surface.positions[index + 2],
-    );
-  }
+  target.positions.push(...surface.positions);
   target.indices.push(...surface.indices.map((index) => index + vertexOffset));
   if (surface.uvs?.length === vertexCount * 2) {
     const uScale = rescaleFacadeUvs ? 3 / spec.facade.preferredBayWidthM : 1;
@@ -793,18 +777,11 @@ function appendRoofSurfaceMesh(
   target: Buffers,
   surface: SurfaceMeshData,
   color: Color4,
-  baseElevation: number,
 ): void {
   if (surface.positions.length === 0 || surface.indices.length === 0) return;
   const vertexOffset = target.positions.length / 3;
   const vertexCount = surface.positions.length / 3;
-  for (let index = 0; index < surface.positions.length; index += 3) {
-    target.positions.push(
-      surface.positions[index],
-      surface.positions[index + 1] + baseElevation,
-      surface.positions[index + 2],
-    );
-  }
+  target.positions.push(...surface.positions);
   target.indices.push(...surface.indices.map((index) => index + vertexOffset));
   // LoD2 source UVs are in the source coordinate reference system rather than
   // a metre-based surface mapping. Projecting them in world X/Z keeps the tile
@@ -833,7 +810,6 @@ function addBuilding(
   spec: FacadeSpec,
   customFacade?: BuildingFacadeBuffers,
   whollyNeutral = false,
-  baseElevation = 0,
 ): void {
   const ring = cleanRing(building.outline);
   if (ring.length < 3) return;
@@ -852,9 +828,8 @@ function addBuilding(
       wallColor,
       spec,
       whollyNeutral,
-      baseElevation,
     );
-    appendRoofSurfaceMesh(roofTarget, building.geometry.roofs, roof, baseElevation);
+    appendRoofSurfaceMesh(roofTarget, building.geometry.roofs, roof);
     return;
   }
 
@@ -870,7 +845,7 @@ function addBuilding(
 
   for (const point of roofPoints) {
     const uv: Point2 = [point[0] / ROOF_REPEAT_METERS, point[1] / ROOF_REPEAT_METERS];
-    pushVertex(roofTarget, point, baseElevation + building.height, roof, uv);
+    pushVertex(roofTarget, point, building.height, roof, uv);
   }
 
   const triangles = earcut(roofPoints.flatMap(([x, z]) => [x, z]), holeIndices, 2);
@@ -914,10 +889,10 @@ function addBuilding(
       // side never falls back to the untextured base colour.
       const uMax = customFacade ? 1 : horizontalRepeat;
       const vMax = customFacade ? 1 : verticalRepeat;
-      const a = pushVertex(wallTarget, start, baseElevation, edgeColor, [0, 0]);
-      const b = pushVertex(wallTarget, end, baseElevation, edgeColor, [uMax, 0]);
-      const c = pushVertex(wallTarget, end, baseElevation + building.height, edgeColor, [uMax, vMax]);
-      const d = pushVertex(wallTarget, start, baseElevation + building.height, edgeColor, [0, vMax]);
+      const a = pushVertex(wallTarget, start, 0, edgeColor, [0, 0]);
+      const b = pushVertex(wallTarget, end, 0, edgeColor, [uMax, 0]);
+      const c = pushVertex(wallTarget, end, building.height, edgeColor, [uMax, vMax]);
+      const d = pushVertex(wallTarget, start, building.height, edgeColor, [0, vMax]);
       wallTarget.indices.push(a, b, c, a, c, d);
 
       if (customFacade) {
@@ -937,10 +912,10 @@ function addBuilding(
           end[1] + (dx / edgeLength) * winding * inset,
         ];
         const backingColor = new Color4(1, 1, 1, 1);
-        const backingA = pushVertex(customFacade.backing, inwardStart, baseElevation, backingColor, [0, 0]);
-        const backingB = pushVertex(customFacade.backing, inwardEnd, baseElevation, backingColor, [0, 0]);
-        const backingC = pushVertex(customFacade.backing, inwardEnd, baseElevation + building.height, backingColor, [0, 0]);
-        const backingD = pushVertex(customFacade.backing, inwardStart, baseElevation + building.height, backingColor, [0, 0]);
+        const backingA = pushVertex(customFacade.backing, inwardStart, 0, backingColor, [0, 0]);
+        const backingB = pushVertex(customFacade.backing, inwardEnd, 0, backingColor, [0, 0]);
+        const backingC = pushVertex(customFacade.backing, inwardEnd, building.height, backingColor, [0, 0]);
+        const backingD = pushVertex(customFacade.backing, inwardStart, building.height, backingColor, [0, 0]);
         customFacade.backing.indices.push(backingA, backingB, backingC, backingA, backingC, backingD);
       }
     }
@@ -956,7 +931,6 @@ function addGroundFacadeSkirt(
   target: Buffers,
   building: BuildingFeature,
   spec: FacadeSpec,
-  baseElevation: number,
 ): void {
   const ring = cleanRing(building.outline);
   if (ring.length < 3 || building.height <= 0.8) return;
@@ -988,10 +962,10 @@ function addGroundFacadeSkirt(
     ];
     const horizontalRepeat = Math.max(0.25, edgeLength / spec.facade.preferredBayWidthM);
 
-    const a = pushVertex(target, start, baseElevation, color, [0, 0]);
-    const b = pushVertex(target, end, baseElevation, color, [horizontalRepeat, 0]);
-    const c = pushVertex(target, end, baseElevation + height, color, [horizontalRepeat, 1]);
-    const d = pushVertex(target, start, baseElevation + height, color, [0, 1]);
+    const a = pushVertex(target, start, 0, color, [0, 0]);
+    const b = pushVertex(target, end, 0, color, [horizontalRepeat, 0]);
+    const c = pushVertex(target, end, height, color, [horizontalRepeat, 1]);
+    const d = pushVertex(target, start, height, color, [0, 1]);
     target.indices.push(a, b, c, a, c, d);
   }
 }
@@ -1058,7 +1032,6 @@ function buildBuildings(
     const ring = cleanRing(building.outline);
     if (ring.length < 3) continue;
     const spec = facadeSpecFor(building, ring);
-    const baseElevation = buildingTerrainBase(building, tile.terrainData);
     const definition = getBuildingFacade(building.id);
     const customFacade = definition
       ? {
@@ -1071,17 +1044,7 @@ function buildBuildings(
       : undefined;
     if (customFacade) {
       customFacades.push(customFacade);
-      addBuilding(
-        buffers(),
-        buffers(),
-        roofBuffers,
-        tiledRoofBuffers,
-        building,
-        spec,
-        customFacade,
-        false,
-        baseElevation,
-      );
+      addBuilding(buffers(), buffers(), roofBuffers, tiledRoofBuffers, building, spec, customFacade);
       continue;
     }
 
@@ -1093,22 +1056,12 @@ function buildBuildings(
     const upper = buffersFor(selection.id, "upper");
     const neutral = buffersFor(selection.id, "neutral");
     const whollyNeutral = isWindowlessBuilding(building, ring, spec);
-    addBuilding(
-      upper,
-      neutral,
-      roofBuffers,
-      tiledRoofBuffers,
-      building,
-      spec,
-      undefined,
-      whollyNeutral,
-      baseElevation,
-    );
+    addBuilding(upper, neutral, roofBuffers, tiledRoofBuffers, building, spec, undefined, whollyNeutral);
     if (!whollyNeutral) {
       const groundLayer: FacadeTextureLayer = retailBuildingIds.has(building.id)
         ? "ground-retail"
         : "ground-residential";
-      addGroundFacadeSkirt(buffersFor(selection.id, groundLayer), building, spec, baseElevation);
+      addGroundFacadeSkirt(buffersFor(selection.id, groundLayer), building, spec);
     }
   }
 
@@ -1351,25 +1304,6 @@ function buildRoadChains(roads: RoadFeature[]): RoadChain[] {
     }
   }
   return chains;
-}
-
-function subdivideTerrainPolyline(points: Point2[], maximumSegmentLength = 5): Point2[] {
-  if (points.length < 2) return points;
-  const result: Point2[] = [[...points[0]] as Point2];
-  for (let index = 0; index < points.length - 1; index += 1) {
-    const start = points[index];
-    const end = points[index + 1];
-    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
-    const segments = Math.max(1, Math.ceil(length / maximumSegmentLength));
-    for (let segment = 1; segment <= segments; segment += 1) {
-      const amount = segment / segments;
-      result.push([
-        start[0] + (end[0] - start[0]) * amount,
-        start[1] + (end[1] - start[1]) * amount,
-      ]);
-    }
-  }
-  return result;
 }
 
 function cumulativeDistances(points: Point2[]): number[] {
@@ -1678,11 +1612,7 @@ function buildRoads(
   const curbTop = buffers();
   const curbFace = buffers();
   const parkingExclusions: ParkingSurfaceExclusion[] = [];
-  const chains = buildRoadChains(tile.roads).map((chain) => (
-    tile.terrainData
-      ? { ...chain, points: subdivideTerrainPolyline(chain.points) }
-      : chain
-  ));
+  const chains = buildRoadChains(tile.roads);
   const carriageways = carriagewaySegments(chains);
   const crossingEndpoints = new Set<string>();
   for (const chain of chains) {
@@ -1983,26 +1913,16 @@ export function buildTileMeshSet(
 ): TileMeshSet {
   const materials = sharedMaterials(scene);
 
-  const ground = tile.terrainData
-    ? createTerrainMesh(
-      tile.id,
-      tile.terrainData,
-      scene,
-      materials.ground,
-      GROUND_REPEAT_METERS,
-    )
-    : MeshBuilder.CreateGround(
-      `ground-${tile.id}`,
-      { width: tileSize + 2, height: tileSize + 2, subdivisions: 1 },
-      scene,
-    );
-  if (!tile.terrainData) {
-    ground.position.set(tile.center[0], 0, tile.center[1]);
-    applyWorldGroundUvs(ground, tile.center);
-    ground.material = materials.ground;
-    ground.checkCollisions = true;
-    ground.freezeWorldMatrix();
-  }
+  const ground = MeshBuilder.CreateGround(
+    `ground-${tile.id}`,
+    { width: tileSize + 2, height: tileSize + 2, subdivisions: 1 },
+    scene,
+  );
+  ground.position.set(tile.center[0], 0, tile.center[1]);
+  applyWorldGroundUvs(ground, tile.center);
+  ground.material = materials.ground;
+  ground.checkCollisions = true;
+  ground.freezeWorldMatrix();
 
   const greens = buildGreens(tile, scene, materials);
   const roads = buildRoads(tile, scene, materials);
@@ -2020,6 +1940,7 @@ export function buildTileMeshSet(
     includeParkingBands: false,
     inferStopLines: true,
     includeWornCenterMarkings: true,
+    includeAsphaltPatches: false,
   });
   const curbsideDetails = buildCurbsideDetailMeshes(tile, scene);
   const buildings = buildBuildings(tile, scene, materials.roofs, materials.roofTiles);
@@ -2030,7 +1951,6 @@ export function buildTileMeshSet(
     landmarkFilteredBusinesses,
     tile.buildings,
     scene,
-    tile.terrainData,
   );
   const streetFurniture = buildStreetFurniture(
     tile.id,
@@ -2039,16 +1959,6 @@ export function buildTileMeshSet(
     tile.roads,
     scene,
   );
-  // These identity-space tile batches already encode their local surface
-  // lifts in Y. Add the surveyed ground beneath each vertex exactly once.
-  for (const mesh of [
-    ...greens,
-    ...roads.meshes,
-    ...parkingSurfaces,
-    ...streetSurfaceDetails.meshes,
-    ...curbsideDetails,
-    ...streetFurniture,
-  ]) drapeMeshToTerrain(mesh, tile.terrainData);
   const meshes: Array<Mesh | null> = [
     ground,
     ...greens,

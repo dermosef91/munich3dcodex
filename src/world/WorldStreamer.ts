@@ -9,9 +9,8 @@ import {
   LOD2_BINARY_VERSION,
 } from "./lod2Binary.mjs";
 import { loadTreeAssets, type TreeAssetRenderer } from "./treeAssets";
-import { fetchTerrainHeightGrid, terrainGridContains, terrainHeightFromGrids } from "./terrain";
 import type { ParkingLayout } from "./parkingLayout";
-import type { MunichManifest, MunichTile, TerrainHeightGrid, TileManifestEntry } from "./types";
+import type { MunichManifest, MunichTile, TileManifestEntry } from "./types";
 
 type StatusCallback = (message: string, loaded: number, total: number) => void;
 type WorldPosition = Pick<Vector3, "x" | "z">;
@@ -25,7 +24,6 @@ export interface StreamedTileShadowMeshes {
 interface LoadedTileMeshes {
   meshes: AbstractMesh[];
   shadows: StreamedTileShadowMeshes;
-  terrain?: TerrainHeightGrid;
 }
 
 export class WorldStreamer {
@@ -88,7 +86,6 @@ export class WorldStreamer {
     this.lastUpdate = now;
     const generation = ++this.loadGeneration;
     const target = { ...this.latestPosition };
-    const requestedClearance = position.y;
 
     const nearby = this.manifest.tiles
       .filter((tile) => Math.hypot(target.x - tile.center[0], target.z - tile.center[1]) <= this.loadRadius)
@@ -125,35 +122,12 @@ export class WorldStreamer {
     }
 
     if (generation === this.loadGeneration) {
-      if (immediate
-        && Math.hypot(position.x - target.x, position.z - target.z) < 0.25) {
-        const terrainHeight = this.terrainHeightAt(target.x, target.z);
-        if (terrainHeight !== undefined) position.y = terrainHeight + requestedClearance;
-      }
       this.onStatus("Munich is ready", this.loaded.size, this.manifest.tiles.length);
     }
   }
 
   getAttribution(): string {
     return this.manifest?.attribution ?? "Map data © OpenStreetMap contributors";
-  }
-
-  /** Surveyed local world Y at a loaded point; flat legacy coverage is zero. */
-  heightAt(x: number, z: number): number {
-    return terrainHeightFromGrids(
-      [...this.loaded.values()].map((tile) => tile.terrain),
-      x,
-      z,
-    );
-  }
-
-  private terrainHeightAt(x: number, z: number): number | undefined {
-    for (const loaded of this.loaded.values()) {
-      if (loaded.terrain && terrainGridContains(loaded.terrain, x, z)) {
-        return terrainHeightFromGrids([loaded.terrain], x, z);
-      }
-    }
-    return undefined;
   }
 
   private distanceTo(tile: TileManifestEntry, position: WorldPosition): number {
@@ -174,16 +148,13 @@ export class WorldStreamer {
         tile = createFallbackTile(entry.id, entry.center, this.manifest.tileSize);
       }
 
-      await Promise.all([
-        this.loadLod2Geometry(tile),
-        this.loadTerrain(tile),
-      ]);
+      await this.loadLod2Geometry(tile);
 
       const built = buildTileMeshSet(tile, this.manifest.tileSize, this.scene);
       const meshes: AbstractMesh[] = [...built.meshes];
       let treeMeshes = { meshes: [] as AbstractMesh[], shadowCasters: [] as AbstractMesh[] };
       try {
-        treeMeshes = this.treeAssets?.createTileMeshes(entry.id, tile.trees, tile.terrainData) ?? treeMeshes;
+        treeMeshes = this.treeAssets?.createTileMeshes(entry.id, tile.trees) ?? treeMeshes;
         meshes.push(...treeMeshes.meshes);
       } catch (error) {
         for (const mesh of meshes) mesh.dispose(false, false);
@@ -194,7 +165,7 @@ export class WorldStreamer {
         treeCasters: treeMeshes.shadowCasters,
         receivers: built.shadowReceivers,
       };
-      this.loaded.set(entry.id, { meshes, shadows, terrain: tile.terrainData });
+      this.loaded.set(entry.id, { meshes, shadows });
       try {
         this.onTileLoaded?.(tile, shadows, built.parkingLayout);
       } catch (error) {
@@ -244,18 +215,6 @@ export class WorldStreamer {
       // or corrupt optional sidecar therefore degrades only its semantic LoD2
       // meshes to the ordinary footprint extrusion path.
       console.warn(`LoD2 geometry unavailable for tile ${tile.id}; using building footprints.`, error);
-    }
-  }
-
-  private async loadTerrain(tile: MunichTile): Promise<void> {
-    if (!tile.terrain) return;
-    try {
-      tile.terrainData = await fetchTerrainHeightGrid(tile.terrain);
-    } catch (error) {
-      // Terrain is optional at runtime. A failed grid must not take its tile,
-      // buildings, or transport network down with it.
-      delete tile.terrainData;
-      console.warn(`Terrain unavailable for tile ${tile.id}; using flat ground.`, error);
     }
   }
 
