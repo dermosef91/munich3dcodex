@@ -37,7 +37,8 @@ export type LandmarkFacadeTextureId =
   | "ruffinihaus-nw"
   | "ruffinihaus-ne"
   | "ruffinihaus-east"
-  | "muenchner-kammerspiele-maximilianstrasse";
+  | "muenchner-kammerspiele-maximilianstrasse"
+  | "deutsches-theater-schwanthalerstrasse";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -200,6 +201,7 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
   "ruffinihaus-ne": { file: "ruffinihaus-ne.png", roughness: 0.90, specularIntensity: 0.18 },
   "ruffinihaus-east": { file: "ruffinihaus-east.png", roughness: 0.90, specularIntensity: 0.18 },
   "muenchner-kammerspiele-maximilianstrasse": { file: "muenchner-kammerspiele-maximilianstrasse.png", roughness: 0.84, specularIntensity: 0.26 },
+  "deutsches-theater-schwanthalerstrasse": { file: "deutsches-theater-schwanthalerstrasse.png", roughness: 0.87, specularIntensity: 0.22 },
 };
 
 const materialCache = new WeakMap<Scene, Map<LandmarkFacadeTextureId, PBRMaterial>>();

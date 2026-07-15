@@ -648,6 +648,61 @@ def generate_kammerspiele() -> None:
     kammerspiele_sheet()
 
 
+def deutsches_theater_sheet() -> None:
+    """Render the gilded, theatrical Schwanthalerstrasse frontage."""
+    width, height = 1536, 1378
+    image = Image.new("RGB", (width, height), "#b66f4c")
+    draw = ImageDraw.Draw(image)
+    red = "#b66f4c"
+    red_dark = "#7f4435"
+    gold = "#d8b36f"
+    gold_light = "#f0d495"
+    glass = "#273338"
+    draw.rectangle((0, 0, width, round(height * 0.075)), fill=gold)
+    draw.rectangle((0, round(height * 0.92), width, height), fill=red_dark)
+    for fraction in (0.12, 0.34, 0.59, 0.84):
+        y = round(height * fraction)
+        draw.rectangle((0, y, width, y + 16), fill=gold)
+        draw.line((0, y + 18, width, y + 18), fill=gold_light, width=4)
+    bays = 7
+    bay_width = width / bays
+    for bay in range(bays):
+        center = round((bay + 0.5) * bay_width)
+        # Tall paired opera windows, framed by theatrical pilasters.
+        draw.rectangle((round(bay * bay_width) + 10, round(height * 0.12), round(bay * bay_width) + 26, round(height * 0.85)), fill=gold)
+        for top_f, bottom_f in ((0.17, 0.31), (0.40, 0.57)):
+            w = round(bay_width * 0.44)
+            left, right = center - w // 2, center + w // 2
+            top, bottom = round(height * top_f), round(height * bottom_f)
+            radius = w // 2
+            draw.rectangle((left - 9, top - 9, right + 9, bottom + 9), fill=gold_light)
+            draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+            draw.rectangle((left, top + radius, right, bottom), fill=glass)
+            draw.line((center, top + 5, center, bottom), fill="#0d1719", width=4)
+        # Original art deco rosette.
+        draw.ellipse((center - 21, round(height * 0.64), center + 21, round(height * 0.70)), fill=gold)
+        draw.ellipse((center - 10, round(height * 0.655), center + 10, round(height * 0.685)), fill=red_dark)
+        w = round(bay_width * 0.60)
+        left, right = center - w // 2, center + w // 2
+        top, bottom = round(height * 0.74), round(height * 0.93)
+        radius = w // 2
+        draw.rectangle((left - 10, top - 10, right + 10, bottom), fill=gold)
+        draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+        draw.rectangle((left, top + radius, right, bottom), fill=glass)
+    # Central tall theatre entrance with a crimson canopy.
+    center = width // 2
+    draw.rectangle((center - round(bay_width * 0.48), round(height * 0.70), center + round(bay_width * 0.48), round(height * 0.95)), fill="#1e2629")
+    draw.rectangle((center - round(bay_width * 0.72), round(height * 0.685), center + round(bay_width * 0.72), round(height * 0.715)), fill="#6a2730")
+    draw.line((center - round(bay_width * 0.72), round(height * 0.685), center + round(bay_width * 0.72), round(height * 0.685)), fill=gold_light, width=4)
+    output = TEXTURE_ROOT / "deutsches-theater-schwanthalerstrasse.png"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_deutsches_theater() -> None:
+    deutsches_theater_sheet()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recipe", choices=(
@@ -660,6 +715,7 @@ def main() -> None:
         "hotel-vier-jahreszeiten",
         "ruffinihaus",
         "muenchner-kammerspiele",
+        "deutsches-theater",
     ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
@@ -680,6 +736,8 @@ def main() -> None:
         generate_ruffinihaus()
     elif args.recipe == "muenchner-kammerspiele":
         generate_kammerspiele()
+    elif args.recipe == "deutsches-theater":
+        generate_deutsches_theater()
 
 
 if __name__ == "__main__":

@@ -1153,6 +1153,25 @@
       "provenance": { "method": "mixed", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "One offline-generated Jugendstil facade sheet restores the permanent theatre frontage; the exact wordmark remains procedural and no reference pixels are embedded." }
     },
     {
+      "id": "deutsches-theater",
+      "label": "Deutsches Theater München",
+      "status": "integrated",
+      "implementation": { "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts", "rootNode": "landmark-deutsches-theater" },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [116642230],
+        "replacementBuildingIds": [],
+        "note": "Preserve the Bavarian LoD2 theatre shell and roof; add one thin non-colliding bitmap sheet to the Schwanthalerstrasse frontage."
+      },
+      "previews": [{ "id": "deutsches-theater", "position": [-740, 4.7, 1513.13], "target": [-737.584, 12.0, 1548.927], "fov": 0.90 }],
+      "textures": [{ "id": "deutsches-theater-schwanthalerstrasse", "file": "deutsches-theater-schwanthalerstrasse.png", "status": "integrated", "minimumWidth": 1536, "minimumHeight": 1378, "roughness": 0.87, "specularIntensity": 0.22, "promptSummary": "Deterministic theatrical Schwanthalerstrasse elevation with warm red rendering, gilded courses and pilasters, tall arched opera windows, art-deco rosettes, and a central crimson-canopy entrance." }],
+      "references": [
+        { "url": "https://www.deutsches-theater.de/pressetexte-vom-deutschen-theater/", "publisher": "Deutsches Theater München", "usage": "official-theatre-building-reference", "license": "Copyrighted official reference; reference-only, no source pixels embedded" },
+        { "url": "https://www.deutsches-theater.de/geschichte/", "publisher": "Deutsches Theater München", "usage": "official-history-and-identity-reference", "license": "Copyrighted official reference; reference-only, no source pixels embedded" }
+      ],
+      "provenance": { "method": "mixed", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "One offline-generated theatre facade sheet restores the permanent red-and-gold public identity; the exact name is procedural and no reference pixels are embedded." }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",

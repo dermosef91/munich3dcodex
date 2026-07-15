@@ -33,6 +33,7 @@ export const MUSEUM_FUENF_KONTINENTE_BUILDING_ID = 25_695_553;
 export const HOTEL_VIER_JAHRESZEITEN_BUILDING_ID = 25_505_398;
 export const RUFFINIHAUS_BUILDING_IDS = [233_918_201, 233_918_198, 219_027_197] as const;
 export const MUENCHNER_KAMMERSPIELE_BUILDING_IDS = [85_990_425, 328_018_432] as const;
+export const DEUTSCHES_THEATER_BUILDING_ID = 116_642_230;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -413,6 +414,35 @@ function createMuenchnerKammerspiele(scene: Scene, parent: TransformNode): Trans
   return root;
 }
 
+function deutschesTheaterSignMaterial(scene: Scene): StandardMaterial {
+  const material = dynamicMaterial(scene, "deutsches-theater-sign-material", { width: 1280, height: 180 }, (context, width, height) => {
+    context.fillStyle = "#6a2730";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#f0d495";
+    context.font = `600 ${Math.round(height * 0.42)}px Georgia, serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("DEUTSCHES THEATER", width * 0.5, height * 0.52);
+  });
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
+}
+
+function createDeutschesTheater(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-deutsches-theater");
+  if (existing) return existing;
+  const root = new TransformNode("landmark-deutsches-theater", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [-733.928, 1569.638];
+  const start: FacadePoint = [-753.461, 1547.795];
+  const end: FacadePoint = [-721.708, 1550.059];
+  addFacadePlane(scene, root, "deutsches-theater-schwanthalerstrasse-facade", start, end, interior, 28.5, getLandmarkFacadeMaterial(scene, "deutsches-theater-schwanthalerstrasse"), 0.25);
+  addFacadeSign(scene, root, "deutsches-theater-wordmark", start, end, interior, 4.0, 14.0, 0.90, deutschesTheaterSignMaterial(scene));
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -592,6 +622,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createHotelVierJahreszeiten(scene, root);
   createRuffinihaus(scene, root);
   createMuenchnerKammerspiele(scene, root);
+  createDeutschesTheater(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

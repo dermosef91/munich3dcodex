@@ -76,6 +76,7 @@ export type LandmarkPreviewId =
   | "hotel-vier-jahreszeiten"
   | "ruffinihaus"
   | "muenchner-kammerspiele"
+  | "deutsches-theater"
   | "micky-statue"
   | "hofbraeuhaus"
   | "asamkirche";
@@ -114,6 +115,7 @@ const LANDMARK_PREVIEW_SPECS: Readonly<Record<LandmarkPreviewId, {
   "hotel-vier-jahreszeiten": { position: [744.54, 4.7, 1366.30], target: [718.426, 12.0, 1345.762], fov: 0.90 },
   ruffinihaus: { position: [144.42, 4.6, 1632.37], target: [111.501, 10.5, 1644.767], fov: 0.90 },
   "muenchner-kammerspiele": { position: [722.54, 4.6, 1360.01], target: [779.03, 11.5, 1388.01], fov: 0.86 },
+  "deutsches-theater": { position: [-740, 4.7, 1513.13], target: [-737.584, 12.0, 1548.927], fov: 0.90 },
   "micky-statue": { position: [-418.2, 2.35, -969.5], target: [-413.9, 1.0, -966.4], fov: 0.82 },
   hofbraeuhaus: { position: [563.98, 4.2, 1491.94], target: [577.54, 10.2, 1481.55], fov: 0.96 },
   asamkirche: { position: [-161.6, 4.1, 1762.21], target: [-173.7, 11.4, 1769.17], fov: 0.90 },
