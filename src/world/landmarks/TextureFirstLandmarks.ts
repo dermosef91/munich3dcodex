@@ -112,7 +112,7 @@ function addFacadePlane(
 }
 
 function brandhorstSignMaterial(scene: Scene): StandardMaterial {
-  return dynamicMaterial(scene, "brandhorst-name-sign-material", { width: 1024, height: 160 }, (context, width, height) => {
+  const material = dynamicMaterial(scene, "brandhorst-name-sign-material", { width: 1024, height: 160 }, (context, width, height) => {
     context.fillStyle = "#eeebe1";
     context.fillRect(0, 0, width, height);
     context.fillStyle = "#25272a";
@@ -121,6 +121,10 @@ function brandhorstSignMaterial(scene: Scene): StandardMaterial {
     context.textBaseline = "middle";
     context.fillText("MUSEUM BRANDHORST", width * 0.5, height * 0.52);
   }, new Color3(0.18, 0.18, 0.17));
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
 }
 
 function createMuseumBrandhorst(scene: Scene, parent: TransformNode): TransformNode {
@@ -249,7 +253,7 @@ function createBayerischeStaatsbibliothek(scene: Scene, parent: TransformNode): 
 }
 
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
-  return dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
+  const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
     context.fillRect(0, 0, width, height);
     context.strokeStyle = "#2f5f51";
@@ -261,6 +265,10 @@ function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
     context.textBaseline = "middle";
     context.fillText("HOFBRÄUHAUS", width * 0.5, height * 0.52);
   });
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
 }
 
 function addFacadeSign(
