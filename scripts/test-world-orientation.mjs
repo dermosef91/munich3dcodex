@@ -122,6 +122,9 @@ async function assertSceneContract() {
   assert.match(indexSource, /data-jump="schwabing" aria-pressed="true"/);
   assert.match(indexSource, /id="district">Schwabing · Elisabethstraße 46</);
   assert.match(movementSource, /Vector3\.Forward\(scene\.useRightHandedSystem\)/);
+  assert.match(movementSource, /event\.code === "KeyG"/);
+  assert.match(movementSource, /this\.flying = !this\.flying/);
+  assert.match(movementSource, /this\.axis\("Space", "Space"\)[\s\S]*?this\.axis\("ControlLeft", "ControlRight"\)/);
   assert.match(meshSource, /VertexData\.ComputeNormals\([\s\S]*?useRightHandedSystem:\s*true/);
   assert.match(meshSource, /mesh\.sideOrientation\s*=\s*Material\.CounterClockWiseSideOrientation/);
   assert.match(detailsSource, /yaw\s*\+\s*Math\.PI/);

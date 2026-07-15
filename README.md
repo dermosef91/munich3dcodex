@@ -23,7 +23,8 @@ only verified local caches.
 Open the local URL and choose **Enter world**.
 
 - On foot: use WASD and the mouse, hold Shift to sprint, press Space to jump,
-  and press Escape to release the pointer.
+  and press Escape to release the pointer. Press G to toggle helicopter-style
+  flight; while flying, hold Space to climb and Ctrl to descend.
 - To drive: walk beside a parked car and press E. Use W/S for throttle, braking
   and reverse, A/D to steer, Space for the handbrake, and E to exit after
   slowing below 5 km/h. Steering and grip respond progressively to speed, the

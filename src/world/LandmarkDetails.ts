@@ -96,7 +96,7 @@ const LANDMARK_PREVIEW_SPECS: Readonly<Record<LandmarkPreviewId, {
   "hermann-frieb-realschule": { position: [-369.6, 4.2, -1122.9], target: [-430, 12, -1154], fov: 0.95 },
   hohenzollernplatz: { position: [-282, 4.0, -1215], target: [-282, 1.0, -1180] },
   "cafe-franca": { position: [-410, 3.4, -837], target: [-397, 2.2, -852], fov: 0.92 },
-  "museum-brandhorst": { position: [197, 5.2, 385], target: [143, 9.5, 366], fov: 0.94 },
+  "museum-brandhorst": { position: [174, 4.2, 303], target: [157, 9.5, 329], fov: 0.94 },
   "alte-pinakothek": { position: [-113, 5.2, 214], target: [-141, 11.5, 279], fov: 0.96 },
   "bayerische-staatsbibliothek": { position: [531, 5.4, 368], target: [606, 12.2, 391], fov: 0.92 },
   hofbraeuhaus: { position: [563.98, 4.2, 1491.94], target: [577.54, 10.2, 1481.55], fov: 0.96 },

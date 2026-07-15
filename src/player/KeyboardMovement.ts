@@ -18,6 +18,7 @@ export class KeyboardMovement {
   private readonly pressed = new Set<string>();
   private enabled = true;
   private sprinting = false;
+  private flying = false;
   private grounded = false;
   private verticalVelocity = 0;
   private jumpRequestedAt = Number.NEGATIVE_INFINITY;
@@ -46,15 +47,30 @@ export class KeyboardMovement {
     return this.grounded;
   }
 
+  get isFlying(): boolean {
+    return this.flying;
+  }
+
   setEnabled(enabled: boolean): void {
     if (this.enabled === enabled) return;
     this.enabled = enabled;
+    if (!enabled) this.flying = false;
     this.clear();
     this.verticalVelocity = 0;
     this.camera.cameraDirection.setAll(0);
   }
 
   private applyVerticalMovement(deltaSeconds: number): void {
+    if (this.flying) {
+      const vertical = this.axis("Space", "Space")
+        - this.axis("ControlLeft", "ControlRight");
+      const speed = this.sprinting ? this.sprintSpeed : this.walkingSpeed;
+      this.grounded = false;
+      this.verticalVelocity = 0;
+      this.camera.cameraDirection.y = vertical * speed * deltaSeconds;
+      return;
+    }
+
     // FreeCamera collision coordinates place the ellipsoid center one radius
     // below the camera before applying the configured offset.
     const standingHeight = this.camera.ellipsoid.y * 2 - this.camera.ellipsoidOffset.y;
@@ -107,8 +123,25 @@ export class KeyboardMovement {
 
   private readonly onKeyDown = (event: KeyboardEvent): void => {
     if (!this.enabled) return;
+    if (event.code === "KeyG" && !event.repeat && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      this.flying = !this.flying;
+      this.grounded = false;
+      this.verticalVelocity = 0;
+      this.jumpRequestedAt = Number.NEGATIVE_INFINITY;
+      this.pressed.delete("Space");
+      this.pressed.delete("ControlLeft");
+      this.pressed.delete("ControlRight");
+      this.camera.cameraDirection.y = 0;
+      event.preventDefault();
+      return;
+    }
     if (event.code === "ShiftLeft" || event.code === "ShiftRight") {
       this.sprinting = true;
+      return;
+    }
+    if (this.flying && (event.code === "Space" || event.code === "ControlLeft" || event.code === "ControlRight")) {
+      this.pressed.add(event.code);
+      event.preventDefault();
       return;
     }
     if (event.code === "Space" && !event.ctrlKey && !event.metaKey && !event.altKey) {
@@ -116,7 +149,7 @@ export class KeyboardMovement {
       event.preventDefault();
       return;
     }
-    if (!movementCodes.has(event.code) || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (!movementCodes.has(event.code) || (event.ctrlKey && !this.flying) || event.metaKey || event.altKey) return;
     const isNewPress = !this.pressed.has(event.code);
     this.pressed.add(event.code);
     if (isNewPress) this.applyMovement(1 / 60);
@@ -129,7 +162,13 @@ export class KeyboardMovement {
       return;
     }
     if (event.code === "Space") {
+      this.pressed.delete(event.code);
       event.preventDefault();
+      return;
+    }
+    if (event.code === "ControlLeft" || event.code === "ControlRight") {
+      this.pressed.delete(event.code);
+      if (this.flying) event.preventDefault();
       return;
     }
     if (!movementCodes.has(event.code)) return;

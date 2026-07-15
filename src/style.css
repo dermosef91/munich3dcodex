@@ -56,9 +56,33 @@ a:focus-visible {
 .intro,
 .crosshair,
 .vehicle-hint,
+.flight-hud,
 .driving-hud {
   position: absolute;
   z-index: 2;
+}
+
+.flight-hud {
+  top: 82px;
+  left: 50%;
+  padding: 8px 13px;
+  border: 1px solid rgba(228, 170, 110, 0.3);
+  border-radius: 999px;
+  background: rgba(24, 32, 29, 0.72);
+  color: #f1b97c;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  pointer-events: none;
+  text-transform: uppercase;
+  transform: translate(-50%, -5px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.is-flying .flight-hud {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 .vehicle-hint {
@@ -453,6 +477,10 @@ body.is-driving .driving-hud,
     position: absolute;
     top: 68px;
     left: 18px;
+  }
+
+  .flight-hud {
+    top: 116px;
   }
 
   .intro {

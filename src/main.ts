@@ -46,6 +46,7 @@ const attribution = element<HTMLElement>("#attribution");
 const enterButton = element<HTMLButtonElement>("#enter");
 const intro = element<HTMLElement>("#intro");
 const vehicleHint = element<HTMLElement>("#vehicle-hint");
+const flightHud = element<HTMLElement>("#flight-hud");
 const drivingHud = element<HTMLElement>("#driving-hud");
 const drivingSpeed = element<HTMLElement>("#driving-speed");
 const drivingFeedback = element<HTMLElement>("#driving-feedback");
@@ -237,6 +238,7 @@ for (const button of districtButtons) {
 }
 
 let lastHudUpdate = 0;
+let flightModeVisible = false;
 scene.onBeforeRenderObservable.add(() => {
   vehicles.update();
   trams.update();
@@ -246,6 +248,12 @@ scene.onBeforeRenderObservable.add(() => {
   canvas.dataset.playerY = camera.position.y.toFixed(3);
   canvas.dataset.playerZ = camera.position.z.toFixed(3);
   canvas.dataset.grounded = String(keyboardMovement.isGrounded);
+  canvas.dataset.flying = String(keyboardMovement.isFlying);
+  if (keyboardMovement.isFlying !== flightModeVisible) {
+    flightModeVisible = keyboardMovement.isFlying;
+    document.body.classList.toggle("is-flying", flightModeVisible);
+    flightHud.setAttribute("aria-hidden", String(!flightModeVisible));
+  }
   void streamer.loadAround(camera.position);
 
   const now = performance.now();

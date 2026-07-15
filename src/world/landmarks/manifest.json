@@ -538,8 +538,8 @@
       "previews": [
         {
           "id": "museum-brandhorst",
-          "position": [197, 5.2, 385],
-          "target": [143, 9.5, 366],
+          "position": [174, 4.2, 303],
+          "target": [157, 9.5, 329],
           "fov": 0.94
         }
       ],
