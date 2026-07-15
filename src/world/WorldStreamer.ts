@@ -12,6 +12,10 @@ import { loadTreeAssets, type TreeAssetRenderer } from "./treeAssets";
 import type { ParkingLayout } from "./parkingLayout";
 import type { MunichManifest, MunichTile, TileManifestEntry } from "./types";
 
+function publicUrl(path: string): string {
+  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+}
+
 type StatusCallback = (message: string, loaded: number, total: number) => void;
 type WorldPosition = Pick<Vector3, "x" | "z">;
 
@@ -54,7 +58,7 @@ export class WorldStreamer {
       return null;
     });
     try {
-      const response = await fetch("/data/manifest.json");
+      const response = await fetch(publicUrl("data/manifest.json"));
       if (!response.ok) throw new Error(`Manifest returned ${response.status}`);
       this.manifest = (await response.json()) as MunichManifest;
     } catch (error) {
@@ -140,7 +144,7 @@ export class WorldStreamer {
     try {
       let tile: MunichTile;
       try {
-        const response = await fetch(entry.file);
+        const response = await fetch(publicUrl(entry.file));
         if (!response.ok) throw new Error(`Tile ${entry.id} returned ${response.status}`);
         tile = (await response.json()) as MunichTile;
       } catch (error) {
@@ -192,7 +196,7 @@ export class WorldStreamer {
         throw new Error(`Invalid declared building count ${sidecar.buildingCount}`);
       }
 
-      const response = await fetch(sidecar.file);
+      const response = await fetch(publicUrl(sidecar.file));
       if (!response.ok) throw new Error(`Sidecar returned ${response.status}`);
       const bytes = await response.arrayBuffer();
       if (bytes.byteLength !== sidecar.byteLength) {
