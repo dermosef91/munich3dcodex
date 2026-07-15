@@ -1117,6 +1117,26 @@
       }
     },
     {
+      "id": "ruffinihaus",
+      "label": "Ruffinihaus",
+      "status": "integrated",
+      "implementation": { "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts", "rootNode": "landmark-ruffinihaus" },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [233918201, 233918198, 219027197],
+        "replacementBuildingIds": [],
+        "note": "Preserve the three Bavarian LoD2 shells forming the heritage complex; add three thin non-colliding street-facing bitmap planes to the main shell."
+      },
+      "previews": [{ "id": "ruffinihaus", "position": [144.42, 4.6, 1632.37], "target": [111.501, 10.5, 1644.767], "fov": 0.90 }],
+      "textures": [
+        { "id": "ruffinihaus-nw", "file": "ruffinihaus-nw.png", "status": "integrated", "minimumWidth": 1366, "minimumHeight": 1536, "roughness": 0.90, "specularIntensity": 0.18, "promptSummary": "Deterministic six-bay painted old-town facade with warm plaster, pale trim, original cartouches, upper windows, and ground arcades." },
+        { "id": "ruffinihaus-ne", "file": "ruffinihaus-ne.png", "status": "integrated", "minimumWidth": 736, "minimumHeight": 1536, "roughness": 0.90, "specularIntensity": 0.18, "promptSummary": "Deterministic symmetric three-bay painted corner elevation with original ornamental cartouches and arcades." },
+        { "id": "ruffinihaus-east", "file": "ruffinihaus-east.png", "status": "integrated", "minimumWidth": 1536, "minimumHeight": 1524, "roughness": 0.90, "specularIntensity": 0.18, "promptSummary": "Deterministic six-bay painted east elevation with warm plaster, cartouches, windows, and arcades." }
+      ],
+      "references": [{ "url": "https://www.muenchen.de/sehenswuerdigkeiten/bauwerke-und-denkmaeler/ruffinihaus", "publisher": "Landeshauptstadt München", "usage": "official-heritage-and-facade-reference", "license": "Copyrighted official reference; reference-only, no source pixels embedded" }],
+      "provenance": { "method": "mixed", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "Three offline-generated facade sheets provide an original painted-facade interpretation; the exact building name is procedural and no reference pixels are embedded." }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",

@@ -33,7 +33,10 @@ export type LandmarkFacadeTextureId =
   | "nsdoku-north"
   | "nsdoku-east"
   | "museum-fuenf-kontinente-maximilianstrasse"
-  | "hotel-vier-jahreszeiten-maximilianstrasse";
+  | "hotel-vier-jahreszeiten-maximilianstrasse"
+  | "ruffinihaus-nw"
+  | "ruffinihaus-ne"
+  | "ruffinihaus-east";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -192,6 +195,9 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     roughness: 0.88,
     specularIntensity: 0.24,
   },
+  "ruffinihaus-nw": { file: "ruffinihaus-nw.png", roughness: 0.90, specularIntensity: 0.18 },
+  "ruffinihaus-ne": { file: "ruffinihaus-ne.png", roughness: 0.90, specularIntensity: 0.18 },
+  "ruffinihaus-east": { file: "ruffinihaus-east.png", roughness: 0.90, specularIntensity: 0.18 },
 };
 
 const materialCache = new WeakMap<Scene, Map<LandmarkFacadeTextureId, PBRMaterial>>();

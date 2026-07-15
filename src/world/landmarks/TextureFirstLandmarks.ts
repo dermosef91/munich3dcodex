@@ -31,6 +31,7 @@ export const PINAKOTHEK_DER_MODERNE_BUILDING_ID = 10_053_440;
 export const NSDOKU_BUILDING_ID = 280_336_045;
 export const MUSEUM_FUENF_KONTINENTE_BUILDING_ID = 25_695_553;
 export const HOTEL_VIER_JAHRESZEITEN_BUILDING_ID = 25_505_398;
+export const RUFFINIHAUS_BUILDING_IDS = [233_918_201, 233_918_198, 219_027_197] as const;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -351,6 +352,37 @@ function createHotelVierJahreszeiten(scene: Scene, parent: TransformNode): Trans
   return root;
 }
 
+function ruffinihausSignMaterial(scene: Scene): StandardMaterial {
+  const material = dynamicMaterial(scene, "ruffinihaus-sign-material", { width: 1024, height: 170 }, (context, width, height) => {
+    context.fillStyle = "#e9d2a3";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#553c29";
+    context.font = `600 ${Math.round(height * 0.42)}px Georgia, serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("RUFFINIHAUS", width * 0.5, height * 0.52);
+  });
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
+}
+
+function createRuffinihaus(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-ruffinihaus");
+  if (existing) return existing;
+  const root = new TransformNode("landmark-ruffinihaus", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [102.019, 1639.387];
+  const nwStart: FacadePoint = [84.810, 1633.041];
+  const nwEnd: FacadePoint = [106.291, 1628.628];
+  addFacadePlane(scene, root, "ruffinihaus-nw-facade", nwStart, nwEnd, interior, 24.6, getLandmarkFacadeMaterial(scene, "ruffinihaus-nw"), 0.20);
+  addFacadePlane(scene, root, "ruffinihaus-ne-facade", [106.291, 1628.628], [116.979, 1633.649], interior, 24.6, getLandmarkFacadeMaterial(scene, "ruffinihaus-ne"), 0.20);
+  addFacadePlane(scene, root, "ruffinihaus-east-facade", [116.979, 1633.649], [106.024, 1655.886], interior, 24.6, getLandmarkFacadeMaterial(scene, "ruffinihaus-east"), 0.20);
+  addFacadeSign(scene, root, "ruffinihaus-wordmark", nwStart, nwEnd, interior, 4.0, 10.0, 0.78, ruffinihausSignMaterial(scene));
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -528,6 +560,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createNsdoku(scene, root);
   createMuseumFuenfKontinente(scene, root);
   createHotelVierJahreszeiten(scene, root);
+  createRuffinihaus(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

@@ -551,6 +551,58 @@ def generate_hotel_vier_jahreszeiten() -> None:
     hotel_vier_jahreszeiten_sheet()
 
 
+def ruffinihaus_sheet(file_name: str, width: int, height: int, bays: int, phase: int) -> None:
+    """Render a painted old-town Ruffinihaus elevation without source pixels."""
+    image = Image.new("RGB", (width, height), "#d8b476")
+    draw = ImageDraw.Draw(image)
+    plaster = "#d8b476"
+    trim = "#f1dfb5"
+    shadow = "#9e7048"
+    glass = "#263238"
+    mural_colors = ("#ae5e4e", "#638d7a", "#c58b4b", "#7c6b8f", "#b45157")
+    draw.rectangle((0, 0, width, round(height * 0.08)), fill=trim)
+    for fraction in (0.245, 0.49, 0.735, 0.90):
+        y = round(height * fraction)
+        draw.rectangle((0, y, width, y + 12), fill=shadow)
+        draw.line((0, y, width, y), fill=trim, width=4)
+    draw.rectangle((0, round(height * 0.91), width, height), fill=shadow)
+    bay_width = width / bays
+    for bay in range(bays):
+        center = round((bay + 0.5) * bay_width)
+        # Painted vertical cartouche, designed as original ornament rather than copied mural work.
+        mural_w = round(bay_width * 0.20)
+        mural_left = center - mural_w // 2
+        draw.rectangle((mural_left, round(height * 0.115), mural_left + mural_w, round(height * 0.22)), fill=mural_colors[(bay + phase) % len(mural_colors)])
+        draw.ellipse((mural_left + 5, round(height * 0.13), mural_left + mural_w - 5, round(height * 0.205)), outline=trim, width=max(2, mural_w // 12))
+        for top_f in (0.29, 0.54):
+            window_w = round(bay_width * 0.48)
+            left = center - window_w // 2
+            right = center + window_w // 2
+            top = round(height * top_f)
+            bottom = round(height * (top_f + 0.15))
+            draw.rectangle((left - 9, top - 9, right + 9, bottom + 9), fill=trim)
+            draw.rectangle((left, top, right, bottom), fill=glass)
+            draw.line((center, top, center, bottom), fill="#111b1f", width=3)
+            draw.line((left + 7, top, left + 7, bottom), fill="#70828a", width=3)
+        opening_w = round(bay_width * 0.60)
+        left = center - opening_w // 2
+        right = center + opening_w // 2
+        top = round(height * 0.77)
+        radius = opening_w // 2
+        draw.rectangle((left - 10, top - 10, right + 10, round(height * 0.91)), fill=trim)
+        draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+        draw.rectangle((left, top + radius, right, round(height * 0.91)), fill=glass)
+    output = TEXTURE_ROOT / file_name
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_ruffinihaus() -> None:
+    ruffinihaus_sheet("ruffinihaus-nw.png", 1366, 1536, 6, 0)
+    ruffinihaus_sheet("ruffinihaus-ne.png", 736, 1536, 3, 2)
+    ruffinihaus_sheet("ruffinihaus-east.png", 1536, 1524, 6, 4)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recipe", choices=(
@@ -561,6 +613,7 @@ def main() -> None:
         "ns-dokumentationszentrum",
         "museum-fuenf-kontinente",
         "hotel-vier-jahreszeiten",
+        "ruffinihaus",
     ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
@@ -577,6 +630,8 @@ def main() -> None:
         generate_museum_fuenf_kontinente()
     elif args.recipe == "hotel-vier-jahreszeiten":
         generate_hotel_vier_jahreszeiten()
+    elif args.recipe == "ruffinihaus":
+        generate_ruffinihaus()
 
 
 if __name__ == "__main__":
