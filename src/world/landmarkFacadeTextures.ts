@@ -39,7 +39,8 @@ export type LandmarkFacadeTextureId =
   | "ruffinihaus-east"
   | "muenchner-kammerspiele-maximilianstrasse"
   | "deutsches-theater-schwanthalerstrasse"
-  | "frauenkirche-frauenplatz";
+  | "frauenkirche-frauenplatz"
+  | "justizpalast-prielmayerstrasse";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -204,6 +205,7 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
   "muenchner-kammerspiele-maximilianstrasse": { file: "muenchner-kammerspiele-maximilianstrasse.png", roughness: 0.84, specularIntensity: 0.26 },
   "deutsches-theater-schwanthalerstrasse": { file: "deutsches-theater-schwanthalerstrasse.png", roughness: 0.87, specularIntensity: 0.22 },
   "frauenkirche-frauenplatz": { file: "frauenkirche-frauenplatz.png", roughness: 0.92, specularIntensity: 0.16 },
+  "justizpalast-prielmayerstrasse": { file: "justizpalast-prielmayerstrasse.png", roughness: 0.88, specularIntensity: 0.22 },
 };
 
 const materialCache = new WeakMap<Scene, Map<LandmarkFacadeTextureId, PBRMaterial>>();

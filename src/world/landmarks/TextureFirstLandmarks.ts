@@ -35,6 +35,7 @@ export const RUFFINIHAUS_BUILDING_IDS = [233_918_201, 233_918_198, 219_027_197] 
 export const MUENCHNER_KAMMERSPIELE_BUILDING_IDS = [85_990_425, 328_018_432] as const;
 export const DEUTSCHES_THEATER_BUILDING_ID = 116_642_230;
 export const FRAUENKIRCHE_BUILDING_ID = 225_698_612;
+export const JUSTIZPALAST_BUILDING_ID = -14_897_001;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -456,6 +457,18 @@ function createFrauenkirche(scene: Scene, parent: TransformNode): TransformNode 
   return root;
 }
 
+function createJustizpalast(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-justizpalast");
+  if (existing) return existing;
+  const root = new TransformNode("landmark-justizpalast", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [-543.535, 1169.608];
+  // Prielmayerstrasse follows the long north-west public elevation. The
+  // overlay intentionally stops below the elaborate LoD2 roof and dome mass.
+  addFacadePlane(scene, root, "justizpalast-prielmayerstrasse-facade", [-589.405, 1104.045], [-623.469, 1177.645], interior, 44.0, getLandmarkFacadeMaterial(scene, "justizpalast-prielmayerstrasse"), 0.30);
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -637,6 +650,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createMuenchnerKammerspiele(scene, root);
   createDeutschesTheater(scene, root);
   createFrauenkirche(scene, root);
+  createJustizpalast(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

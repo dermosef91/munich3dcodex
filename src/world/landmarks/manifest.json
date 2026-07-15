@@ -1226,6 +1226,17 @@
       }
     },
     {
+      "id": "justizpalast",
+      "label": "Justizpalast",
+      "status": "integrated",
+      "implementation": { "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts", "rootNode": "landmark-justizpalast" },
+      "shell": { "mode": "preserve", "targetBuildingIds": [-14897001], "replacementBuildingIds": [], "note": "Preserve the complete Bavarian LoD2 court building, including its roof and dome mass; add a thin non-colliding Prielmayerstrasse facade sheet only." },
+      "previews": [{ "id": "justizpalast", "position": [-650, 5.0, 1135], "target": [-599, 25, 1145], "fov": 0.95 }],
+      "textures": [{ "id": "justizpalast-prielmayerstrasse", "file": "justizpalast-prielmayerstrasse.png", "status": "integrated", "minimumWidth": 1024, "minimumHeight": 1024, "roughness": 0.88, "specularIntensity": 0.22, "promptSummary": "Original rectified neutral-lit late-nineteenth-century court facade with pale sandstone, arched windows, pilasters, slate roof band, and no baked signage or source pixels." }],
+      "references": [{ "url": "https://www.justiz.bayern.de/gerichte-und-behoerden/oberlandesgerichte/muenchen/gericht/gerichtssitz.php", "publisher": "Bayerisches Staatsministerium der Justiz", "usage": "official-building-reference", "license": "Copyrighted official reference; reference-only, no source pixels embedded" }],
+      "provenance": { "method": "original-art", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "Original generated facade art restores the court's sandstone and arched-window character; the authoritative LoD2 shell, roof, and collision remain intact." }
+    },
+    {
       "id": "micky-statue",
       "label": "Micky Statue at Elisabethstrasse 46",
       "status": "integrated",
