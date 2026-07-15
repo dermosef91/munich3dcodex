@@ -26,8 +26,10 @@ export class KeyboardMovement {
   constructor(
     private readonly camera: UniversalCamera,
     private readonly engine: Engine,
-    private readonly walkingSpeed = 4.6,
-    private readonly sprintSpeed = 8.2,
+    private readonly walkingSpeed = 6.9,
+    private readonly sprintSpeed = 12.3,
+    private readonly flightSpeed = 73.6,
+    private readonly flightSprintSpeed = 131.2,
     private readonly jumpSpeed = 5.7,
     private readonly gravity = 16,
   ) {
@@ -64,7 +66,7 @@ export class KeyboardMovement {
     if (this.flying) {
       const vertical = this.axis("Space", "Space")
         - this.axis("ControlLeft", "ControlRight");
-      const speed = this.sprinting ? this.sprintSpeed : this.walkingSpeed;
+      const speed = this.sprinting ? this.flightSprintSpeed : this.flightSpeed;
       this.grounded = false;
       this.verticalVelocity = 0;
       this.camera.cameraDirection.y = vertical * speed * deltaSeconds;
@@ -113,7 +115,9 @@ export class KeyboardMovement {
     forwardBasis.normalize();
     rightBasis.normalize();
     const direction = forwardBasis.scale(forward).addInPlace(rightBasis.scale(sideways)).normalize();
-    const speed = this.sprinting ? this.sprintSpeed : this.walkingSpeed;
+    const speed = this.flying
+      ? (this.sprinting ? this.flightSprintSpeed : this.flightSpeed)
+      : (this.sprinting ? this.sprintSpeed : this.walkingSpeed);
     this.camera.cameraDirection.addInPlace(direction.scale(speed * deltaSeconds));
   }
 

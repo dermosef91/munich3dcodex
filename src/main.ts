@@ -22,6 +22,7 @@ import { loadCustomAssets } from "./customAssets";
 import { KeyboardMovement } from "./player/KeyboardMovement";
 import { createSchwabingDetails } from "./world/SchwabingDetails";
 import { createLandmarkDetails, landmarkPreview } from "./world/LandmarkDetails";
+import { loadMickyStatue } from "./world/landmarks/MickyStatue";
 import { VehicleSystem } from "./world/vehicles";
 import { TramSystem } from "./world/tram";
 import { GroundShadowSystem } from "./world/GroundShadowSystem";
@@ -308,10 +309,20 @@ async function prepareOptionalWorldDetails(): Promise<void> {
     console.warn("Schwabing details could not be prepared.", error);
   }
   await nextRenderedFrame();
+  let landmarkRoot: ReturnType<typeof createLandmarkDetails> | undefined;
   try {
-    createLandmarkDetails(scene);
+    landmarkRoot = createLandmarkDetails(scene);
   } catch (error) {
     console.warn("Landmark details could not be prepared.", error);
+  }
+  await nextRenderedFrame();
+  if (landmarkRoot) {
+    try {
+      const mickyStatueMeshes = await loadMickyStatue(scene, landmarkRoot);
+      sunShadows.registerDynamicCasters("micky-statue", mickyStatueMeshes);
+    } catch (error) {
+      console.warn("Micky statue could not be prepared.", error);
+    }
   }
   await nextRenderedFrame();
   try {

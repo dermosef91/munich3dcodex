@@ -125,6 +125,10 @@ async function assertSceneContract() {
   assert.match(movementSource, /event\.code === "KeyG"/);
   assert.match(movementSource, /this\.flying = !this\.flying/);
   assert.match(movementSource, /this\.axis\("Space", "Space"\)[\s\S]*?this\.axis\("ControlLeft", "ControlRight"\)/);
+  assert.match(movementSource, /walkingSpeed = 6\.9/);
+  assert.match(movementSource, /sprintSpeed = 12\.3/);
+  assert.match(movementSource, /flightSpeed = 73\.6/);
+  assert.match(movementSource, /flightSprintSpeed = 131\.2/);
   assert.match(meshSource, /VertexData\.ComputeNormals\([\s\S]*?useRightHandedSystem:\s*true/);
   assert.match(meshSource, /mesh\.sideOrientation\s*=\s*Material\.CounterClockWiseSideOrientation/);
   assert.match(detailsSource, /yaw\s*\+\s*Math\.PI/);

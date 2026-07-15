@@ -55,6 +55,12 @@ assert.match(
 
 assert.match(mainSource, /createLandmarkDetails\(scene\)/, "landmark layer must be added during startup");
 assert.match(mainSource, /createSchwabingDetails\(scene\)/, "preserved-shell facade details must be added during startup");
+assert.match(mainSource, /loadMickyStatue\(scene, landmarkRoot\)/, "Micky statue must be loaded into the landmark layer");
+const mickyStatueSource = implementationSources.get("src/world/landmarks/MickyStatue.ts");
+assert.equal(typeof mickyStatueSource, "string", "Micky statue implementation must be loaded from the manifest");
+assert.match(mickyStatueSource, /assets\/environment\/MickyStatue\/MickyStatueTextured\.glb/, "Micky statue must use the supplied textured GLB");
+assert.match(mickyStatueSource, /11\.566_427_0, 48\.159_681_3/, "Micky statue must stay in the reviewed No. 46 courtyard position");
+assert.match(mickyStatueSource, /mesh\.checkCollisions = mesh\.getTotalVertices\(\) > 0/, "Micky statue geometry must be collision-enabled");
 assert.match(meshSource, /if \(isLandmarkReplacementBuilding\(building\.id\)\) continue;/, "generic building shells must be skipped");
 assert.match(meshSource, /business\.frontage\?\.buildingId/, "storefronts on replacement shells must be filtered");
 assert.match(landmarkSource, /11\.574_029_9, 48\.157_201_2/, "Baerenbrunnen must use its reviewed coordinates");
