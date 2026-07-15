@@ -12,6 +12,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const vite = await createServer({
   root,
   appType: "custom",
+  optimizeDeps: { noDiscovery: true },
   server: { middlewareMode: true, hmr: false, ws: false },
 });
 

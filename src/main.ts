@@ -189,6 +189,7 @@ const trams = new TramSystem(scene, engine, groundShadows);
 canvas.dataset.shadowQuality = sunShadows.enabled ? requestedShadowQuality : "off";
 canvas.dataset.performanceMode = adaptivePerformance.mode;
 canvas.dataset.renderPixelRatio = adaptivePerformance.renderPixelRatio.toFixed(2);
+canvas.dataset.startupPhase = "boot";
 
 let firstLoad = true;
 const streamer = new WorldStreamer(scene, (message, loadedCount, totalCount) => {
@@ -196,9 +197,7 @@ const streamer = new WorldStreamer(scene, (message, loadedCount, totalCount) => 
   const progress = firstLoad ? Math.min(100, 18 + loadedCount * 14) : Math.min(100, (loadedCount / Math.max(totalCount, 1)) * 100);
   loadingProgress.style.width = `${progress}%`;
   if (firstLoad && message === "Munich is ready") {
-    firstLoad = false;
     loadingProgress.style.width = "100%";
-    window.setTimeout(() => loading.classList.add("is-hidden"), 350);
   }
 });
 streamer.setTileLifecycleHandlers(
@@ -252,6 +251,7 @@ for (const button of districtButtons) {
 let lastHudUpdate = 0;
 let flightModeVisible = false;
 scene.onBeforeRenderObservable.add(() => {
+  if (firstLoad) return;
   vehicles.update();
   trams.update();
   groundShadows.update();
@@ -296,17 +296,57 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) adaptivePerformance.resetSampling(performance.now());
 });
 
+function nextRenderedFrame(): Promise<void> {
+  return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+}
+
+async function prepareOptionalWorldDetails(): Promise<void> {
+  await nextRenderedFrame();
+  try {
+    createSchwabingDetails(scene);
+  } catch (error) {
+    console.warn("Schwabing details could not be prepared.", error);
+  }
+  await nextRenderedFrame();
+  try {
+    createLandmarkDetails(scene);
+  } catch (error) {
+    console.warn("Landmark details could not be prepared.", error);
+  }
+  await nextRenderedFrame();
+  try {
+    await loadCustomAssets(scene);
+  } catch (error) {
+    console.warn("Custom assets could not be prepared.", error);
+  }
+}
+
+function revealWorld(): void {
+  firstLoad = false;
+  keyboardMovement.setEnabled(true);
+  canvas.dataset.startupPhase = "playable";
+  loadingProgress.style.width = "100%";
+  window.setTimeout(() => loading.classList.add("is-hidden"), 350);
+}
+
 async function start(): Promise<void> {
-  await Promise.all([
-    streamer.initialize(camera.position),
-    vehicles.initialize(),
-  ]);
+  keyboardMovement.setEnabled(false);
+  canvas.dataset.startupPhase = "streaming";
+  engine.runRenderLoop(() => scene.render());
+
+  await streamer.initialize(camera.position);
+  canvas.dataset.startupPhase = "compiling";
   await sunShadows.compile();
   attribution.textContent = streamer.getAttribution();
-  createSchwabingDetails(scene);
-  createLandmarkDetails(scene);
-  await loadCustomAssets(scene);
-  engine.runRenderLoop(() => scene.render());
+  revealWorld();
+
+  const vehicleAssetsPromise = vehicles.initialize().catch((error: unknown) => {
+    console.warn("Vehicle assets could not be prepared.", error);
+  });
+  const optionalDetailsPromise = prepareOptionalWorldDetails();
+  void Promise.all([vehicleAssetsPromise, optionalDetailsPromise]).then(() => {
+    canvas.dataset.startupPhase = "complete";
+  });
 }
 
 void start().catch((error: unknown) => {

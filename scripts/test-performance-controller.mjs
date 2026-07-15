@@ -7,6 +7,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const vite = await createServer({
   root,
   appType: "custom",
+  optimizeDeps: { noDiscovery: true },
   server: { middlewareMode: true, hmr: false, ws: false },
 });
 
@@ -52,6 +53,27 @@ try {
   assert.ok(
     mainSource.slice(throttledDiagnosticsStart).includes("canvas.dataset.playerX"),
     "player diagnostics must remain available on the throttled HUD cadence",
+  );
+  const startFunctionStart = mainSource.indexOf("async function start");
+  const startFunctionEnd = mainSource.indexOf("void start().catch", startFunctionStart);
+  const startSource = mainSource.slice(startFunctionStart, startFunctionEnd);
+  assert.ok(startFunctionStart >= 0 && startFunctionEnd > startFunctionStart);
+  assert.ok(
+    startSource.indexOf("engine.runRenderLoop") < startSource.indexOf("await streamer.initialize"),
+    "rendering must begin before critical world streaming completes",
+  );
+  assert.equal(
+    startSource.includes("await vehicles.initialize"),
+    false,
+    "vehicle assets must not block the playable world",
+  );
+  assert.ok(
+    startSource.indexOf("revealWorld()") < startSource.indexOf("vehicles.initialize()"),
+    "vehicle downloads must not compete with critical world streaming",
+  );
+  assert.ok(
+    startSource.indexOf("revealWorld()") < startSource.indexOf("prepareOptionalWorldDetails()"),
+    "optional landmark details must begin only after the world becomes playable",
   );
 
   const { AdaptivePerformanceController } = await vite.ssrLoadModule(
