@@ -32,7 +32,8 @@ export type LandmarkFacadeTextureId =
   | "nsdoku-west"
   | "nsdoku-north"
   | "nsdoku-east"
-  | "museum-fuenf-kontinente-maximilianstrasse";
+  | "museum-fuenf-kontinente-maximilianstrasse"
+  | "hotel-vier-jahreszeiten-maximilianstrasse";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -185,6 +186,11 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "museum-fuenf-kontinente-maximilianstrasse.png",
     roughness: 0.91,
     specularIntensity: 0.18,
+  },
+  "hotel-vier-jahreszeiten-maximilianstrasse": {
+    file: "hotel-vier-jahreszeiten-maximilianstrasse.png",
+    roughness: 0.88,
+    specularIntensity: 0.24,
   },
 };
 

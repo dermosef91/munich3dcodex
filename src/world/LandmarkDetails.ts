@@ -73,6 +73,8 @@ export type LandmarkPreviewId =
   | "pinakothek-der-moderne"
   | "ns-dokumentationszentrum"
   | "museum-fuenf-kontinente"
+  | "hotel-vier-jahreszeiten"
+  | "micky-statue"
   | "hofbraeuhaus"
   | "asamkirche";
 
@@ -107,6 +109,8 @@ const LANDMARK_PREVIEW_SPECS: Readonly<Record<LandmarkPreviewId, {
   "pinakothek-der-moderne": { position: [-74.791, 4.6, 388.312], target: [-48.033, 12.2, 399.946], fov: 1.05 },
   "ns-dokumentationszentrum": { position: [-329.060, 4.6, 652.549], target: [-323.602, 13.6, 639.396], fov: 1.20 },
   "museum-fuenf-kontinente": { position: [1034.460, 4.6, 1454.007], target: [1024.701, 14.0, 1488.273], fov: 0.95 },
+  "hotel-vier-jahreszeiten": { position: [744.54, 4.7, 1366.30], target: [718.426, 12.0, 1345.762], fov: 0.90 },
+  "micky-statue": { position: [-418.2, 2.35, -969.5], target: [-413.9, 1.0, -966.4], fov: 0.82 },
   hofbraeuhaus: { position: [563.98, 4.2, 1491.94], target: [577.54, 10.2, 1481.55], fov: 0.96 },
   asamkirche: { position: [-161.6, 4.1, 1762.21], target: [-173.7, 11.4, 1769.17], fov: 0.90 },
 };

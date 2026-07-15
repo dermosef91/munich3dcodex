@@ -1068,6 +1068,55 @@
       }
     },
     {
+      "id": "hotel-vier-jahreszeiten",
+      "label": "Hotel Vier Jahreszeiten Kempinski",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-hotel-vier-jahreszeiten"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [25505398],
+        "replacementBuildingIds": [],
+        "note": "Preserve the Bavarian LoD2 hotel shell and roof; add one thin non-colliding bitmap sheet to its Maximilianstrasse frontage."
+      },
+      "previews": [
+        {
+          "id": "hotel-vier-jahreszeiten",
+          "position": [744.54, 4.7, 1366.30],
+          "target": [718.426, 12.0, 1345.762],
+          "fov": 0.90
+        }
+      ],
+      "textures": [
+        {
+          "id": "hotel-vier-jahreszeiten-maximilianstrasse",
+          "file": "hotel-vier-jahreszeiten-maximilianstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 2048,
+          "minimumHeight": 1504,
+          "roughness": 0.88,
+          "specularIntensity": 0.24,
+          "promptSummary": "Deterministic neutral-lit palatial hotel elevation with pale ochre ashlar, nine bays, layered stone courses, arched windows, a central revolving-door entrance, and an understated canopy."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.kempinski.com/en/hotel-vier-jahreszeiten/overview/hotel-information/our-hotel",
+          "publisher": "Hotel Vier Jahreszeiten Kempinski Munich",
+          "usage": "official-hotel-history-and-identity-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "One offline-generated facade sheet supplies the permanent palatial rhythm; the exact hotel identity is procedural and no reference pixels are embedded."
+      }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",
@@ -1103,6 +1152,44 @@
         "reviewStatus": "needs-user-review",
         "pixelsEmbedded": false,
         "note": "Original procedural late-Baroque facade shorthand based on documented yellow ground, white stucco, stacked openings, and Nepomuk niche; no source-image pixels embedded."
+      }
+    },
+    {
+      "id": "micky-statue",
+      "label": "Micky Statue at Elisabethstrasse 46",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/MickyStatue.ts",
+        "rootNode": "landmark-micky-statue"
+      },
+      "shell": {
+        "mode": "none",
+        "targetBuildingIds": [],
+        "replacementBuildingIds": [],
+        "note": "Freestanding two-metre statue in the enclosed backyard of Elisabethstrasse 46; all streamed Bavarian LoD2 building shells remain unchanged."
+      },
+      "previews": [
+        {
+          "id": "micky-statue",
+          "position": [-418.2, 2.35, -969.5],
+          "target": [-413.9, 1.0, -966.4],
+          "fov": 0.82
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://www.openstreetmap.org/way/108881086",
+          "publisher": "OpenStreetMap contributors",
+          "usage": "address-building-and-courtyard-location-reference",
+          "license": "ODbL-1.0; no map imagery pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "original-art",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "User-supplied GLB integrated without geometry or texture modification; authorship and reuse rights were not independently verified."
       }
     }
   ]

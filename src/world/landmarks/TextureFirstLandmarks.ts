@@ -30,6 +30,7 @@ export const HAUS_DER_KUNST_BUILDING_ID = 150_797_531;
 export const PINAKOTHEK_DER_MODERNE_BUILDING_ID = 10_053_440;
 export const NSDOKU_BUILDING_ID = 280_336_045;
 export const MUSEUM_FUENF_KONTINENTE_BUILDING_ID = 25_695_553;
+export const HOTEL_VIER_JAHRESZEITEN_BUILDING_ID = 25_505_398;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -320,6 +321,36 @@ function createMuseumFuenfKontinente(scene: Scene, parent: TransformNode): Trans
   return root;
 }
 
+function hotelVierJahreszeitenSignMaterial(scene: Scene): StandardMaterial {
+  const material = dynamicMaterial(scene, "hotel-vier-jahreszeiten-sign-material", { width: 1536, height: 190 }, (context, width, height) => {
+    context.fillStyle = "#d7c39c";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#4b3b28";
+    context.font = `600 ${Math.round(height * 0.30)}px Georgia, serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("HOTEL VIER JAHRESZEITEN KEMPINSKI", width * 0.5, height * 0.52);
+  }, new Color3(0.10, 0.08, 0.05));
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
+}
+
+function createHotelVierJahreszeiten(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-hotel-vier-jahreszeiten");
+  if (existing) return existing;
+
+  const root = new TransformNode("landmark-hotel-vier-jahreszeiten", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [722.121, 1326.637];
+  const start: FacadePoint = [700.377, 1339.550];
+  const end: FacadePoint = [736.474, 1351.975];
+  addFacadePlane(scene, root, "hotel-vier-jahreszeiten-maximilianstrasse-facade", start, end, interior, 27.85, getLandmarkFacadeMaterial(scene, "hotel-vier-jahreszeiten-maximilianstrasse"), 0.25);
+  addFacadeSign(scene, root, "hotel-vier-jahreszeiten-wordmark", start, end, interior, 4.3, 18.5, 0.82, hotelVierJahreszeitenSignMaterial(scene));
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -496,6 +527,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createPinakothekDerModerne(scene, root);
   createNsdoku(scene, root);
   createMuseumFuenfKontinente(scene, root);
+  createHotelVierJahreszeiten(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

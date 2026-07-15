@@ -468,6 +468,89 @@ def generate_museum_fuenf_kontinente() -> None:
     museum_fuenf_kontinente_sheet()
 
 
+def hotel_vier_jahreszeiten_sheet() -> None:
+    """Render the formal Maximilianstrasse hotel frontage."""
+    width, height = 2048, 1504
+    image = Image.new("RGB", (width, height), "#c6aa7a")
+    draw = ImageDraw.Draw(image)
+    plaster = "#c6aa7a"
+    plaster_light = "#dfc99b"
+    stone = "#d7c39c"
+    stone_shadow = "#a58a61"
+    glass = "#263237"
+    glass_light = "#60737a"
+
+    # Fine ashlar joints and strong storey courses organize the palatial front.
+    for y in range(0, height, 42):
+        draw.line((0, y, width, y), fill="#b79969", width=2)
+    for fraction in (0.18, 0.38, 0.59, 0.80, 0.91):
+        y = round(height * fraction)
+        draw.rectangle((0, y, width, y + 16), fill=stone_shadow)
+        draw.line((0, y, width, y), fill=plaster_light, width=5)
+    draw.rectangle((0, 0, width, round(height * 0.065)), fill=stone)
+    draw.rectangle((0, round(height * 0.915), width, height), fill=stone_shadow)
+
+    bays = 9
+    bay_width = width / bays
+    floor_specs = (
+        (0.095, 0.115, False),
+        (0.245, 0.125, False),
+        (0.435, 0.135, True),
+        (0.635, 0.135, True),
+    )
+    for bay in range(bays):
+        center_x = round((bay + 0.5) * bay_width)
+        # Subtle colossal pilasters on the central three-bay block.
+        if 2 <= bay <= 6:
+            draw.rectangle((round(bay * bay_width) - 6, round(height * 0.19), round(bay * bay_width) + 6, round(height * 0.81)), fill=plaster_light)
+        for top_f, height_f, arched in floor_specs:
+            window_width = round(bay_width * 0.42)
+            window_height = round(height * height_f)
+            left = center_x - window_width // 2
+            top = round(height * top_f)
+            right = center_x + window_width // 2
+            bottom = top + window_height
+            surround = 10
+            draw.rectangle((left - surround, top - surround, right + surround, bottom + surround), fill=stone)
+            if arched:
+                radius = window_width // 2
+                draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+                draw.rectangle((left, top + radius, right, bottom), fill=glass)
+            else:
+                draw.rectangle((left, top, right, bottom), fill=glass)
+            draw.line((center_x, top + 5, center_x, bottom - 5), fill="#151d20", width=4)
+            draw.line((left + 8, top + 5, left + 8, bottom - 5), fill=glass_light, width=3)
+            if top_f in (0.245, 0.435):
+                draw.rectangle((left - 16, bottom + 8, right + 16, bottom + 18), fill=stone_shadow)
+
+        # Tall ground-floor shop arcade.
+        opening_width = round(bay_width * 0.58)
+        left = center_x - opening_width // 2
+        right = center_x + opening_width // 2
+        top = round(height * 0.825)
+        bottom = round(height * 0.955)
+        radius = opening_width // 2
+        draw.rectangle((left - 12, top - 12, right + 12, bottom + 5), fill=stone)
+        draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+        draw.rectangle((left, top + radius, right, bottom), fill=glass)
+
+    # Central revolving-door entrance and understated canopy.
+    center = width // 2
+    entrance_width = round(bay_width * 0.82)
+    draw.rectangle((center - entrance_width // 2, round(height * 0.795), center + entrance_width // 2, round(height * 0.975)), fill="#20292c")
+    draw.line((center, round(height * 0.815), center, round(height * 0.975)), fill=glass_light, width=6)
+    draw.rectangle((center - round(entrance_width * 0.75), round(height * 0.775), center + round(entrance_width * 0.75), round(height * 0.805)), fill="#544a3b")
+    draw.line((center - round(entrance_width * 0.75), round(height * 0.775), center + round(entrance_width * 0.75), round(height * 0.775)), fill=plaster_light, width=5)
+
+    output = TEXTURE_ROOT / "hotel-vier-jahreszeiten-maximilianstrasse.png"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_hotel_vier_jahreszeiten() -> None:
+    hotel_vier_jahreszeiten_sheet()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recipe", choices=(
@@ -477,6 +560,7 @@ def main() -> None:
         "pinakothek-der-moderne",
         "ns-dokumentationszentrum",
         "museum-fuenf-kontinente",
+        "hotel-vier-jahreszeiten",
     ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
@@ -491,6 +575,8 @@ def main() -> None:
         generate_nsdoku()
     elif args.recipe == "museum-fuenf-kontinente":
         generate_museum_fuenf_kontinente()
+    elif args.recipe == "hotel-vier-jahreszeiten":
+        generate_hotel_vier_jahreszeiten()
 
 
 if __name__ == "__main__":
