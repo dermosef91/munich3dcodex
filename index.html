@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#26312e">
+  <meta name="description" content="Walk through a browser-built 3D map of Munich Center, Maxvorstadt, and Schwabing.">
+  <link rel="icon" href="/assets/ui/munich3d-mark.svg" type="image/svg+xml">
+  <title>Munich 3D</title>
+</head>
+<body>
+<div id="app">
+  <canvas id="scene" aria-label="Walkable 3D map of Munich"></canvas>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Munich 3D home">
+      <img class="brand-mark" src="/assets/ui/munich3d-mark.svg" alt="">
+      <span>Munich 3D</span>
+    </a>
+    <nav class="districts" aria-label="Jump to district">
+      <button type="button" data-jump="center" aria-pressed="false">Center</button>
+      <button type="button" data-jump="maxvorstadt" aria-pressed="false">Maxvorstadt</button>
+      <button type="button" data-jump="schwabing" aria-pressed="true">Schwabing</button>
+    </nav>
+    <button class="enter-button" id="enter" type="button">Enter world</button>
+  </header>
+
+  <div class="crosshair" aria-hidden="true"></div>
+
+  <aside class="intro" id="intro" aria-live="polite">
+    <p class="eyebrow">Browser prototype · real map geometry</p>
+    <h1>Walk Munich.</h1>
+    <p>Click <strong>Enter world</strong>, then use W A S D and the mouse. Hold Shift to sprint, press Space to jump, and press E beside a parked car to drive.</p>
+  </aside>
+
+  <div class="vehicle-hint" id="vehicle-hint" role="status" aria-live="polite"></div>
+
+  <section class="driving-hud" id="driving-hud" aria-label="Driving instruments" aria-hidden="true">
+    <div class="driving-feedback" id="driving-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div class="driving-speedometer">
+      <div class="driving-speed-readout">
+        <output class="driving-speed-value" id="driving-speed" aria-label="Current speed">0</output>
+        <span class="driving-speed-unit">km/h</span>
+      </div>
+      <div class="driving-speed-energy" id="driving-speed-energy" aria-hidden="true">
+        <span class="driving-speed-fill" id="driving-speed-fill"></span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="hud">
+    <div>
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="status">Preparing Munich…</span>
+    </div>
+    <div class="location">
+      <span id="district">Schwabing · Elisabethstraße 46</span>
+      <span id="coordinates">48.15947° N · 11.56619° E</span>
+    </div>
+    <span class="attribution" id="attribution">Map data © OpenStreetMap contributors</span>
+  </footer>
+
+  <div class="loading" id="loading" role="status">
+    <img class="loading-mark" src="/assets/ui/munich3d-mark.svg" alt="">
+    <span>Building Munich</span>
+    <span class="loading-line"><i id="loading-progress"></i></span>
+  </div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

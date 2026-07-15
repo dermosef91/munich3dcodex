@@ -1,0 +1,12 @@
+node_modules/
+.pnpm-store/
+.claude/
+dist/
+.DS_Store
+*.tsbuildinfo
+data/cache/
+data/raw/lod2/*.gml
+data/raw/lod2/*.part
+data/raw/lod2/*.meta4
+data/raw/lod2/*.http.json
+data/normalized/lod2-munich-corridor.json

@@ -1,0 +1,715 @@
+{
+  "schemaVersion": 1,
+  "assetRoot": "assets/textures/landmarks",
+  "landmarks": [
+    {
+      "id": "elisabethmarkt",
+      "label": "Elisabethmarkt",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-elisabethmarkt"
+      },
+      "shell": {
+        "mode": "replace",
+        "targetBuildingIds": [1193386924, 1193386925, 1193386926, 1193386927, 1193386928, 1193386929, 1193386930, 1193386931, 1193386932, 1288780265],
+        "replacementBuildingIds": [1193386924, 1193386925, 1193386926, 1193386927, 1193386928, 1193386929, 1193386930, 1193386931, 1193386932, 1288780265],
+        "note": "Replace the ten mapped 2024 market pavilions with reviewed pavilion geometry, including a freestanding winter garden and service kiosk detail layer."
+      },
+      "previews": [
+        {
+          "id": "elisabethmarkt",
+          "position": [121, 2.4, -649],
+          "target": [185, 2.6, -649]
+        },
+        {
+          "id": "elisabethmarkt-wintergarten",
+          "position": [142, 2.7, -655],
+          "target": [160, 2.15, -646.5],
+          "fov": 0.94
+        }
+      ],
+      "textures": [
+        {
+          "id": "elisabethmarkt",
+          "file": "elisabethmarkt-bay.png",
+          "status": "integrated",
+          "minimumWidth": 1024,
+          "minimumHeight": 1024,
+          "roughness": 0.82,
+          "specularIntensity": 0.38,
+          "promptSummary": "Repeatable pale vertical timber-batten market bay with lime backing, charcoal glazing, and a green soffit."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.bogevisch.de/projekte/neuerrichtung-elisabethmarkt-dauermarkt",
+          "publisher": "Bogevischs Buero",
+          "usage": "reference-only",
+          "license": "Copyrighted architectural reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original generated facade art and procedural pavilion geometry based on the completed 2024 market's documented architectural traits; the winter garden and kiosk are original in-world design details."
+      }
+    },
+    {
+      "id": "elisabethplatz-biergarten",
+      "label": "Elisabethplatz Beer Garden",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-elisabethplatz-biergarten"
+      },
+      "shell": {
+        "mode": "replace",
+        "targetBuildingIds": [50758320],
+        "replacementBuildingIds": [50758320],
+        "note": "Replace the OSM-only 10 m toilet extrusion with a low beer-garden pavilion; retain the square's central fountain clearing."
+      },
+      "previews": [
+        {
+          "id": "elisabethplatz-biergarten",
+          "position": [118, 2.55, -678],
+          "target": [101, 2.1, -681],
+          "fov": 0.92
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://www.openstreetmap.org/way/50758320",
+          "publisher": "OpenStreetMap contributors",
+          "usage": "location-and-footprint-reference",
+          "license": "ODbL-1.0; no imagery pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original pavilion and canopy geometry guided by user-supplied visual and aerial references; no source-image pixels embedded."
+      }
+    },
+    {
+      "id": "baerenbrunnen",
+      "label": "Baerenbrunnen on Elisabethplatz",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-baerenbrunnen"
+      },
+      "shell": {
+        "mode": "none",
+        "targetBuildingIds": [],
+        "replacementBuildingIds": [],
+        "note": "Freestanding fountain modeled at reviewed geographic coordinates."
+      },
+      "previews": [
+        {
+          "id": "baerenbrunnen",
+          "position": [151, 2.1, -699],
+          "target": [151, 1.9, -690]
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://stadt.muenchen.de/infos/brunnen-muenchen.html",
+          "publisher": "Landeshauptstadt Muenchen",
+          "usage": "location-and-form-reference",
+          "license": "Municipal reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original low-poly interpretation of Georg Mueller's 1936 bear fountain."
+      }
+    },
+    {
+      "id": "st-joseph",
+      "label": "St. Joseph Church",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-st-joseph"
+      },
+      "shell": {
+        "mode": "replace",
+        "targetBuildingIds": [31095497, 776733543],
+        "replacementBuildingIds": [31095497, 776733543],
+        "note": "Replace the streamed church shell and its separately mapped tower to restore the single offset tower, onion dome, portico, and west gable."
+      },
+      "previews": [
+        {
+          "id": "st-joseph",
+          "position": [-391, 5, -490],
+          "target": [-322, 25, -500],
+          "fov": 1.4
+        }
+      ],
+      "textures": [
+        {
+          "id": "st-joseph",
+          "file": "st-joseph-west.png",
+          "status": "integrated",
+          "minimumWidth": 1200,
+          "minimumHeight": 1200,
+          "roughness": 0.91,
+          "specularIntensity": 0.24,
+          "promptSummary": "Rectified straw-yellow west facade with warm-white Baroque trim, triple arches, panels, and a saint niche."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.muenchen.de/sehenswuerdigkeiten/kirchen-und-kloester/st-joseph",
+          "publisher": "muenchen.de",
+          "usage": "reference-only",
+          "license": "Official city reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original generated west-elevation art with procedural silhouette and architectural fittings."
+      }
+    },
+    {
+      "id": "nordbad",
+      "label": "Nordbad",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-nordbad"
+      },
+      "shell": {
+        "mode": "replace",
+        "targetBuildingIds": [23873795, -1539766678, -1564933106, -535635977, -544024786, -560802405, 97847497, 109066342],
+        "replacementBuildingIds": [23873795, -1539766678, -1564933106, -535635977, -544024786, -560802405, 97847497, 109066342],
+        "note": "Replace the mapped Nordbad sections while retaining the surrounding site data; custom geometry includes the outdoor pool complex."
+      },
+      "previews": [
+        {
+          "id": "nordbad",
+          "position": [-655, 4.2, -1039],
+          "target": [-611, 7.2, -1035]
+        },
+        {
+          "id": "nordbad-pools",
+          "position": [-505, 18, -1055],
+          "target": [-544, 0.35, -1056],
+          "fov": 0.96
+        }
+      ],
+      "textures": [
+        {
+          "id": "nordbad",
+          "file": "nordbad-facade.png",
+          "status": "integrated",
+          "minimumWidth": 1800,
+          "minimumHeight": 800,
+          "roughness": 0.89,
+          "specularIntensity": 0.27,
+          "promptSummary": "Panoramic ochre interwar pool facade with cream multipane windows, a stone plinth, and blank central entrance area."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.swm.de/baeder/schwimmen-sauna/nordbad",
+          "publisher": "Stadtwerke Muenchen",
+          "usage": "location-and-appearance-reference",
+          "license": "Official operator reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original generated facade art and procedural massing; pool footprints are grounded in mapped water outlines and supplied aerial context."
+      }
+    },
+    {
+      "id": "hohenzollernplatz",
+      "label": "Hohenzollernplatz",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-hohenzollernplatz"
+      },
+      "shell": {
+        "mode": "none",
+        "targetBuildingIds": [],
+        "replacementBuildingIds": [],
+        "note": "Freestanding square, fountain, transit entrance, planting, and seating treatment."
+      },
+      "previews": [
+        {
+          "id": "hohenzollernplatz",
+          "position": [-282, 4, -1215],
+          "target": [-282, 1, -1180]
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://stadt.muenchen.de/infos/brunnen-muenchen.html",
+          "publisher": "Landeshauptstadt Muenchen",
+          "usage": "fountain-location-reference",
+          "license": "Municipal reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original procedural public-space treatment based on mapped layout and the documented 1980 fountain."
+      }
+    },
+    {
+      "id": "munich-mma",
+      "label": "Munich MMA at Nordbad",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-munich-mma-nordbad"
+      },
+      "shell": {
+        "mode": "replace",
+        "targetBuildingIds": [35589513],
+        "replacementBuildingIds": [35589513],
+        "note": "Replace the south pavilion at Schleißheimer Strasse 140; the northern building 80516661 remains Nush O Jan."
+      },
+      "previews": [
+        {
+          "id": "munich-mma",
+          "position": [-623.12, 4.2, -967.84],
+          "target": [-619.147, 3, -987.826],
+          "fov": 0.88
+        }
+      ],
+      "textures": [
+        {
+          "id": "munich-mma",
+          "file": "munich-mma-nordbad.png",
+          "status": "integrated",
+          "minimumWidth": 1700,
+          "minimumHeight": 800,
+          "roughness": 0.48,
+          "specularIntensity": 0.62,
+          "promptSummary": "Rectified north-facing Nordbad entrance with centered doors and clerestory glazing; the Elisabethstrasse elevation is a separate procedural full-height glass curtain wall."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://munich-mma.de/ueber-uns/locations/",
+          "publisher": "Munich MMA",
+          "usage": "location-and-appearance-reference",
+          "license": "Official operator reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original north-entrance art, procedural signage, and a mullioned transparent Elisabethstrasse facade corrected from a user-provided street-level reference; no reference pixels embedded."
+      }
+    },
+    {
+      "id": "stadtarchiv",
+      "label": "Stadtarchiv Muenchen extension",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-stadtarchiv-extension"
+      },
+      "shell": {
+        "mode": "replace",
+        "targetBuildingIds": [27276683],
+        "replacementBuildingIds": [27276683],
+        "note": "Replace the modern archive extension opposite Nordbad and retain the Oculus historiae as projecting geometry."
+      },
+      "previews": [
+        {
+          "id": "stadtarchiv",
+          "position": [-635, 4, -1050],
+          "target": [-677, 8, -1054]
+        }
+      ],
+      "textures": [
+        {
+          "id": "stadtarchiv",
+          "file": "stadtarchiv-extension.png",
+          "status": "integrated",
+          "minimumWidth": 1700,
+          "minimumHeight": 800,
+          "roughness": 0.86,
+          "specularIntensity": 0.31,
+          "promptSummary": "Rectified pale blue-grey structural bays with recessed openings and fine red-brick and pale horizontal banding."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://commons.wikimedia.org/wiki/File:Stadtarchiv_Muenchen_3.JPG",
+          "publisher": "Wikimedia Commons",
+          "usage": "reference-only",
+          "license": "CC BY-SA 3.0; no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original generated facade art and procedural archive details based on the documented extension and licensed reference."
+      }
+    },
+    {
+      "id": "kreuzkirche",
+      "label": "Kreuzkirche Schwabing",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/Kreuzkirche.ts",
+        "rootNode": "landmark-kreuzkirche"
+      },
+      "shell": {
+        "mode": "replace",
+        "targetBuildingIds": [86022858, 387219512],
+        "replacementBuildingIds": [86022858, 387219512],
+        "note": "Replace the OSM-only church extrusion and detached campanile with a reviewed silhouette and facade treatment."
+      },
+      "previews": [
+        {
+          "id": "kreuzkirche",
+          "position": [-390, 5.2, -1318],
+          "target": [-435, 10.5, -1273],
+          "fov": 0.96
+        }
+      ],
+      "textures": [
+        {
+          "id": "kreuzkirche",
+          "file": "kreuzkirche-facade.png",
+          "status": "integrated",
+          "minimumWidth": 1024,
+          "minimumHeight": 768,
+          "roughness": 0.9,
+          "specularIntensity": 0.24,
+          "promptSummary": "Rectified postwar Kreuzkirche elevation emphasizing pale plaster, board-formed concrete bands, clerestory glazing, and blank wall fields."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://kreuzkirche-muenchen.de/",
+          "publisher": "Evang.-Luth. Kirchengemeinde Kreuzkirche",
+          "usage": "location-and-appearance-reference",
+          "license": "Official parish reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original generated facade art and procedural silhouette grounded in official parish and mapped building references."
+      }
+    },
+    {
+      "id": "hermann-frieb-realschule",
+      "label": "Hermann-Frieb-Realschule",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/HermannFriebDetails.ts",
+        "rootNode": "hermann-frieb-details"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [35768220, 35768221, -663034797, -1439844777, -1502387334],
+        "replacementBuildingIds": [],
+        "note": "Preserve all five Bavarian LoD2 school shells; add thin facade overlays and non-colliding architectural details to the principal wings."
+      },
+      "previews": [
+        {
+          "id": "hermann-frieb-realschule",
+          "position": [-434, 4.5, -1092],
+          "target": [-430, 11, -1136],
+          "fov": 1
+        }
+      ],
+      "textures": [
+        {
+          "id": "hermann-frieb-realschule",
+          "file": "hermann-frieb-realschule.png",
+          "status": "integrated",
+          "minimumWidth": 1024,
+          "minimumHeight": 768,
+          "roughness": 0.86,
+          "specularIntensity": 0.3,
+          "promptSummary": "Rectified historic municipal-school elevation with pale rendered walls, warm stone trim, rhythmic tall windows, and blank entrance signage."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://stadt.muenchen.de/service/info/stadt-hermannfriebrealschule/103895/",
+          "publisher": "Landeshauptstadt Muenchen",
+          "usage": "official-location-reference",
+          "license": "Official municipal reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original facade art and projecting details over preserved Bavarian LoD2 massing."
+      }
+    },
+    {
+      "id": "cafe-franca",
+      "label": "Café Franca",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/LandmarkDetails.ts",
+        "rootNode": "landmark-cafe-franca"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [116756212],
+        "replacementBuildingIds": [],
+        "note": "Preserve the Bavarian LoD2 apartment shell at Hiltenspergerstraße 24; add a thin cafe frontage overlay and non-colliding garden furnishings."
+      },
+      "previews": [
+        {
+          "id": "cafe-franca",
+          "position": [-410, 3.4, -837],
+          "target": [-397, 2.2, -852],
+          "fov": 0.92
+        }
+      ],
+      "textures": [
+        {
+          "id": "cafe-franca",
+          "file": "cafe-franca-facade.png",
+          "status": "integrated",
+          "minimumWidth": 1200,
+          "minimumHeight": 800,
+          "roughness": 0.84,
+          "specularIntensity": 0.24,
+          "promptSummary": "Rectified cream cafe elevation with a dark entry, warm window, muted green wainscot, striped ochre-and-cream awning, and blank sign panel for procedural lettering."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.muenchen.travel/en/topics/urban-districts/column-a-vacation-in-my-own-city/favourite-places",
+          "publisher": "München Tourismus",
+          "usage": "reference-only",
+          "license": "Copyrighted editorial reference; no pixels embedded"
+        },
+        {
+          "url": "https://orte.muenchen.de/1298677.html",
+          "publisher": "muenchen.de local directory",
+          "usage": "location-and-business-reference",
+          "license": "Directory reference; no pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original generated facade art plus procedural signage, patio furniture, parasols, planters, and rose arbor; supplied photos guided the artwork but contributed no pixels."
+      }
+    },
+    {
+      "id": "museum-brandhorst",
+      "label": "Museum Brandhorst",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-museum-brandhorst"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [28026817],
+        "replacementBuildingIds": [],
+        "note": "Preserve the Bavarian LoD2 museum shell; add thin non-colliding facade planes aligned to Theresienstrasse, Tuerkenstrasse, the Marianne-von-Werefkin-Weg, and the south end."
+      },
+      "previews": [
+        {
+          "id": "museum-brandhorst",
+          "position": [197, 5.2, 385],
+          "target": [143, 9.5, 366],
+          "fov": 0.94
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://www.museum-brandhorst.de/pressematerial/architektur-museum-brandhorst/",
+          "publisher": "Museum Brandhorst",
+          "usage": "official-architecture-reference",
+          "license": "Official museum reference; no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original procedural facade art reproduces the documented multicolour ceramic-rod rhythm without embedding reference photography."
+      }
+    },
+    {
+      "id": "alte-pinakothek",
+      "label": "Alte Pinakothek",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-alte-pinakothek"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [4647135],
+        "replacementBuildingIds": [],
+        "note": "Preserve the complete Bavarian LoD2 museum shell and roof; add thin non-colliding facade planes on the Theresienstrasse, Gabelsbergerstrasse, Barer Strasse, and Arcisstrasse elevations."
+      },
+      "previews": [
+        {
+          "id": "alte-pinakothek",
+          "position": [-113, 5.2, 214],
+          "target": [-141, 11.5, 279],
+          "fov": 0.96
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://www.pinakothek.de/en/alte-pinakothek",
+          "publisher": "Bayerische Staatsgemaeldesammlungen",
+          "usage": "official-architecture-and-entrance-reference",
+          "license": "Official museum reference; no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original procedural facade art distinguishes Klenze-era rendered bays from Doellgast's exposed-brick reconstruction without embedding reference photography."
+      }
+    },
+    {
+      "id": "bayerische-staatsbibliothek",
+      "label": "Bayerische Staatsbibliothek",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-bayerische-staatsbibliothek"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [-52412001],
+        "replacementBuildingIds": [],
+        "note": "Preserve the Bavarian LoD2 library shell and its semantic roof geometry; add one thin non-colliding procedural sheet to the approximately 150 metre Ludwigstrasse frontage."
+      },
+      "previews": [
+        {
+          "id": "bayerische-staatsbibliothek",
+          "position": [531, 5.4, 368],
+          "target": [606, 12.2, 391],
+          "fov": 0.92
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://www.bsb-muenchen.de/en/about-us/portrait/library-building/",
+          "publisher": "Bayerische Staatsbibliothek",
+          "usage": "official-building-history-and-facade-reference",
+          "license": "Official library reference; no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original procedural blank-brick facade art records the long Gärtner elevation, rhythmic arched openings, and central portal without embedding reference photography."
+      }
+    },
+    {
+      "id": "hofbraeuhaus",
+      "label": "Hofbräuhaus am Platzl",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-hofbraeuhaus"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [1273939826],
+        "replacementBuildingIds": [],
+        "note": "Preserve the compact Bavarian LoD2 tavern shell and roof; add thin non-colliding procedural sheets to the two public Platzl elevations."
+      },
+      "previews": [
+        {
+          "id": "hofbraeuhaus",
+          "position": [563.98, 4.2, 1491.94],
+          "target": [577.54, 10.2, 1481.55],
+          "fov": 0.96
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://www.hofbraeuhaus.de/en/history/",
+          "publisher": "Hofbräuhaus München",
+          "usage": "official-building-history-and-identity-reference",
+          "license": "Official venue reference; no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original procedural cream-and-green tavern elevations and exact-name sign treatment; no source-image pixels embedded."
+      }
+    },
+    {
+      "id": "asamkirche",
+      "label": "Asamkirche (Sankt Johann Nepomuk)",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-asamkirche"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [47515468],
+        "replacementBuildingIds": [],
+        "note": "Preserve the detailed Bavarian LoD2 church and rear-set tower; add one thin non-colliding facade sheet to the narrow public Sendlinger Strasse elevation."
+      },
+      "previews": [
+        {
+          "id": "asamkirche",
+          "position": [-161.6, 4.1, 1762.21],
+          "target": [-173.7, 11.4, 1769.17],
+          "fov": 0.90
+        }
+      ],
+      "textures": [],
+      "references": [
+        {
+          "url": "https://www.muenchen.travel/pois/stadt-viertel/asamkirche",
+          "publisher": "München Tourismus",
+          "usage": "official-appearance-and-dimensions-reference",
+          "license": "Official city tourism reference; no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "procedural",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Original procedural late-Baroque facade shorthand based on documented yellow ground, white stucco, stacked openings, and Nepomuk niche; no source-image pixels embedded."
+      }
+    }
+  ]
+}

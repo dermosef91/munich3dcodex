@@ -1,0 +1,4 @@
+interface:
+  display_name: "Munich Landmark Assets"
+  short_description: "Build and validate Munich3D landmark assets"
+  default_prompt: "Use $munich-landmark-assets to add a reviewed custom landmark asset to Munich3D."

@@ -1,0 +1,755 @@
+{
+  "generatedAt": "2026-07-14T23:29:41.424Z",
+  "source": "OpenStreetMap Overpass API (2026-07-14T23:18:29Z); Landeshauptstadt München, Mobilitätsreferat – Parkseiten; Bavarian Surveying Administration LoD2",
+  "attribution": "© OpenStreetMap contributors · ODbL · Landeshauptstadt München – opendata.muenchen.de · dl-de/by-2-0 · municipal data projected, clipped, and visually inferred for Munich3D · Bayerische Vermessungsverwaltung – www.geodaten.bayern.de · CC BY 4.0 · modified for Munich3D · DGM1",
+  "sources": [
+    {
+      "dataset": "OpenStreetMap",
+      "id": "Munich corridor extract",
+      "license": "ODbL-1.0",
+      "observedAt": "2026-07-14T23:18:29Z"
+    },
+    {
+      "dataset": "Landeshauptstadt München, Mobilitätsreferat – Parkseiten",
+      "id": "mor_wfs:ruhver_parkseiten_line",
+      "license": "dl-de/by-2-0"
+    },
+    {
+      "dataset": "Bavarian Surveying Administration LoD2",
+      "id": "lod2-munich-corridor.json",
+      "license": "CC-BY-4.0",
+      "observedAt": "2026-07-14T23:30:26.548859Z"
+    }
+  ],
+  "origin": {
+    "lat": 48.151,
+    "lon": 11.572
+  },
+  "tileSize": 500,
+  "bounds": {
+    "south": 48.134,
+    "west": 11.56,
+    "north": 48.17,
+    "east": 11.59
+  },
+  "treePlacements": {
+    "mappedPoints": 5159,
+    "sourceRows": 125,
+    "inferredFromRows": 1086,
+    "skippedNearMappedPoint": 15,
+    "skippedDuplicateRow": 2,
+    "skippedOutsideBounds": 65,
+    "defaultSpacingMeters": 10,
+    "streetCorridorNames": [
+      "Elisabethstraße"
+    ],
+    "sourceStreetWays": 10,
+    "inferredFromStreetCorridors": 27,
+    "skippedStreetNearKnownTree": 115,
+    "skippedStreetBuildingConflict": 0,
+    "skippedStreetDuplicate": 0,
+    "skippedStreetOutsideBounds": 18,
+    "streetCorridorSpacingMeters": 14,
+    "streetCorridorSetbackBeyondRoadMeters": 2.5,
+    "streetCorridorEndClearanceMeters": 9
+  },
+  "parkingRowStats": {
+    "features": 3366,
+    "sourceRows": 2818,
+    "tileRows": 3172,
+    "sourceCapacity": 26848,
+    "allocatedCapacity": 26848,
+    "skipped": 548,
+    "skippedByReason": {
+      "invalid_capacity": 396,
+      "non_parkable_rule": 152
+    },
+    "outsideTileRows": 25,
+    "runtimeTileRows": 3147,
+    "runtimeAllocatedCapacity": 26714,
+    "responseTimestamp": "2026-07-14T23:19:29.005Z"
+  },
+  "tiles": [
+    {
+      "id": "-2_-5",
+      "center": [
+        -750,
+        -2250
+      ],
+      "file": "/data/tiles/-2_-5.json",
+      "buildings": 62,
+      "businesses": 5,
+      "trees": 0,
+      "streetLamps": 0,
+      "benches": 0,
+      "parking": 3,
+      "parkingRows": 17
+    },
+    {
+      "id": "-2_-4",
+      "center": [
+        -750,
+        -1750
+      ],
+      "file": "/data/tiles/-2_-4.json",
+      "buildings": 203,
+      "businesses": 26,
+      "trees": 70,
+      "streetLamps": 0,
+      "benches": 15,
+      "parking": 12,
+      "parkingRows": 47
+    },
+    {
+      "id": "-2_-3",
+      "center": [
+        -750,
+        -1250
+      ],
+      "file": "/data/tiles/-2_-3.json",
+      "buildings": 201,
+      "businesses": 44,
+      "trees": 237,
+      "streetLamps": 0,
+      "benches": 17,
+      "parking": 9,
+      "parkingRows": 89
+    },
+    {
+      "id": "-2_-2",
+      "center": [
+        -750,
+        -750
+      ],
+      "file": "/data/tiles/-2_-2.json",
+      "buildings": 332,
+      "businesses": 69,
+      "trees": 166,
+      "streetLamps": 2,
+      "benches": 5,
+      "parking": 19,
+      "parkingRows": 98
+    },
+    {
+      "id": "-2_-1",
+      "center": [
+        -750,
+        -250
+      ],
+      "file": "/data/tiles/-2_-1.json",
+      "buildings": 435,
+      "businesses": 94,
+      "trees": 111,
+      "streetLamps": 0,
+      "benches": 7,
+      "parking": 5,
+      "parkingRows": 93
+    },
+    {
+      "id": "-2_0",
+      "center": [
+        -750,
+        250
+      ],
+      "file": "/data/tiles/-2_0.json",
+      "buildings": 398,
+      "businesses": 115,
+      "trees": 220,
+      "streetLamps": 3,
+      "benches": 9,
+      "parking": 18,
+      "parkingRows": 93
+    },
+    {
+      "id": "-2_1",
+      "center": [
+        -750,
+        750
+      ],
+      "file": "/data/tiles/-2_1.json",
+      "buildings": 197,
+      "businesses": 53,
+      "trees": 228,
+      "streetLamps": 17,
+      "benches": 15,
+      "parking": 6,
+      "parkingRows": 73
+    },
+    {
+      "id": "-2_2",
+      "center": [
+        -750,
+        1250
+      ],
+      "file": "/data/tiles/-2_2.json",
+      "buildings": 186,
+      "businesses": 101,
+      "trees": 43,
+      "streetLamps": 30,
+      "benches": 47,
+      "parking": 4,
+      "parkingRows": 39
+    },
+    {
+      "id": "-2_3",
+      "center": [
+        -750,
+        1750
+      ],
+      "file": "/data/tiles/-2_3.json",
+      "buildings": 253,
+      "businesses": 97,
+      "trees": 60,
+      "streetLamps": 1,
+      "benches": 1,
+      "parking": 5,
+      "parkingRows": 76
+    },
+    {
+      "id": "-1_-5",
+      "center": [
+        -250,
+        -2250
+      ],
+      "file": "/data/tiles/-1_-5.json",
+      "buildings": 38,
+      "businesses": 0,
+      "trees": 53,
+      "streetLamps": 0,
+      "benches": 15,
+      "parking": 3,
+      "parkingRows": 5
+    },
+    {
+      "id": "-1_-4",
+      "center": [
+        -250,
+        -1750
+      ],
+      "file": "/data/tiles/-1_-4.json",
+      "buildings": 139,
+      "businesses": 10,
+      "trees": 209,
+      "streetLamps": 0,
+      "benches": 56,
+      "parking": 12,
+      "parkingRows": 42
+    },
+    {
+      "id": "-1_-3",
+      "center": [
+        -250,
+        -1250
+      ],
+      "file": "/data/tiles/-1_-3.json",
+      "buildings": 409,
+      "businesses": 60,
+      "trees": 281,
+      "streetLamps": 21,
+      "benches": 28,
+      "parking": 26,
+      "parkingRows": 117
+    },
+    {
+      "id": "-1_-2",
+      "center": [
+        -250,
+        -750
+      ],
+      "file": "/data/tiles/-1_-2.json",
+      "buildings": 410,
+      "businesses": 61,
+      "trees": 310,
+      "streetLamps": 3,
+      "benches": 41,
+      "parking": 13,
+      "parkingRows": 121
+    },
+    {
+      "id": "-1_-1",
+      "center": [
+        -250,
+        -250
+      ],
+      "file": "/data/tiles/-1_-1.json",
+      "buildings": 367,
+      "businesses": 71,
+      "trees": 348,
+      "streetLamps": 7,
+      "benches": 106,
+      "parking": 5,
+      "parkingRows": 112
+    },
+    {
+      "id": "-1_0",
+      "center": [
+        -250,
+        250
+      ],
+      "file": "/data/tiles/-1_0.json",
+      "buildings": 154,
+      "businesses": 37,
+      "trees": 409,
+      "streetLamps": 34,
+      "benches": 78,
+      "parking": 10,
+      "parkingRows": 70
+    },
+    {
+      "id": "-1_1",
+      "center": [
+        -250,
+        750
+      ],
+      "file": "/data/tiles/-1_1.json",
+      "buildings": 188,
+      "businesses": 14,
+      "trees": 101,
+      "streetLamps": 33,
+      "benches": 46,
+      "parking": 13,
+      "parkingRows": 75
+    },
+    {
+      "id": "-1_2",
+      "center": [
+        -250,
+        1250
+      ],
+      "file": "/data/tiles/-1_2.json",
+      "buildings": 294,
+      "businesses": 139,
+      "trees": 63,
+      "streetLamps": 70,
+      "benches": 28,
+      "parking": 13,
+      "parkingRows": 71
+    },
+    {
+      "id": "-1_3",
+      "center": [
+        -250,
+        1750
+      ],
+      "file": "/data/tiles/-1_3.json",
+      "buildings": 328,
+      "businesses": 229,
+      "trees": 55,
+      "streetLamps": 34,
+      "benches": 10,
+      "parking": 6,
+      "parkingRows": 80
+    },
+    {
+      "id": "0_-5",
+      "center": [
+        250,
+        -2250
+      ],
+      "file": "/data/tiles/0_-5.json",
+      "buildings": 53,
+      "businesses": 3,
+      "trees": 63,
+      "streetLamps": 0,
+      "benches": 6,
+      "parking": 12,
+      "parkingRows": 32
+    },
+    {
+      "id": "0_-4",
+      "center": [
+        250,
+        -1750
+      ],
+      "file": "/data/tiles/0_-4.json",
+      "buildings": 279,
+      "businesses": 37,
+      "trees": 117,
+      "streetLamps": 0,
+      "benches": 30,
+      "parking": 18,
+      "parkingRows": 100
+    },
+    {
+      "id": "0_-3",
+      "center": [
+        250,
+        -1250
+      ],
+      "file": "/data/tiles/0_-3.json",
+      "buildings": 454,
+      "businesses": 160,
+      "trees": 235,
+      "streetLamps": 0,
+      "benches": 27,
+      "parking": 63,
+      "parkingRows": 105
+    },
+    {
+      "id": "0_-2",
+      "center": [
+        250,
+        -750
+      ],
+      "file": "/data/tiles/0_-2.json",
+      "buildings": 415,
+      "businesses": 163,
+      "trees": 188,
+      "streetLamps": 0,
+      "benches": 14,
+      "parking": 33,
+      "parkingRows": 133
+    },
+    {
+      "id": "0_-1",
+      "center": [
+        250,
+        -250
+      ],
+      "file": "/data/tiles/0_-1.json",
+      "buildings": 551,
+      "businesses": 178,
+      "trees": 75,
+      "streetLamps": 0,
+      "benches": 8,
+      "parking": 2,
+      "parkingRows": 124
+    },
+    {
+      "id": "0_0",
+      "center": [
+        250,
+        250
+      ],
+      "file": "/data/tiles/0_0.json",
+      "buildings": 449,
+      "businesses": 224,
+      "trees": 190,
+      "streetLamps": 17,
+      "benches": 20,
+      "parking": 12,
+      "parkingRows": 85
+    },
+    {
+      "id": "0_1",
+      "center": [
+        250,
+        750
+      ],
+      "file": "/data/tiles/0_1.json",
+      "buildings": 183,
+      "businesses": 89,
+      "trees": 195,
+      "streetLamps": 49,
+      "benches": 66,
+      "parking": 3,
+      "parkingRows": 70
+    },
+    {
+      "id": "0_2",
+      "center": [
+        250,
+        1250
+      ],
+      "file": "/data/tiles/0_2.json",
+      "buildings": 299,
+      "businesses": 299,
+      "trees": 65,
+      "streetLamps": 55,
+      "benches": 19,
+      "parking": 5,
+      "parkingRows": 32
+    },
+    {
+      "id": "0_3",
+      "center": [
+        250,
+        1750
+      ],
+      "file": "/data/tiles/0_3.json",
+      "buildings": 318,
+      "businesses": 373,
+      "trees": 106,
+      "streetLamps": 70,
+      "benches": 62,
+      "parking": 8,
+      "parkingRows": 51
+    },
+    {
+      "id": "1_-5",
+      "center": [
+        750,
+        -2250
+      ],
+      "file": "/data/tiles/1_-5.json",
+      "buildings": 101,
+      "businesses": 1,
+      "trees": 16,
+      "streetLamps": 0,
+      "benches": 1,
+      "parking": 5,
+      "parkingRows": 32
+    },
+    {
+      "id": "1_-4",
+      "center": [
+        750,
+        -1750
+      ],
+      "file": "/data/tiles/1_-4.json",
+      "buildings": 359,
+      "businesses": 32,
+      "trees": 102,
+      "streetLamps": 0,
+      "benches": 24,
+      "parking": 16,
+      "parkingRows": 105
+    },
+    {
+      "id": "1_-3",
+      "center": [
+        750,
+        -1250
+      ],
+      "file": "/data/tiles/1_-3.json",
+      "buildings": 429,
+      "businesses": 87,
+      "trees": 249,
+      "streetLamps": 3,
+      "benches": 27,
+      "parking": 75,
+      "parkingRows": 95
+    },
+    {
+      "id": "1_-2",
+      "center": [
+        750,
+        -750
+      ],
+      "file": "/data/tiles/1_-2.json",
+      "buildings": 286,
+      "businesses": 134,
+      "trees": 335,
+      "streetLamps": 0,
+      "benches": 89,
+      "parking": 20,
+      "parkingRows": 75
+    },
+    {
+      "id": "1_-1",
+      "center": [
+        750,
+        -250
+      ],
+      "file": "/data/tiles/1_-1.json",
+      "buildings": 247,
+      "businesses": 55,
+      "trees": 134,
+      "streetLamps": 13,
+      "benches": 57,
+      "parking": 0,
+      "parkingRows": 64
+    },
+    {
+      "id": "1_0",
+      "center": [
+        750,
+        250
+      ],
+      "file": "/data/tiles/1_0.json",
+      "buildings": 210,
+      "businesses": 23,
+      "trees": 104,
+      "streetLamps": 36,
+      "benches": 59,
+      "parking": 9,
+      "parkingRows": 44
+    },
+    {
+      "id": "1_1",
+      "center": [
+        750,
+        750
+      ],
+      "file": "/data/tiles/1_1.json",
+      "buildings": 152,
+      "businesses": 14,
+      "trees": 302,
+      "streetLamps": 23,
+      "benches": 87,
+      "parking": 6,
+      "parkingRows": 38
+    },
+    {
+      "id": "1_2",
+      "center": [
+        750,
+        1250
+      ],
+      "file": "/data/tiles/1_2.json",
+      "buildings": 286,
+      "businesses": 148,
+      "trees": 129,
+      "streetLamps": 21,
+      "benches": 23,
+      "parking": 4,
+      "parkingRows": 88
+    },
+    {
+      "id": "1_3",
+      "center": [
+        750,
+        1750
+      ],
+      "file": "/data/tiles/1_3.json",
+      "buildings": 352,
+      "businesses": 184,
+      "trees": 35,
+      "streetLamps": 9,
+      "benches": 21,
+      "parking": 7,
+      "parkingRows": 134
+    },
+    {
+      "id": "2_-5",
+      "center": [
+        1250,
+        -2250
+      ],
+      "file": "/data/tiles/2_-5.json",
+      "buildings": 29,
+      "businesses": 8,
+      "trees": 52,
+      "streetLamps": 0,
+      "benches": 3,
+      "parking": 1,
+      "parkingRows": 16
+    },
+    {
+      "id": "2_-4",
+      "center": [
+        1250,
+        -1750
+      ],
+      "file": "/data/tiles/2_-4.json",
+      "buildings": 257,
+      "businesses": 28,
+      "trees": 53,
+      "streetLamps": 8,
+      "benches": 2,
+      "parking": 3,
+      "parkingRows": 58
+    },
+    {
+      "id": "2_-3",
+      "center": [
+        1250,
+        -1250
+      ],
+      "file": "/data/tiles/2_-3.json",
+      "buildings": 281,
+      "businesses": 145,
+      "trees": 147,
+      "streetLamps": 32,
+      "benches": 44,
+      "parking": 9,
+      "parkingRows": 106
+    },
+    {
+      "id": "2_-2",
+      "center": [
+        1250,
+        -750
+      ],
+      "file": "/data/tiles/2_-2.json",
+      "buildings": 217,
+      "businesses": 19,
+      "trees": 96,
+      "streetLamps": 4,
+      "benches": 6,
+      "parking": 3,
+      "parkingRows": 62
+    },
+    {
+      "id": "2_-1",
+      "center": [
+        1250,
+        -250
+      ],
+      "file": "/data/tiles/2_-1.json",
+      "buildings": 105,
+      "businesses": 13,
+      "trees": 44,
+      "streetLamps": 0,
+      "benches": 42,
+      "parking": 7,
+      "parkingRows": 22
+    },
+    {
+      "id": "2_0",
+      "center": [
+        1250,
+        250
+      ],
+      "file": "/data/tiles/2_0.json",
+      "buildings": 4,
+      "businesses": 2,
+      "trees": 50,
+      "streetLamps": 1,
+      "benches": 37,
+      "parking": 0,
+      "parkingRows": 0
+    },
+    {
+      "id": "2_1",
+      "center": [
+        1250,
+        750
+      ],
+      "file": "/data/tiles/2_1.json",
+      "buildings": 59,
+      "businesses": 10,
+      "trees": 27,
+      "streetLamps": 11,
+      "benches": 20,
+      "parking": 15,
+      "parkingRows": 25
+    },
+    {
+      "id": "2_2",
+      "center": [
+        1250,
+        1250
+      ],
+      "file": "/data/tiles/2_2.json",
+      "buildings": 249,
+      "businesses": 56,
+      "trees": 187,
+      "streetLamps": 0,
+      "benches": 40,
+      "parking": 7,
+      "parkingRows": 84
+    },
+    {
+      "id": "2_3",
+      "center": [
+        1250,
+        1750
+      ],
+      "file": "/data/tiles/2_3.json",
+      "buildings": 181,
+      "businesses": 30,
+      "trees": 12,
+      "streetLamps": 12,
+      "benches": 29,
+      "parking": 0,
+      "parkingRows": 49
+    }
+  ],
+  "authoritativeCoverage": {
+    "west": 11.56,
+    "south": 48.134,
+    "east": 11.59,
+    "north": 48.17
+  }
+}

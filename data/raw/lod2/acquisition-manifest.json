@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "munich3d-bavaria-lod2-acquisition-v1",
+  "dataset": {
+    "name": "Bavarian Surveying Administration LoD2",
+    "productPage": "https://geodaten.bayern.de/opengeodata/OpenDataDetail.html?pn=lod2",
+    "license": "CC-BY-4.0",
+    "horizontalCrs": "EPSG:25832",
+    "format": "CityGML",
+    "tileSizeMeters": 2000
+  },
+  "request": {
+    "bboxWgs84": [
+      11.56,
+      48.134,
+      11.59,
+      48.17
+    ],
+    "tileIds": [
+      "690_5334",
+      "690_5336",
+      "690_5338",
+      "692_5334",
+      "692_5336",
+      "692_5338"
+    ]
+  },
+  "metalink": {
+    "url": "https://geodaten.bayern.de/odd/a/lod2/citygml/meta/metalink/09.meta4",
+    "published": "2026-07-14T21:09:38Z"
+  },
+  "tiles": [
+    {
+      "tileId": "690_5334",
+      "localPath": "690_5334.gml",
+      "url": "https://download1.bayernwolke.de/a/lod2/citygml/690_5334.gml",
+      "mirrors": [
+        "https://download1.bayernwolke.de/a/lod2/citygml/690_5334.gml",
+        "https://download2.bayernwolke.de/a/lod2/citygml/690_5334.gml"
+      ],
+      "sha256": "fa05d2a15ae676f2906cc1d0ff2f9889bd2d6c77b9bd0af38852e848a588ab23",
+      "bytes": 161627079
+    },
+    {
+      "tileId": "690_5336",
+      "localPath": "690_5336.gml",
+      "url": "https://download1.bayernwolke.de/a/lod2/citygml/690_5336.gml",
+      "mirrors": [
+        "https://download1.bayernwolke.de/a/lod2/citygml/690_5336.gml",
+        "https://download2.bayernwolke.de/a/lod2/citygml/690_5336.gml"
+      ],
+      "sha256": "8129a87794808742a47e277b293f336206e14dfdcc2cdd7be686d873b7d5d7a5",
+      "bytes": 147954131
+    },
+    {
+      "tileId": "690_5338",
+      "localPath": "690_5338.gml",
+      "url": "https://download1.bayernwolke.de/a/lod2/citygml/690_5338.gml",
+      "mirrors": [
+        "https://download1.bayernwolke.de/a/lod2/citygml/690_5338.gml",
+        "https://download2.bayernwolke.de/a/lod2/citygml/690_5338.gml"
+      ],
+      "sha256": "b69d6449f27347116aa5a659a42ca0ac5ef7ba0fbdca5ea0e71a701672410e84",
+      "bytes": 71798179
+    },
+    {
+      "tileId": "692_5334",
+      "localPath": "692_5334.gml",
+      "url": "https://download1.bayernwolke.de/a/lod2/citygml/692_5334.gml",
+      "mirrors": [
+        "https://download1.bayernwolke.de/a/lod2/citygml/692_5334.gml",
+        "https://download2.bayernwolke.de/a/lod2/citygml/692_5334.gml"
+      ],
+      "sha256": "1193453ab2dd07455649840bc7ea3fb624f354bde0c7d02b4ae75824b770b489",
+      "bytes": 120981419
+    },
+    {
+      "tileId": "692_5336",
+      "localPath": "692_5336.gml",
+      "url": "https://download1.bayernwolke.de/a/lod2/citygml/692_5336.gml",
+      "mirrors": [
+        "https://download1.bayernwolke.de/a/lod2/citygml/692_5336.gml",
+        "https://download2.bayernwolke.de/a/lod2/citygml/692_5336.gml"
+      ],
+      "sha256": "c1acf5c32061ec0d5348374f5e88a182da458b496c3bea84038e0d789741ef58",
+      "bytes": 75807889
+    },
+    {
+      "tileId": "692_5338",
+      "localPath": "692_5338.gml",
+      "url": "https://download1.bayernwolke.de/a/lod2/citygml/692_5338.gml",
+      "mirrors": [
+        "https://download1.bayernwolke.de/a/lod2/citygml/692_5338.gml",
+        "https://download2.bayernwolke.de/a/lod2/citygml/692_5338.gml"
+      ],
+      "sha256": "ea7bd934758beceed08925ce4a735bb7d3b927468d43124e751cbc23dc2e67ef",
+      "bytes": 74542925
+    }
+  ]
+}

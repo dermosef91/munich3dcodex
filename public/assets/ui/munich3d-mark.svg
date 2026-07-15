@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Munich 3D mark</title>
+  <desc id="desc">A circular monoline mark combining twin Munich domes, the letter M, and a street in perspective.</desc>
+  <circle cx="32" cy="32" r="29" fill="none" stroke="#f5f1e8" stroke-width="2"/>
+  <path d="M15 44V25c0-5 3.8-9 8.5-9s8.5 4 8.5 9v19M32 44V25c0-5 3.8-9 8.5-9s8.5 4 8.5 9v19" fill="none" stroke="#f5f1e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20.5 16c0-3.2 1.3-5.4 3-7.1 1.7 1.7 3 3.9 3 7.1M37.5 16c0-3.2 1.3-5.4 3-7.1 1.7 1.7 3 3.9 3 7.1" fill="none" stroke="#f5f1e8" stroke-width="2" stroke-linecap="round"/>
+  <path d="M26 51 32 32l6 19M21 51h22" fill="none" stroke="#f5f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

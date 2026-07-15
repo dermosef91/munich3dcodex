@@ -1,0 +1,43 @@
+{
+  "name": "munich-3d-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "data:all": "node scripts/rebuild-munich-data.mjs",
+    "data:munich": "node scripts/fetch-munich-osm.mjs",
+    "data:lod2:fetch": "node scripts/fetch-bavaria-lod2.mjs",
+    "data:lod2:merge": "node scripts/merge-lod2-runtime.mjs",
+    "data:lod2:test": "node scripts/test-fetch-bavaria-lod2.mjs && python3 scripts/test_convert_bavaria_lod2.py && node scripts/test-lod2-binary.mjs",
+    "data:validate": "node scripts/validate-data.mjs",
+    "landmarks:inspect": "node scripts/landmark-assets.mjs inspect",
+    "landmarks:validate": "node scripts/landmark-assets.mjs validate",
+    "test:orientation": "node scripts/test-world-orientation.mjs",
+    "test:data-pipeline": "node scripts/test-rebuild-munich-data.mjs && node scripts/test-osm-grounding.mjs && node scripts/test-osm-multipolygon-rendering.mjs && pnpm data:lod2:test && pnpm data:validate",
+    "test:materials": "node scripts/test-surface-materials.mjs",
+    "test:shadows": "node scripts/test-shadow-contract.mjs",
+    "test:facades": "node scripts/test-facade-contract.mjs",
+    "test:neutral-facades": "node scripts/test-neutral-facades.mjs",
+    "test:vehicles": "node scripts/test-vehicle-contract.mjs && node scripts/test-vehicle-parking.mjs",
+    "test:parking": "node scripts/test-munich-parking.mjs && node scripts/test-parking-layout.mjs && node scripts/test-parking-surfaces.mjs && node scripts/test-parking-runtime.mjs",
+    "test:trams": "node scripts/test-tram-routes.mjs && node scripts/test-tram-renderer.mjs",
+    "test:tree-rows": "node scripts/test-tree-rows.mjs",
+    "test:street-trees": "node scripts/test-street-tree-corridors.mjs",
+    "test:street-details": "node scripts/test-curbside-details.mjs && node scripts/test-street-surface-details.mjs",
+    "test:landmarks": "node scripts/landmark-assets.mjs validate && node scripts/test-landmark-contract.mjs && node scripts/test-landmark-textures.mjs"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^8.20.0",
+    "@babylonjs/loaders": "^8.20.0",
+    "earcut": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/earcut": "^3.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4"
+  },
+  "packageManager": "pnpm@11.7.0"
+}
