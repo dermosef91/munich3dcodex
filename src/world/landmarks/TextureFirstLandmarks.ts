@@ -32,6 +32,7 @@ export const NSDOKU_BUILDING_ID = 280_336_045;
 export const MUSEUM_FUENF_KONTINENTE_BUILDING_ID = 25_695_553;
 export const HOTEL_VIER_JAHRESZEITEN_BUILDING_ID = 25_505_398;
 export const RUFFINIHAUS_BUILDING_IDS = [233_918_201, 233_918_198, 219_027_197] as const;
+export const MUENCHNER_KAMMERSPIELE_BUILDING_IDS = [85_990_425, 328_018_432] as const;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -383,6 +384,35 @@ function createRuffinihaus(scene: Scene, parent: TransformNode): TransformNode {
   return root;
 }
 
+function kammerspieleSignMaterial(scene: Scene): StandardMaterial {
+  const material = dynamicMaterial(scene, "kammerspiele-sign-material", { width: 1536, height: 170 }, (context, width, height) => {
+    context.fillStyle = "#d9e1d6";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#254b46";
+    context.font = `600 ${Math.round(height * 0.38)}px Arial, sans-serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("MÜNCHNER KAMMERSPIELE", width * 0.5, height * 0.52);
+  });
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
+}
+
+function createMuenchnerKammerspiele(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-muenchner-kammerspiele");
+  if (existing) return existing;
+  const root = new TransformNode("landmark-muenchner-kammerspiele", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [778.945, 1397.457];
+  const start: FacadePoint = [741.710, 1377.500];
+  const end: FacadePoint = [816.350, 1398.520];
+  addFacadePlane(scene, root, "muenchner-kammerspiele-maximilianstrasse-facade", start, end, interior, 12.6, getLandmarkFacadeMaterial(scene, "muenchner-kammerspiele-maximilianstrasse"), 0.24);
+  addFacadeSign(scene, root, "muenchner-kammerspiele-wordmark", start, end, interior, 3.0, 18.0, 0.72, kammerspieleSignMaterial(scene));
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -561,6 +591,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createMuseumFuenfKontinente(scene, root);
   createHotelVierJahreszeiten(scene, root);
   createRuffinihaus(scene, root);
+  createMuenchnerKammerspiele(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

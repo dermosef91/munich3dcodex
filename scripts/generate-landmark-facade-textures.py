@@ -603,6 +603,51 @@ def generate_ruffinihaus() -> None:
     ruffinihaus_sheet("ruffinihaus-east.png", 1536, 1524, 6, 4)
 
 
+def kammerspiele_sheet() -> None:
+    """Render the Jugendstil Maximilianstrasse theatre frontage."""
+    width, height = 4096, 666
+    image = Image.new("RGB", (width, height), "#b9c9c4")
+    draw = ImageDraw.Draw(image)
+    pale = "#b9c9c4"
+    pale_light = "#dce5dc"
+    green = "#305853"
+    green_dark = "#203d3a"
+    brass = "#c5a56e"
+    glass = "#26383a"
+    draw.rectangle((0, 0, width, round(height * 0.10)), fill=pale_light)
+    draw.rectangle((0, round(height * 0.86), width, height), fill=green_dark)
+    for fraction in (0.17, 0.52, 0.82):
+        y = round(height * fraction)
+        draw.rectangle((0, y, width, y + 9), fill=brass)
+        draw.line((0, y + 12, width, y + 12), fill=pale_light, width=3)
+    bays = 15
+    bay_width = width / bays
+    for bay in range(bays):
+        center = round((bay + 0.5) * bay_width)
+        window_w = round(bay_width * 0.48)
+        left, right = center - window_w // 2, center + window_w // 2
+        draw.rectangle((left - 8, round(height * 0.23), right + 8, round(height * 0.47)), fill=green)
+        draw.rectangle((left, round(height * 0.25), right, round(height * 0.47)), fill=glass)
+        draw.line((center, round(height * 0.25), center, round(height * 0.47)), fill="#728e87", width=3)
+        # Curved original-art floral medallion between upper and lower zones.
+        draw.ellipse((center - round(bay_width * 0.12), round(height * 0.56), center + round(bay_width * 0.12), round(height * 0.70)), fill=brass)
+        draw.ellipse((center - round(bay_width * 0.075), round(height * 0.59), center + round(bay_width * 0.075), round(height * 0.67)), outline=green_dark, width=4)
+        arch_w = round(bay_width * 0.58)
+        left, right = center - arch_w // 2, center + arch_w // 2
+        top, bottom = round(height * 0.73), round(height * 0.94)
+        radius = arch_w // 2
+        draw.rectangle((left - 8, top - 8, right + 8, bottom), fill=green)
+        draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+        draw.rectangle((left, top + radius, right, bottom), fill=glass)
+    output = TEXTURE_ROOT / "muenchner-kammerspiele-maximilianstrasse.png"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_kammerspiele() -> None:
+    kammerspiele_sheet()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recipe", choices=(
@@ -614,6 +659,7 @@ def main() -> None:
         "museum-fuenf-kontinente",
         "hotel-vier-jahreszeiten",
         "ruffinihaus",
+        "muenchner-kammerspiele",
     ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
@@ -632,6 +678,8 @@ def main() -> None:
         generate_hotel_vier_jahreszeiten()
     elif args.recipe == "ruffinihaus":
         generate_ruffinihaus()
+    elif args.recipe == "muenchner-kammerspiele":
+        generate_kammerspiele()
 
 
 if __name__ == "__main__":

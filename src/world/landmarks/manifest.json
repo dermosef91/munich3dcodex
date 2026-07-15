@@ -1137,6 +1137,22 @@
       "provenance": { "method": "mixed", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "Three offline-generated facade sheets provide an original painted-facade interpretation; the exact building name is procedural and no reference pixels are embedded." }
     },
     {
+      "id": "muenchner-kammerspiele",
+      "label": "Münchner Kammerspiele Schauspielhaus",
+      "status": "integrated",
+      "implementation": { "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts", "rootNode": "landmark-muenchner-kammerspiele" },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [85990425, 328018432],
+        "replacementBuildingIds": [],
+        "note": "Preserve the street-front shell and courtyard theatre; add one thin non-colliding bitmap plane only to the recognizable Maximilianstrasse frontage."
+      },
+      "previews": [{ "id": "muenchner-kammerspiele", "position": [722.54, 4.6, 1360.01], "target": [779.03, 11.5, 1388.01], "fov": 0.86 }],
+      "textures": [{ "id": "muenchner-kammerspiele-maximilianstrasse", "file": "muenchner-kammerspiele-maximilianstrasse.png", "status": "integrated", "minimumWidth": 4096, "minimumHeight": 666, "roughness": 0.84, "specularIntensity": 0.26, "promptSummary": "Deterministic Jugendstil theatre elevation with pale green stone, dark green glazing and arcades, brass courses, and original floral medallion rhythm." }],
+      "references": [{ "url": "https://www.muenchner-kammerspiele.de/en/wir/mk/40667-the-schauspielhaus", "publisher": "Münchner Kammerspiele", "usage": "official-theatre-building-reference", "license": "Copyrighted official reference; reference-only, no source pixels embedded" }],
+      "provenance": { "method": "mixed", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "One offline-generated Jugendstil facade sheet restores the permanent theatre frontage; the exact wordmark remains procedural and no reference pixels are embedded." }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",
