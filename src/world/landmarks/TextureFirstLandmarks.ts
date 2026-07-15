@@ -8,6 +8,7 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import type { Scene } from "@babylonjs/core/scene";
+import { getLandmarkFacadeMaterial } from "../landmarkFacadeTextures";
 
 type FacadePoint = readonly [x: number, z: number];
 
@@ -366,91 +367,42 @@ function createBayerischeStaatsbibliothek(scene: Scene, parent: TransformNode): 
   return root;
 }
 
-function hofbraeuhausMaterial(
-  scene: Scene,
-  name: string,
-  options: { readonly bays: number; readonly sign: boolean },
-): StandardMaterial {
-  return dynamicMaterial(scene, name, { width: 1536, height: 1024 }, (context, width, height) => {
-    context.fillStyle = "#ded0ad";
+function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
+  return dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
+    context.fillStyle = "#f1ead5";
     context.fillRect(0, 0, width, height);
-    context.fillStyle = "#9f927a";
-    context.fillRect(0, height * 0.87, width, height * 0.13);
-    context.fillStyle = "rgba(244, 236, 213, 0.82)";
-    for (const y of [height * 0.25, height * 0.49, height * 0.72, height * 0.86]) {
-      context.fillRect(0, y, width, 8);
-    }
-
-    const bayWidth = width / options.bays;
-    for (let bay = 0; bay < options.bays; bay += 1) {
-      const centerX = bayWidth * (bay + 0.5);
-      context.fillStyle = "rgba(235, 224, 196, 0.88)";
-      context.fillRect(centerX - 5, 0, 10, height * 0.87);
-      for (const floorTop of [0.10, 0.34, 0.58]) {
-        const windowWidth = bayWidth * 0.48;
-        const windowHeight = height * 0.14;
-        const left = centerX - windowWidth * 0.5;
-        const top = height * floorTop;
-        context.fillStyle = "#f0e5ca";
-        context.fillRect(left - 7, top - 7, windowWidth + 14, windowHeight + 14);
-        context.fillStyle = "#24463d";
-        context.fillRect(left, top, windowWidth, windowHeight);
-        context.strokeStyle = "#80a39a";
-        context.lineWidth = 4;
-        context.beginPath();
-        context.moveTo(centerX, top + 2);
-        context.lineTo(centerX, top + windowHeight - 2);
-        context.moveTo(left + 2, top + windowHeight * 0.5);
-        context.lineTo(left + windowWidth - 2, top + windowHeight * 0.5);
-        context.stroke();
-      }
-
-      const arcadeWidth = bayWidth * 0.62;
-      const arcadeLeft = centerX - arcadeWidth * 0.5;
-      const arcadeTop = height * 0.76;
-      const arcadeBottom = height * 0.91;
-      context.fillStyle = "#ece0c4";
-      context.beginPath();
-      context.moveTo(arcadeLeft - 8, arcadeBottom);
-      context.lineTo(arcadeLeft - 8, arcadeTop + arcadeWidth * 0.5);
-      context.arc(centerX, arcadeTop + arcadeWidth * 0.5, arcadeWidth * 0.5 + 8, Math.PI, 0);
-      context.lineTo(arcadeLeft + arcadeWidth + 8, arcadeBottom);
-      context.closePath();
-      context.fill();
-      context.fillStyle = "#283e37";
-      context.beginPath();
-      context.moveTo(arcadeLeft, arcadeBottom);
-      context.lineTo(arcadeLeft, arcadeTop + arcadeWidth * 0.5);
-      context.arc(centerX, arcadeTop + arcadeWidth * 0.5, arcadeWidth * 0.5, Math.PI, 0);
-      context.lineTo(arcadeLeft + arcadeWidth, arcadeBottom);
-      context.closePath();
-      context.fill();
-    }
-
-    if (options.sign) {
-      context.fillStyle = "#f1ead5";
-      context.fillRect(width * 0.31, height * 0.51, width * 0.38, height * 0.085);
-      context.strokeStyle = "#2f5f51";
-      context.lineWidth = 7;
-      context.strokeRect(width * 0.31, height * 0.51, width * 0.38, height * 0.085);
-      context.fillStyle = "#234e43";
-      context.font = `700 ${Math.round(height * 0.052)}px Georgia, serif`;
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText("HOFBRÄUHAUS", width * 0.5, height * 0.553);
-
-      context.fillStyle = "#f1ead5";
-      context.beginPath();
-      context.arc(width * 0.5, height * 0.20, height * 0.075, 0, Math.PI * 2);
-      context.fill();
-      context.strokeStyle = "#2f5f51";
-      context.lineWidth = 7;
-      context.stroke();
-      context.fillStyle = "#234e43";
-      context.font = `700 ${Math.round(height * 0.078)}px Georgia, serif`;
-      context.fillText("HB", width * 0.5, height * 0.205);
-    }
+    context.strokeStyle = "#2f5f51";
+    context.lineWidth = 18;
+    context.strokeRect(10, 10, width - 20, height - 20);
+    context.fillStyle = "#234e43";
+    context.font = `700 ${Math.round(height * 0.48)}px Georgia, serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("HOFBRÄUHAUS", width * 0.5, height * 0.52);
   });
+}
+
+function addFacadeSign(
+  scene: Scene,
+  parent: TransformNode,
+  name: string,
+  start: FacadePoint,
+  end: FacadePoint,
+  interior: FacadePoint,
+  y: number,
+  width: number,
+  height: number,
+  material: Material,
+): Mesh {
+  const frame = facadeFrame(start, end, interior);
+  const mesh = MeshBuilder.CreatePlane(name, { width, height, sideOrientation: Mesh.FRONTSIDE }, scene);
+  mesh.parent = parent;
+  mesh.position.copyFrom(frame.center.add(frame.outward.scale(0.095)).add(new Vector3(0, y, 0)));
+  mesh.rotation.y = frame.yaw + Math.PI;
+  mesh.material = material;
+  mesh.isPickable = false;
+  mesh.checkCollisions = false;
+  return mesh;
 }
 
 function createHofbraeuhaus(scene: Scene, parent: TransformNode): TransformNode {
@@ -460,12 +412,14 @@ function createHofbraeuhaus(scene: Scene, parent: TransformNode): TransformNode 
   const root = new TransformNode("landmark-hofbraeuhaus", scene);
   root.parent = parent;
   const interior: FacadePoint = [589.415, 1490.816];
-  const main = hofbraeuhausMaterial(scene, "hofbraeuhaus-platzl-main-material", { bays: 7, sign: true });
-  const corner = hofbraeuhausMaterial(scene, "hofbraeuhaus-platzl-corner-material", { bays: 8, sign: false });
+  const facade = getLandmarkFacadeMaterial(scene, "hofbraeuhaus");
+  const westStart: FacadePoint = [569.931, 1491.400];
+  const westEnd: FacadePoint = [585.148, 1471.694];
 
   // The two articulated Platzl elevations meet at the famous public corner.
-  addFacadePlane(scene, root, "hofbraeuhaus-platzl-west-facade", [569.931, 1491.400], [585.148, 1471.694], interior, 18.4, main);
-  addFacadePlane(scene, root, "hofbraeuhaus-platzl-north-facade", [585.148, 1471.694], [608.899, 1489.843], interior, 18.4, corner);
+  addFacadePlane(scene, root, "hofbraeuhaus-platzl-west-facade", westStart, westEnd, interior, 18.4, facade);
+  addFacadePlane(scene, root, "hofbraeuhaus-platzl-north-facade", [585.148, 1471.694], [608.899, 1489.843], interior, 18.4, facade);
+  addFacadeSign(scene, root, "hofbraeuhaus-platzl-name-sign", westStart, westEnd, interior, 10.35, 8.4, 1.45, hofbraeuhausSignMaterial(scene));
   return root;
 }
 

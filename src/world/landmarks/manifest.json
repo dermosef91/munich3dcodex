@@ -647,7 +647,7 @@
         "mode": "preserve",
         "targetBuildingIds": [1273939826],
         "replacementBuildingIds": [],
-        "note": "Preserve the compact Bavarian LoD2 tavern shell and roof; add thin non-colliding procedural sheets to the two public Platzl elevations."
+        "note": "Preserve the compact Bavarian LoD2 tavern shell and roof; add thin non-colliding custom facade sheets to the two public Platzl elevations."
       },
       "previews": [
         {
@@ -657,7 +657,18 @@
           "fov": 0.96
         }
       ],
-      "textures": [],
+      "textures": [
+        {
+          "id": "hofbraeuhaus",
+          "file": "hofbraeuhaus-facade.png",
+          "status": "integrated",
+          "minimumWidth": 1536,
+          "minimumHeight": 1024,
+          "roughness": 0.88,
+          "specularIntensity": 0.22,
+          "promptSummary": "Rectified neutral-lit Hofbraeuhaus-inspired cream-and-green historic tavern elevation with repeated upper windows and darker arched ground-floor openings; no text, people, vehicles, sky, or source pixels."
+        }
+      ],
       "references": [
         {
           "url": "https://www.hofbraeuhaus.de/en/history/",
@@ -667,10 +678,10 @@
         }
       ],
       "provenance": {
-        "method": "procedural",
+        "method": "mixed",
         "reviewStatus": "needs-user-review",
         "pixelsEmbedded": false,
-        "note": "Original procedural cream-and-green tavern elevations and exact-name sign treatment; no source-image pixels embedded."
+        "note": "Original generated facade art plus procedural exact-name sign treatment; official imagery was used as reference only and contributed no pixels."
       }
     },
     {

@@ -11,7 +11,8 @@ export type LandmarkFacadeTextureId =
   | "stadtarchiv"
   | "kreuzkirche"
   | "hermann-frieb-realschule"
-  | "cafe-franca";
+  | "cafe-franca"
+  | "hofbraeuhaus";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -59,6 +60,11 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "cafe-franca-facade.png",
     roughness: 0.84,
     specularIntensity: 0.24,
+  },
+  hofbraeuhaus: {
+    file: "hofbraeuhaus-facade.png",
+    roughness: 0.88,
+    specularIntensity: 0.22,
   },
 };
 
