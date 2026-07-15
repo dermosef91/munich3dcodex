@@ -140,7 +140,9 @@ export class KeyboardMovement {
       return;
     }
     if (this.flying && (event.code === "Space" || event.code === "ControlLeft" || event.code === "ControlRight")) {
+      const isNewPress = !this.pressed.has(event.code);
       this.pressed.add(event.code);
+      if (isNewPress) this.applyVerticalMovement(1 / 60);
       event.preventDefault();
       return;
     }
