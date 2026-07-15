@@ -295,7 +295,9 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function nextRenderedFrame(): Promise<void> {
-  return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+  return new Promise((resolve) => {
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => resolve()));
+  });
 }
 
 async function prepareOptionalWorldDetails(): Promise<void> {

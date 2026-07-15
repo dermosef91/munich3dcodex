@@ -90,6 +90,15 @@ try {
       `${optionalModule} must load dynamically after entry`,
     );
   }
+  const paintBarrierSource = mainSource.slice(
+    mainSource.indexOf("function nextRenderedFrame"),
+    mainSource.indexOf("async function prepareOptionalWorldDetails"),
+  );
+  assert.equal(
+    paintBarrierSource.match(/requestAnimationFrame/g)?.length,
+    2,
+    "optional detail construction must wait until the playable state has painted",
+  );
 
   const { AdaptivePerformanceController } = await vite.ssrLoadModule(
     "/src/performance/AdaptivePerformanceController.ts",
