@@ -16,13 +16,11 @@ import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { PhotoDome } from "@babylonjs/core/Helpers/photoDome";
+import type { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { WorldStreamer } from "./world/WorldStreamer";
 import { closestDistrict, DISTRICTS, type DistrictId, worldToLonLat } from "./world/geo";
-import { loadCustomAssets } from "./customAssets";
 import { KeyboardMovement } from "./player/KeyboardMovement";
-import { createSchwabingDetails } from "./world/SchwabingDetails";
-import { createLandmarkDetails, landmarkPreview } from "./world/LandmarkDetails";
-import { loadMickyStatue } from "./world/landmarks/MickyStatue";
+import { landmarkPreview } from "./world/landmarkPreview";
 import { VehicleSystem } from "./world/vehicles";
 import { TramSystem } from "./world/tram";
 import { GroundShadowSystem } from "./world/GroundShadowSystem";
@@ -298,19 +296,27 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function nextRenderedFrame(): Promise<void> {
-  return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+  return new Promise((resolve) => {
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => resolve()));
+  });
 }
 
 async function prepareOptionalWorldDetails(): Promise<void> {
+  const schwabingModulePromise = import("./world/SchwabingDetails");
+  const landmarkModulePromise = import("./world/LandmarkDetails");
+  const mickyStatueModulePromise = import("./world/landmarks/MickyStatue");
+  const customAssetsModulePromise = import("./customAssets");
   await nextRenderedFrame();
   try {
+    const { createSchwabingDetails } = await schwabingModulePromise;
     createSchwabingDetails(scene);
   } catch (error) {
     console.warn("Schwabing details could not be prepared.", error);
   }
   await nextRenderedFrame();
-  let landmarkRoot: ReturnType<typeof createLandmarkDetails> | undefined;
+  let landmarkRoot: TransformNode | undefined;
   try {
+    const { createLandmarkDetails } = await landmarkModulePromise;
     landmarkRoot = createLandmarkDetails(scene);
   } catch (error) {
     console.warn("Landmark details could not be prepared.", error);
@@ -318,6 +324,7 @@ async function prepareOptionalWorldDetails(): Promise<void> {
   await nextRenderedFrame();
   if (landmarkRoot) {
     try {
+      const { loadMickyStatue } = await mickyStatueModulePromise;
       const mickyStatueMeshes = await loadMickyStatue(scene, landmarkRoot);
       sunShadows.registerDynamicCasters("micky-statue", mickyStatueMeshes);
     } catch (error) {
@@ -326,6 +333,7 @@ async function prepareOptionalWorldDetails(): Promise<void> {
   }
   await nextRenderedFrame();
   try {
+    const { loadCustomAssets } = await customAssetsModulePromise;
     await loadCustomAssets(scene);
   } catch (error) {
     console.warn("Custom assets could not be prepared.", error);

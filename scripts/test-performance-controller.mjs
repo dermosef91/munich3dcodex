@@ -75,6 +75,30 @@ try {
     startSource.indexOf("revealWorld()") < startSource.indexOf("prepareOptionalWorldDetails()"),
     "optional landmark details must begin only after the world becomes playable",
   );
+  for (const optionalModule of [
+    "./world/SchwabingDetails",
+    "./world/LandmarkDetails",
+    "./customAssets",
+  ]) {
+    assert.equal(
+      mainSource.includes(`from \"${optionalModule}\"`),
+      false,
+      `${optionalModule} must stay out of the critical static import graph`,
+    );
+    assert.ok(
+      mainSource.includes(`import(\"${optionalModule}\")`),
+      `${optionalModule} must load dynamically after entry`,
+    );
+  }
+  const paintBarrierSource = mainSource.slice(
+    mainSource.indexOf("function nextRenderedFrame"),
+    mainSource.indexOf("async function prepareOptionalWorldDetails"),
+  );
+  assert.equal(
+    paintBarrierSource.match(/requestAnimationFrame/g)?.length,
+    2,
+    "optional detail construction must wait until the playable state has painted",
+  );
 
   const { AdaptivePerformanceController } = await vite.ssrLoadModule(
     "/src/performance/AdaptivePerformanceController.ts",

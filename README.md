@@ -104,7 +104,7 @@ pnpm preview
 - Merged tile meshes, collisions, gravity, keyboard movement and jumping
 - Batched OSM street furniture, hardware-instanced trees and generated storefronts
 - Adaptive render resolution with a tree-shadow fallback when frame time remains constrained
-- Progressive startup that makes the nearest streamed world playable before optional vehicles and detail assets finish
+- Progressive startup that makes the nearest streamed world playable before dynamically imported vehicles and detail assets finish
 - Enterable parked cars, chase-camera driving and deterministic ambient traffic
 - Georeferenced GLB custom assets placed by longitude and latitude
 - Procedural fallback when generated map files are unavailable
