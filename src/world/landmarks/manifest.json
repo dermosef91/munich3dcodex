@@ -1172,6 +1172,22 @@
       "provenance": { "method": "mixed", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "One offline-generated theatre facade sheet restores the permanent red-and-gold public identity; the exact name is procedural and no reference pixels are embedded." }
     },
     {
+      "id": "frauenkirche",
+      "label": "Frauenkirche",
+      "status": "integrated",
+      "implementation": { "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts", "rootNode": "landmark-frauenkirche" },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [225698612],
+        "replacementBuildingIds": [],
+        "note": "Preserve the complete detailed Bavarian LoD2 church, including towers and domes; add one thin non-colliding texture-led plane only to the broad Frauenplatz base elevation."
+      },
+      "previews": [{ "id": "frauenkirche", "position": [120.0, 4.8, 1435.0], "target": [120.0, 30.0, 1403.0], "fov": 1.0 }],
+      "textures": [{ "id": "frauenkirche-frauenplatz", "file": "frauenkirche-frauenplatz.png", "status": "integrated", "minimumWidth": 1536, "minimumHeight": 1024, "roughness": 0.92, "specularIntensity": 0.16, "promptSummary": "Original rectified neutral-lit Frauenplatz-facing Gothic brick elevation with pale limestone trim, pointed arch openings, dark glazing, and no baked signage or source pixels." }],
+      "references": [{ "url": "https://www.muenchen.de/sehenswuerdigkeiten/bauwerke-und-denkmaeler/frauenkirche", "publisher": "Landeshauptstadt München", "usage": "official-building-and-facade-reference", "license": "Copyrighted official reference; reference-only, no source pixels embedded" }],
+      "provenance": { "method": "original-art", "reviewStatus": "needs-user-review", "pixelsEmbedded": false, "note": "One original generated lower-elevation facade sheet restores the brick-and-stone public identity; the existing LoD2 towers, roofs, and copper domes remain intact and no source pixels are embedded." }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",
@@ -1243,8 +1259,8 @@
       "provenance": {
         "method": "original-art",
         "reviewStatus": "needs-user-review",
-        "pixelsEmbedded": false,
-        "note": "User-supplied GLB integrated without geometry or texture modification; authorship and reuse rights were not independently verified."
+        "pixelsEmbedded": true,
+        "note": "User-supplied textured GLB integrated without geometry or texture modification; authorship and reuse rights were not independently verified."
       }
     }
   ]

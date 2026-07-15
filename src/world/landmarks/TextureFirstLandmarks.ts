@@ -34,6 +34,7 @@ export const HOTEL_VIER_JAHRESZEITEN_BUILDING_ID = 25_505_398;
 export const RUFFINIHAUS_BUILDING_IDS = [233_918_201, 233_918_198, 219_027_197] as const;
 export const MUENCHNER_KAMMERSPIELE_BUILDING_IDS = [85_990_425, 328_018_432] as const;
 export const DEUTSCHES_THEATER_BUILDING_ID = 116_642_230;
+export const FRAUENKIRCHE_BUILDING_ID = 225_698_612;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -443,6 +444,18 @@ function createDeutschesTheater(scene: Scene, parent: TransformNode): TransformN
   return root;
 }
 
+function createFrauenkirche(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-frauenkirche");
+  if (existing) return existing;
+  const root = new TransformNode("landmark-frauenkirche", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [120.255, 1380.434];
+  // The Frauenplatz side is the broad southern church elevation; the LoD2
+  // towers and copper domes remain authoritative above this texture-led base.
+  addFacadePlane(scene, root, "frauenkirche-frauenplatz-facade", [66.30, 1404.49], [156.176, 1402.138], interior, 60.0, getLandmarkFacadeMaterial(scene, "frauenkirche-frauenplatz"), 0.30);
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -623,6 +636,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createRuffinihaus(scene, root);
   createMuenchnerKammerspiele(scene, root);
   createDeutschesTheater(scene, root);
+  createFrauenkirche(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;
