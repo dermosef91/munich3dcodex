@@ -118,7 +118,7 @@ try {
     ["roads-sidewalk-material-contract", "munich-sidewalk-v2.png", 12],
     ["greens-grass-material-contract", "munich-park-grass-v2.png", 4],
     ["greens-water-material-contract", "munich-water-v1.png", 4],
-    ["parking-bands-material-contract", "munich-cobblestone-v1.png", 4],
+    ["parking-bands-material-contract", "munich-asphalt-v1.png", 4],
   ];
 
   for (const [name, textureFile, vertices] of textureCases) {
@@ -134,18 +134,18 @@ try {
     assert.ok(new Set(uvs).size > 1, `${name} UVs must vary so the texture can tile`);
   }
 
-  const cobblestoneRoad = byName.get("roads-cobblestone-material-contract");
+  const asphaltRoad = byName.get("roads-asphalt-material-contract");
   const parkingBand = byName.get("parking-bands-material-contract");
-  assert.ok(cobblestoneRoad && parkingBand, "cobblestone road and parking band must both exist");
+  assert.ok(asphaltRoad && parkingBand, "asphalt road and parking band must both exist");
   assert.equal(
     parkingBand.material,
-    cobblestoneRoad.material,
-    "parking must reuse the existing shared cobblestone material and texture instance",
+    asphaltRoad.material,
+    "parking must reuse the existing shared asphalt material and texture instance",
   );
   assert.deepEqual(
     parkingBand.getVerticesData(VertexBuffer.UVKind),
-    [0, 5.8, 2.5, 5.8, 2.5, 5.2, 0, 5.2],
-    "parking cobblestones must retain the four-metre world-space texture phase",
+    [0, 2.32, 1, 2.32, 1, 2.08, 0, 2.08],
+    "parking asphalt must retain the twelve-metre world-space texture phase",
   );
   const parkingBoundary = byName.get("parking-boundaries-material-contract");
   assert.ok(parkingBoundary, "parking must have a continuous perimeter separator");

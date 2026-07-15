@@ -1,9 +1,9 @@
-import "@babylonjs/core/Meshes/thinInstanceMesh";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { Matrix, Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import "@babylonjs/core/Meshes/instancedMesh";
 import type { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import type { Scene } from "@babylonjs/core/scene";
 import type { TreeFeature } from "./types";
@@ -250,22 +250,25 @@ export class TreeAssetRenderer {
       mesh.onDisposeObservable.addOnce(() => this.liveMeshes.delete(mesh));
     };
 
-    const matrices = new Float32Array(transforms.length * 16);
-    const matrix = new Matrix();
-    for (let index = 0; index < transforms.length; index += 1) {
-      const transform = transforms[index];
-      Matrix.ComposeToRef(transform.scaling, transform.rotation, transform.position, matrix);
-      matrix.copyToArray(matrices, index * 16);
-    }
+    const applyTransform = (mesh: AbstractMesh, transform: TreeTransform): void => {
+      mesh.position.copyFrom(transform.position);
+      mesh.rotationQuaternion = transform.rotation.clone();
+      mesh.scaling.copyFrom(transform.scaling);
+    };
     for (const mesh of [stem, leaves]) {
-      mesh.thinInstanceSetBuffer("matrix", matrices, 16, true);
-      mesh.thinInstanceRefreshBoundingInfo(true);
+      applyTransform(mesh, transforms[0]);
+      for (let index = 1; index < transforms.length; index += 1) {
+        const instance = mesh.createInstance(`${mesh.name}-${index}`);
+        instance.isPickable = false;
+        instance.checkCollisions = false;
+        applyTransform(instance, transforms[index]);
+      }
     }
     track(stem);
     track(leaves);
 
-    // One trunk draw and one canopy draw per tile. Thin instances keep the
-    // complete tree set in two bounded meshes, including the shadow pass.
+    // One trunk source and one canopy source per tile. Babylon renders their
+    // ordinary instances as two hardware-instanced batches, including shadows.
     this.prepareMaterial(stem, true);
     this.prepareMaterial(leaves, true);
     return { meshes: [stem, leaves], shadowCasters: [stem, leaves] };

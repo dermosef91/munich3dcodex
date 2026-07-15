@@ -1932,9 +1932,9 @@ export function buildTileMeshSet(
     tile.id,
     parkingLayout,
     scene,
-    materials.surfaces.cobblestone,
+    materials.surfaces.asphalt,
     materials.curbTop,
-    SURFACE_REPEAT_METERS.cobblestone,
+    SURFACE_REPEAT_METERS.asphalt,
   );
   const streetSurfaceDetails = buildStreetSurfaceDetails(tile, scene, {
     includeMunicipalParkingBands: false,

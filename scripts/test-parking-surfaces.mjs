@@ -61,10 +61,10 @@ try {
     buildParkingSurfaceGeometry,
     buildParkingSurfaceMeshes,
   } = await vite.ssrLoadModule("/src/world/parkingSurfaces.ts");
-  const cobblestoneMaterial = new StandardMaterial("existing-cobblestone-material", scene);
+  const asphaltMaterial = new StandardMaterial("existing-asphalt-material", scene);
   const boundaryMaterial = new StandardMaterial("existing-curb-top-material", scene);
 
-  const full = buildParkingSurfaceGeometry(ribbonLayout(), 4);
+  const full = buildParkingSurfaceGeometry(ribbonLayout(), 12);
   assert.equal(full.renderedSurfaces, 1);
   assert.equal(full.bands.positions.length, 12, "one straight ribbon must use four vertices");
   assert.equal(full.bands.indices.length, 6, "one straight ribbon must use two triangles");
@@ -72,8 +72,8 @@ try {
   assert.equal(full.boundaries.indices.length, 12, "the two continuous edges must use four triangles");
   assert.deepEqual(
     full.bands.uvs,
-    [0, 0.3, 5, 0.3, 5, -0.3, 0, -0.3],
-    "parking UVs must retain the four-metre world-space cobblestone phase",
+    [0, 1.2 / 12, 20 / 12, 1.2 / 12, 20 / 12, -1.2 / 12, 0, -1.2 / 12],
+    "parking UVs must retain the twelve-metre world-space asphalt phase",
   );
   assert.ok(upwardNormalY(full.bands.positions, full.bands.indices) > 0, "parking triangles must face +Y");
   assert.equal("dividers" in full, false, "parking geometry must not expose bay-line buffers");
@@ -85,7 +85,7 @@ try {
       reason: "crossing",
       outline: [[8, -2], [12, -2], [12, 2], [8, 2]],
     }],
-  }), 4);
+  }), 12);
   assert.ok(clipped.bands.indices.length > 0, "parking must remain visible on both sides of a crossing");
   for (const [x, z] of triangleCentroids(clipped.bands)) {
     assert.equal(
@@ -112,8 +112,8 @@ try {
       outline: [[30, 0], [40, 0], [40, 8], [30, 8]],
     }],
     exclusions: [],
-  }, 4);
-  assert.equal(polygon.bands.indices.length, 6, "mapped parking lots must render as cobblestone polygons");
+  }, 12);
+  assert.equal(polygon.bands.indices.length, 6, "mapped parking lots must render as asphalt polygons");
   assert.equal(polygon.boundaries.indices.length, 24, "mapped lot perimeter must get one continuous separator");
 
   assert.throws(
@@ -122,7 +122,7 @@ try {
     "invalid texture repeats must fail before producing broken UVs",
   );
   assert.deepEqual(
-    buildParkingSurfaceGeometry(ribbonLayout(), 4),
+    buildParkingSurfaceGeometry(ribbonLayout(), 12),
     full,
     "parking geometry must be deterministic",
   );
@@ -131,9 +131,9 @@ try {
     "parking-surface-test",
     ribbonLayout(),
     scene,
-    cobblestoneMaterial,
+    asphaltMaterial,
     boundaryMaterial,
-    4,
+    12,
   );
   assert.deepEqual(
     meshes.map((mesh) => mesh.name),
@@ -141,7 +141,7 @@ try {
     "one tile must use one surface batch and one continuous-boundary batch",
   );
   const [bandMesh, boundaryMesh] = meshes;
-  assert.equal(bandMesh.material, cobblestoneMaterial, "the existing cobblestone material must be reused");
+  assert.equal(bandMesh.material, asphaltMaterial, "the existing asphalt material must be reused");
   assert.equal(boundaryMesh.material, boundaryMaterial, "the existing curb material must be reused");
   assert.equal(bandMesh.checkCollisions, false);
   assert.equal(boundaryMesh.checkCollisions, false);
@@ -150,7 +150,7 @@ try {
   assert.deepEqual(bandMesh.metadata, {
     kind: "parking-surface",
     canonicalLayout: true,
-    surface: "cobblestone",
+    surface: "asphalt",
     bayDemarcation: false,
   });
   assert.deepEqual(boundaryMesh.metadata, {
@@ -176,12 +176,12 @@ try {
   );
 
   assert.deepEqual(
-    buildParkingSurfaceMeshes("empty", undefined, scene, cobblestoneMaterial, boundaryMaterial, 4),
+    buildParkingSurfaceMeshes("empty", undefined, scene, asphaltMaterial, boundaryMaterial, 12),
     [],
   );
 
   process.stdout.write(
-    "Parking surfaces valid: canonical cobblestone, continuous edge separation, exact exclusion masks, and no bay lines.\n",
+    "Parking surfaces valid: canonical asphalt, continuous edge separation, exact exclusion masks, and no bay lines.\n",
   );
 } finally {
   scene.dispose();

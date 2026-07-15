@@ -456,26 +456,19 @@ function addWornRectangle(
   y: number,
   key: string,
 ): void {
-  const chunks = length > 1.4 ? 3 : 2;
-  const chunkLength = length / chunks;
-  for (let chunk = 0; chunk < chunks; chunk += 1) {
-    const wear = 0.035 + random01(key, 0x1700 + chunk) * Math.min(0.16, chunkLength * 0.2);
-    const localCenter = -length * 0.5 + chunkLength * (chunk + 0.5);
-    const point: Point2 = [
-      center[0] + forward[0] * localCenter,
-      center[1] + forward[1] * localCenter,
-    ];
-    addQuad(
-      target,
-      point,
-      forward,
-      Math.max(0.04, chunkLength - wear),
-      width * (0.9 + random01(key, 0x2710 + chunk) * 0.1),
-      y,
-      variedColor(COLORS.paint, `${key}:${chunk}`, 0.08),
-      [[0.015, 0.015], [0.985, 0.015], [0.985, 0.985], [0.015, 0.985]],
-    );
-  }
+  // The texture supplies chips and edge wear. Splitting one dash into several
+  // quads created a misleading burst of short markings between normal gaps.
+  const wear = 0.035 + random01(key, 0x1700) * Math.min(0.16, length * 0.06);
+  addQuad(
+    target,
+    center,
+    forward,
+    Math.max(0.04, length - wear),
+    width * (0.9 + random01(key, 0x2710) * 0.1),
+    y,
+    variedColor(COLORS.paint, key, 0.08),
+    [[0.015, 0.015], [0.985, 0.015], [0.985, 0.985], [0.015, 0.985]],
+  );
 }
 
 function pointsMatch(first: Point2, second: Point2): boolean {

@@ -5,12 +5,6 @@ import {
   LOD2_BINARY_FORMAT,
   LOD2_BINARY_VERSION,
 } from "../src/world/lod2Binary.mjs";
-import {
-  decodeTerrainHeightGrid,
-  TERRAIN_BINARY_FORMAT,
-  TERRAIN_BINARY_VERSION,
-  TERRAIN_QUANTIZATION_METERS,
-} from "../src/world/terrainBinary.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const dataDirectory = path.join(root, "public", "data");
@@ -35,13 +29,6 @@ let businessCount = 0;
 let storefrontCount = 0;
 let lod2SidecarCount = 0;
 let packedLod2BuildingCount = 0;
-let terrainSidecarCount = 0;
-let terrainBytes = 0;
-let terrainMinimum = Number.POSITIVE_INFINITY;
-let terrainMaximum = Number.NEGATIVE_INFINITY;
-let terrainSeamCount = 0;
-let terrainSeamSampleCount = 0;
-const terrainByTile = new Map();
 const businessIds = new Set();
 const treeIds = new Set();
 const streetLampIds = new Set();
@@ -99,7 +86,7 @@ function assertParkingSide(side, context) {
 }
 
 function dataPathFromUrl(url) {
-  assert(typeof url === "string" && url, "Runtime sidecar URL is missing");
+  assert(typeof url === "string" && url, "LoD2 sidecar URL is missing");
   const relative = url.replace(/^\/+/, "").replace(/^data\//, "");
   const resolved = path.resolve(dataDirectory, relative);
   assert(resolved.startsWith(`${path.resolve(dataDirectory)}${path.sep}`), `Sidecar escapes data directory: ${url}`);
@@ -163,37 +150,6 @@ for (const entry of manifest.tiles) {
     lod2SidecarCount += 1;
     packedLod2BuildingCount += decoded.records.length;
   }
-
-  const terrain = tile.terrain;
-  assert(terrain && typeof terrain === "object", `Tile ${entry.id} is missing its DGM1 terrain sidecar`);
-  assert(terrain.format === TERRAIN_BINARY_FORMAT, `Unsupported terrain sidecar format in ${entry.id}`);
-  assert(terrain.version === TERRAIN_BINARY_VERSION, `Unsupported terrain sidecar version in ${entry.id}`);
-  assert(Number.isSafeInteger(terrain.byteLength) && terrain.byteLength > 0, `Invalid terrain length in ${entry.id}`);
-  assert(terrain.columns === 501 && terrain.rows === 501, `Terrain ${entry.id} is not a 501x501 one-metre grid`);
-  assertPoint(terrain.origin, `Terrain ${entry.id} origin`);
-  assert(Math.abs(terrain.origin[0] - (entry.center[0] - manifest.tileSize / 2)) < 1e-9, `Terrain X origin mismatch in ${entry.id}`);
-  assert(Math.abs(terrain.origin[1] - (entry.center[1] - manifest.tileSize / 2)) < 1e-9, `Terrain Z origin mismatch in ${entry.id}`);
-  assert(terrain.spacing === 1, `Terrain spacing mismatch in ${entry.id}`);
-  assert(terrain.verticalDatum === "DHHN2016", `Terrain datum mismatch in ${entry.id}`);
-  assert(terrain.elevationOrigin === 500, `Terrain elevation origin mismatch in ${entry.id}`);
-  assert(terrain.quantization === TERRAIN_QUANTIZATION_METERS, `Terrain quantization mismatch in ${entry.id}`);
-  assert(terrain.noDataCount === 0, `Terrain ${entry.id} contains unresolved samples`);
-  assert(Number.isFinite(terrain.minHeight) && Number.isFinite(terrain.maxHeight), `Terrain range is invalid in ${entry.id}`);
-  assert(terrain.minHeight <= terrain.maxHeight, `Terrain range is inverted in ${entry.id}`);
-  const terrainPayload = await readFile(dataPathFromUrl(terrain.file));
-  assert(terrainPayload.byteLength === terrain.byteLength, `Terrain sidecar byte length mismatch in ${entry.id}`);
-  const terrainGrid = decodeTerrainHeightGrid(terrainPayload);
-  assert(terrainGrid.columns === terrain.columns && terrainGrid.rows === terrain.rows, `Terrain dimensions disagree in ${entry.id}`);
-  assert(terrainGrid.originX === terrain.origin[0] && terrainGrid.originZ === terrain.origin[1], `Terrain origin disagrees in ${entry.id}`);
-  assert(terrainGrid.spacing === terrain.spacing, `Terrain spacing disagrees in ${entry.id}`);
-  assert(terrainGrid.elevationOrigin === terrain.elevationOrigin, `Terrain elevation origin disagrees in ${entry.id}`);
-  assert(Math.abs(terrainGrid.minHeight - terrain.minHeight) <= terrain.quantization, `Terrain minimum disagrees in ${entry.id}`);
-  assert(Math.abs(terrainGrid.maxHeight - terrain.maxHeight) <= terrain.quantization, `Terrain maximum disagrees in ${entry.id}`);
-  terrainByTile.set(entry.id, terrainGrid);
-  terrainSidecarCount += 1;
-  terrainBytes += terrainPayload.byteLength;
-  terrainMinimum = Math.min(terrainMinimum, terrainGrid.minHeight);
-  terrainMaximum = Math.max(terrainMaximum, terrainGrid.maxHeight);
 
   for (const building of tile.buildings) {
     assert(Number.isSafeInteger(building.id), `Invalid building id ${building.id} in ${entry.id}`);
@@ -427,48 +383,6 @@ for (const entry of manifest.tiles) {
   }
 }
 
-for (const [tileId, grid] of terrainByTile) {
-  const [tileX, tileZ] = tileId.split("_").map(Number);
-  assert(Number.isInteger(tileX) && Number.isInteger(tileZ), `Terrain tile id ${tileId} is invalid`);
-  const east = terrainByTile.get(`${tileX + 1}_${tileZ}`);
-  if (east) {
-    assert(grid.rows === east.rows, `East terrain seam dimensions disagree at ${tileId}`);
-    for (let row = 0; row < grid.rows; row += 1) {
-      const leftHeight = grid.heights[row * grid.columns + grid.columns - 1];
-      const rightHeight = east.heights[row * east.columns];
-      assert(
-        Math.abs(leftHeight - rightHeight) <= TERRAIN_QUANTIZATION_METERS * 1.01,
-        `East terrain seam height mismatch at ${tileId}, row ${row}`,
-      );
-      terrainSeamSampleCount += 1;
-    }
-    terrainSeamCount += 1;
-  }
-  const south = terrainByTile.get(`${tileX}_${tileZ + 1}`);
-  if (south) {
-    assert(grid.columns === south.columns, `South terrain seam dimensions disagree at ${tileId}`);
-    for (let column = 0; column < grid.columns; column += 1) {
-      const northHeight = grid.heights[(grid.rows - 1) * grid.columns + column];
-      const southHeight = south.heights[column];
-      assert(
-        Math.abs(northHeight - southHeight) <= TERRAIN_QUANTIZATION_METERS * 1.01,
-        `South terrain seam height mismatch at ${tileId}, column ${column}`,
-      );
-      terrainSeamSampleCount += 1;
-    }
-    terrainSeamCount += 1;
-  }
-}
-
-assert(terrainSidecarCount === manifest.tiles.length, "Not every runtime tile has DGM1 terrain");
-assert(
-  manifest.sources?.some((source) => (
-    source.dataset === "Bavarian Surveying Administration DGM1" && source.license === "CC-BY-4.0"
-  )),
-  "Manifest is missing DGM1 provenance",
-);
-assert(String(manifest.attribution).includes("DGM1"), "Manifest is missing DGM1 attribution");
-
 for (const [sourceId, source] of parkingRowsBySource) {
   source.pieces.sort((left, right) => left.start - right.start || left.end - right.end);
   for (let index = 1; index < source.pieces.length; index += 1) {
@@ -541,5 +455,5 @@ if (manifest.parkingRowStats) {
 }
 
 process.stdout.write(
-  `Validated ${manifest.tiles.length} tiles, ${terrainSidecarCount} DGM1 terrain sidecars (${terrainBytes} bytes, Y ${terrainMinimum.toFixed(3)}..${terrainMaximum.toFixed(3)} m, ${terrainSeamCount} seams/${terrainSeamSampleCount} shared samples), ${buildingCount} buildings, ${packedLod2BuildingCount} semantic LoD2 buildings in ${lod2SidecarCount} binary sidecars, ${roadCount} road segments, ${greenCount} green/water areas, ${treeCount} trees, ${streetLampCount} street lamps, ${benchCount} benches, ${parkingCount} OSM parking features, ${parkingRowCount} municipal parking-row pieces (${parkingRowCapacity} allocated spaces), and ${storefrontCount}/${businessCount} assigned business frontages.\n`,
+  `Validated ${manifest.tiles.length} tiles, ${buildingCount} buildings, ${packedLod2BuildingCount} semantic LoD2 buildings in ${lod2SidecarCount} binary sidecars, ${roadCount} road segments, ${greenCount} green/water areas, ${treeCount} trees, ${streetLampCount} street lamps, ${benchCount} benches, ${parkingCount} OSM parking features, ${parkingRowCount} municipal parking-row pieces (${parkingRowCapacity} allocated spaces), and ${storefrontCount}/${businessCount} assigned business frontages.\n`,
 );

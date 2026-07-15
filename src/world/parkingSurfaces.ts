@@ -319,7 +319,7 @@ function appendPatch(
   }
 }
 
-/** Build deterministic, clipped cobblestone and continuous-edge geometry. */
+/** Build deterministic, clipped asphalt and continuous-edge geometry. */
 export function buildParkingSurfaceGeometry(
   layout: ParkingLayout | undefined,
   textureRepeatMeters: number,
@@ -374,7 +374,7 @@ function createParkingMesh(
     ? {
       kind,
       canonicalLayout: true,
-      surface: "cobblestone",
+      surface: "asphalt",
       bayDemarcation: false,
     }
     : {
@@ -387,12 +387,12 @@ function createParkingMesh(
   return mesh;
 }
 
-/** Create at most one cobblestone and one continuous-boundary batch per tile. */
+/** Create at most one asphalt and one continuous-boundary batch per tile. */
 export function buildParkingSurfaceMeshes(
   tileId: string,
   layout: ParkingLayout | undefined,
   scene: Scene,
-  cobblestoneMaterial: Material,
+  asphaltMaterial: Material,
   boundaryMaterial: Material,
   textureRepeatMeters: number,
 ): Mesh[] {
@@ -402,7 +402,7 @@ export function buildParkingSurfaceMeshes(
       `parking-bands-${tileId}`,
       "parking-surface",
       geometry.bands,
-      cobblestoneMaterial,
+      asphaltMaterial,
       scene,
     ),
     createParkingMesh(

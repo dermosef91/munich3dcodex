@@ -90,7 +90,7 @@ and source reference survive processing.
 
 Parkseiten does **not** provide surveyed bay polygons, widths or orientations.
 Munich3D buffers each source line into an unmarked 2.4 m visual band and reuses
-the project's cobblestone texture. A narrow continuous curb-coloured perimeter
+the project's asphalt texture. A narrow continuous curb-coloured perimeter
 separates parking from adjacent surfaces; rendered sidewalk and crossing
 triangles mask the band so it cannot paint across those pedestrian areas. The
 band width, surface and boundary treatment are explicit visualization
@@ -123,7 +123,7 @@ cobblestone, compacted fine gravel, grass, flat mineral roofs, water, sidewalk
 paving and neutral urban infill. The renderer
 selects mapped surfaces from OSM road kind and `surface` tags, while non-water
 land-cover polygons use the grass map. Municipal parking bands also reuse the
-cobblestone map as an inferred visual treatment. Where OSM explicitly marks a
+asphalt map as an inferred visual treatment. Where OSM explicitly marks a
 `footway=sidewalk`, the renderer preserves its footway/cycleway surface tags,
 joins the source segments, and expands the mapped centre line toward the nearest
 parallel carriageway to form a raised paved apron and curb. That width, curb

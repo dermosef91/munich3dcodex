@@ -543,7 +543,48 @@
           "fov": 0.94
         }
       ],
-      "textures": [],
+      "textures": [
+        {
+          "id": "museum-brandhorst-marianne",
+          "file": "museum-brandhorst-marianne.png",
+          "status": "integrated",
+          "minimumWidth": 3200,
+          "minimumHeight": 768,
+          "roughness": 0.58,
+          "specularIntensity": 0.44,
+          "promptSummary": "Deterministic multicolour glazed ceramic-rod sheet with phased vertical colour sequences for the long Marianne-von-Werefkin-Weg elevation."
+        },
+        {
+          "id": "museum-brandhorst-tuerken",
+          "file": "museum-brandhorst-tuerken.png",
+          "status": "integrated",
+          "minimumWidth": 3200,
+          "minimumHeight": 768,
+          "roughness": 0.58,
+          "specularIntensity": 0.44,
+          "promptSummary": "Deterministic multicolour glazed ceramic-rod sheet with a distinct phase for the long Tuerkenstrasse elevation."
+        },
+        {
+          "id": "museum-brandhorst-theresien",
+          "file": "museum-brandhorst-theresien.png",
+          "status": "integrated",
+          "minimumWidth": 976,
+          "minimumHeight": 1024,
+          "roughness": 0.56,
+          "specularIntensity": 0.46,
+          "promptSummary": "Deterministic short ceramic-rod entrance sheet with dark double doors and a blank panel reserved for exact procedural museum lettering."
+        },
+        {
+          "id": "museum-brandhorst-south",
+          "file": "museum-brandhorst-south.png",
+          "status": "integrated",
+          "minimumWidth": 976,
+          "minimumHeight": 1024,
+          "roughness": 0.58,
+          "specularIntensity": 0.44,
+          "promptSummary": "Deterministic multicolour ceramic-rod sheet with a fourth colour phase for the short south elevation."
+        }
+      ],
       "references": [
         {
           "url": "https://www.museum-brandhorst.de/pressematerial/architektur-museum-brandhorst/",
@@ -556,7 +597,7 @@
         "method": "procedural",
         "reviewStatus": "needs-user-review",
         "pixelsEmbedded": false,
-        "note": "Original procedural facade art reproduces the documented multicolour ceramic-rod rhythm without embedding reference photography."
+        "note": "Four offline-generated procedural facade sheets reproduce the documented multicolour ceramic-rod rhythm at elevation-specific aspect ratios; exact museum lettering remains procedural and no reference pixels are embedded."
       }
     },
     {

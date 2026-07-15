@@ -8,7 +8,7 @@ licence, update cycle, and runtime representation.
 | --- | --- | --- | --- |
 | Building shells | Bavarian Surveying Administration LoD2 | Ground outlines, wall and roof surfaces, heights, roof form | Versioned binary geometry sidecars beside the existing 500 m runtime tiles |
 | Streets and semantics | OpenStreetMap | Roads, paths, building use, levels, materials, colours, parks, water and source IDs | Compact JSON features in 500 m tiles |
-| Parking | Munich Parkseiten plus OpenStreetMap | Curb-side lines/capacities, mapped spaces/lots and road-side tags | One linked slot/surface layout with non-colliding cobblestone, continuous perimeter separation and pedestrian masks |
+| Parking | Munich Parkseiten plus OpenStreetMap | Curb-side lines/capacities, mapped spaces/lots and road-side tags | One linked slot/surface layout with non-colliding asphalt, continuous perimeter separation and pedestrian masks |
 | Terrain | Bavarian Surveying Administration DGM1 (planned) | A shared 1 m ground-height reference | Clipped and simplified terrain tiles |
 | Ordinary facades | Deterministic Munich facade system plus OSM business frontages | Plausible architectural-family priors, restrained colour variation and ground-floor use | Shared original upper/residential/retail/windowless PBR bundles plus per-building parameters |
 | Hero buildings | Reviewed original art and custom meshes | Address-specific facade composition and distinctive details | Explicit registry override and reusable GLB/custom geometry |
@@ -68,7 +68,7 @@ Munich3D. Its lines, aggregate counts and regulations are source data. They are
 the primary curb source in a canonical layout, supplemented by exact OSM
 parking objects and road-side tags only outside municipal coverage. The same
 linked layout supplies visible surfaces and ambient parked-car slots. The 2.4 m
-parking-band width, cobblestone treatment and narrow continuous perimeter are
+parking-band width, asphalt treatment and narrow continuous perimeter are
 inferred visualization, not surveyed stall polygons or paving observations.
 Rendered sidewalk/crossing triangles mask parking overlap. Individual
 bay-boundary marks are not rendered. Permanent 0–24 stopping bans, construction

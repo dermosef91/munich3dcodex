@@ -42,6 +42,7 @@ try {
   assert.equal(SHADOW_PROFILES.medium.cascades, 2);
   assert.ok(SHADOW_PROFILES.medium.maxDistance < 200, "default shadows must stay near the player");
   assert.equal(SHADOW_PROFILES.medium.filteringQuality, 2, "default PCF must use Babylon's low-cost quality");
+  assert.equal(SHADOW_PROFILES.low.includeTrees, true, "trees must cast at every enabled quality tier");
 
   const fallbackTile = fallbackModule.createFallbackTile("shadow-contract", [0, 0], 100);
   const frontageBuilding = fallbackTile.buildings[0];
@@ -137,9 +138,9 @@ try {
     { id: 3, point: [-8, 18], height: 8 },
   ]);
   assert.equal(treeMeshes.meshes.length, 2, "one tile must use only one stem and one canopy mesh");
-  assert.deepEqual(treeMeshes.shadowCasters, treeMeshes.meshes, "both thin-instance tree batches cast");
+  assert.deepEqual(treeMeshes.shadowCasters, treeMeshes.meshes, "both instanced tree batches cast");
   for (const mesh of treeMeshes.meshes) {
-    assert.equal(mesh.thinInstanceCount, 3, `${mesh.name} must contain every tree as a thin instance`);
+    assert.equal(mesh.instances.length, 2, `${mesh.name} must instance every tree after its source tree`);
   }
 
   const sun = new DirectionalLight("shadow-contract-sun", new Vector3(-0.4, -1, 0.25), scene);
@@ -182,6 +183,14 @@ try {
   assert.equal(fakeShadowMap.renderList.length, 3, "re-registering a streamed tile must not duplicate casters");
   assert.deepEqual(freezeTransitions.slice(-2), [false, true], "streaming must refreeze caster bounds");
   assert.ok(fakeShadowMap.resetCount >= 2, "streaming changes must reset the shadow refresh counter");
+  controller.registerDynamicCasters("vehicle", [tileMeshes.shadowReceivers[0]]);
+  assert.equal(fakeShadowMap.renderList.length, 4, "vehicle geometry must join the sun shadow pass");
+  assert.equal(freezeTransitions.at(-1), false, "moving casters must retain live shadow bounds");
+  controller.registerDynamicCasters("vehicle", [tileMeshes.shadowReceivers[0]]);
+  assert.equal(fakeShadowMap.renderList.length, 4, "re-registering a vehicle must not duplicate casters");
+  controller.unregisterDynamicCasters("vehicle");
+  assert.equal(fakeShadowMap.renderList.length, 3, "disposing a vehicle must remove its sun casters");
+  assert.equal(freezeTransitions.at(-1), true, "static-only caster bounds may be frozen again");
   await controller.compile();
   assert.deepEqual(fakeGenerator.compileOptions, [
     { useInstances: false },
@@ -220,7 +229,7 @@ try {
   groundShadows.dispose();
   treeRenderer.dispose();
   process.stdout.write(
-    "Shadow contract valid: bounded quality tiers, explicit tile roles, two thin-instance tree batches, and one-draw contact shadows.\n",
+    "Shadow contract valid: bounded quality tiers, tree and vehicle sun casters, explicit tile roles, and one-draw contact shadows.\n",
   );
 } finally {
   scene.dispose();

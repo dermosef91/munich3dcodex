@@ -27,7 +27,7 @@ export const SHADOW_PROFILES: Readonly<Record<Exclude<ShadowQuality, "off">, Sha
     maxDistance: 90,
     refreshRate: RenderTargetTexture.REFRESHRATE_RENDER_ONEVERYTWOFRAMES,
     filteringQuality: ShadowGenerator.QUALITY_LOW,
-    includeTrees: false,
+    includeTrees: true,
     darkness: 0.24,
   },
   medium: {
@@ -81,6 +81,7 @@ export class SunShadowController {
   readonly profile: ShadowProfile | null;
   readonly generator: CascadedShadowGenerator | null;
   private readonly tiles = new Map<string, RegisteredTile>();
+  private readonly dynamicCasters = new Map<string, AbstractMesh[]>();
 
   constructor(
     private readonly scene: Scene,
@@ -162,6 +163,31 @@ export class SunShadowController {
     this.refreshCasterBounds();
   }
 
+  registerDynamicCasters(id: string, meshes: readonly AbstractMesh[]): void {
+    this.unregisterDynamicCasters(id);
+    if (!this.generator) return;
+
+    const casters = meshes.filter((mesh) => (
+      !mesh.isDisposed()
+      && mesh.getTotalVertices() > 0
+    ));
+    for (const caster of casters) this.generator.addShadowCaster(caster, false);
+    if (casters.length > 0) this.dynamicCasters.set(id, casters);
+    this.refreshCasterBounds();
+  }
+
+  unregisterDynamicCasters(id: string): void {
+    const casters = this.dynamicCasters.get(id);
+    if (!casters) return;
+    if (this.generator) {
+      for (const caster of casters) {
+        if (!caster.isDisposed()) this.generator.removeShadowCaster(caster, false);
+      }
+    }
+    this.dynamicCasters.delete(id);
+    this.refreshCasterBounds();
+  }
+
   async compile(): Promise<void> {
     if (!this.generator || this.casterCount === 0) return;
     // Building batches use the regular shadow variant while tree batches use
@@ -174,16 +200,19 @@ export class SunShadowController {
   }
 
   dispose(): void {
+    for (const id of [...this.dynamicCasters.keys()]) this.unregisterDynamicCasters(id);
     for (const tileId of [...this.tiles.keys()]) this.unregisterTile(tileId);
     this.generator?.dispose();
   }
 
   private refreshCasterBounds(): void {
     if (!this.generator || this.casterCount === 0) return;
-    // All registered casters are static between streaming events. Recompute
-    // once now instead of traversing the render list on every frame.
+    // Static streamed geometry can keep cached bounds. Moving vehicle casters
+    // need live bounds so the cascades continue to include them as they drive.
     this.generator.freezeShadowCastersBoundingInfo = false;
-    this.generator.freezeShadowCastersBoundingInfo = true;
+    if (this.dynamicCasters.size === 0) {
+      this.generator.freezeShadowCastersBoundingInfo = true;
+    }
     this.generator.getShadowMap()?.resetRefreshCounter();
   }
 }

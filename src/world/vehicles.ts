@@ -15,6 +15,7 @@ import type {
   RoadFeature,
 } from "./types";
 import type { GroundShadowSystem } from "./GroundShadowSystem";
+import type { SunShadowController } from "./SunShadowController";
 import {
   deriveParkingLayout,
   parkingLayoutContainsPoint,
@@ -164,6 +165,7 @@ interface VehicleSystemOptions {
   setWalkingEnabled: (enabled: boolean) => void;
   setDrivingEnabled: (enabled: boolean) => void;
   groundShadows?: GroundShadowSystem;
+  sunShadows?: Pick<SunShadowController, "registerDynamicCasters" | "unregisterDynamicCasters">;
 }
 
 interface RoadSegment {
@@ -283,10 +285,9 @@ function normalizeVehicleMaterials(container: AssetContainer, model: ModelName):
         material.roughness = 0.72;
         break;
       case "glass":
-        // The source glass atlas is close to pure black. A restrained blue-grey
-        // reads as tinted daylight glass rather than an empty black cut-out.
+        // Preserve the original tinted-glass treatment, but make it darker.
         material.albedoTexture = null;
-        material.albedoColor = new Color3(0.2, 0.27, 0.3);
+        material.albedoColor = new Color3(0.075, 0.105, 0.115);
         material.metallic = 0;
         material.roughness = 0.18;
         material.environmentIntensity = 0.62;
@@ -760,6 +761,7 @@ export class VehicleSystem {
       groundY: 0.068,
     });
     this.setVehicleCollision(vehicle, kind === "parked" || kind === "stopped");
+    this.options.sunShadows?.registerDynamicCasters(id, meshes);
     this.vehicles.add(vehicle);
     return vehicle;
   }
@@ -794,6 +796,7 @@ export class VehicleSystem {
   private disposeVehicle(vehicle: VehicleInstance): void {
     this.vehicles.delete(vehicle);
     if (vehicle.tileId) this.tileVehicles.get(vehicle.tileId)?.delete(vehicle);
+    this.options.sunShadows?.unregisterDynamicCasters(vehicle.id);
     this.options.groundShadows?.unregister(vehicle.id);
     vehicle.anchor.dispose(false, false);
   }

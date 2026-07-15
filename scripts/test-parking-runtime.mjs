@@ -98,9 +98,9 @@ try {
 
   const band = built.meshes.find((mesh) => mesh.name === `parking-bands-${selected.tile.id}`);
   const boundary = built.meshes.find((mesh) => mesh.name === `parking-boundaries-${selected.tile.id}`);
-  assert.ok(band, "the canonical runtime layout must produce a cobblestone batch");
+  assert.ok(band, "the canonical runtime layout must produce an asphalt batch");
   assert.ok(boundary, "the canonical runtime layout must produce a continuous separator batch");
-  assert.ok(band.material?.diffuseTexture?.url?.endsWith("munich-cobblestone-v1.png"));
+  assert.ok(band.material?.diffuseTexture?.url?.endsWith("munich-asphalt-v1.png"));
   assert.equal(boundary.metadata?.continuous, true);
   assert.equal(boundary.metadata?.bayDemarcation, false);
   assert.equal(

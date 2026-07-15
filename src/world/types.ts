@@ -205,7 +205,7 @@ export interface ParkingFeature {
  * A curb-side parking run from Munich's municipal Parkseiten layer.
  *
  * The source records a line and an aggregate capacity, not surveyed bay
- * polygons, paving material or width. Runtime cobblestone bands are therefore
+ * polygons, paving material or width. Runtime asphalt bands are therefore
  * an unmarked visualization aid and must remain distinguishable from source
  * geometry.
  */

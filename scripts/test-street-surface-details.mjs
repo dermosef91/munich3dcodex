@@ -232,6 +232,12 @@ try {
     0,
     "parking geometry must be opt-in when the canonical parking renderer is mounted",
   );
+  const withoutPatches = buildStreetSurfaceDetailGeometry(tile(), {
+    ...enabledOptions,
+    includeAsphaltPatches: false,
+  });
+  assert.equal(withoutPatches.counts["asphalt-patch"], 0, "repair decals must be independently removable");
+  assert.equal(withoutPatches.batches.patch.indices.length, 0, "disabled repair decals must not allocate a patch batch");
   assert.equal(
     buildStreetSurfaceDetailGeometry(tile()).counts["stop-line"],
     0,
@@ -302,6 +308,12 @@ try {
   assert.ok(
     buildStreetSurfaceDetailGeometry(yesLanePaint, { includeWornCenterMarkings: true }).counts["worn-marking"] > 0,
     "lane_markings=yes retains deterministic center dashes",
+  );
+  const continuousDashes = buildStreetSurfaceDetailGeometry(yesLanePaint, { includeWornCenterMarkings: true });
+  assert.equal(
+    continuousDashes.batches.paint.positions.length / 3,
+    continuousDashes.counts["worn-marking"] * 4,
+    "each generated lane marker must be one continuous quad rather than a burst of short chunks",
   );
 
   const localRoad = {
@@ -387,6 +399,11 @@ try {
   assert.equal(paintMesh.material.transparencyMode, Material.MATERIAL_ALPHATESTANDBLEND);
   assert.ok(paintMesh.material.alphaCutOff > 0 && paintMesh.material.alphaCutOff < 0.2);
   assert.equal(paintMesh.material.needDepthPrePass, true);
+  assert.equal(
+    paintMesh.material.isFrozen,
+    false,
+    "async paint textures must remain unfrozen until their image upload is available",
+  );
   const paintUvs = paintMesh.getVerticesData(VertexBuffer.UVKind) ?? [];
   assert.ok(
     paintUvs.every((value) => value >= 0 && value <= 1),

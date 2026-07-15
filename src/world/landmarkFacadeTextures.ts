@@ -15,7 +15,11 @@ export type LandmarkFacadeTextureId =
   | "hofbraeuhaus"
   | "alte-pinakothek-theresienstrasse"
   | "alte-pinakothek-gabelsbergerstrasse"
-  | "alte-pinakothek-end";
+  | "alte-pinakothek-end"
+  | "museum-brandhorst-marianne"
+  | "museum-brandhorst-tuerken"
+  | "museum-brandhorst-theresien"
+  | "museum-brandhorst-south";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -83,6 +87,26 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "alte-pinakothek-end.png",
     roughness: 0.91,
     specularIntensity: 0.18,
+  },
+  "museum-brandhorst-marianne": {
+    file: "museum-brandhorst-marianne.png",
+    roughness: 0.58,
+    specularIntensity: 0.44,
+  },
+  "museum-brandhorst-tuerken": {
+    file: "museum-brandhorst-tuerken.png",
+    roughness: 0.58,
+    specularIntensity: 0.44,
+  },
+  "museum-brandhorst-theresien": {
+    file: "museum-brandhorst-theresien.png",
+    roughness: 0.56,
+    specularIntensity: 0.46,
+  },
+  "museum-brandhorst-south": {
+    file: "museum-brandhorst-south.png",
+    roughness: 0.58,
+    specularIntensity: 0.44,
   },
 };
 

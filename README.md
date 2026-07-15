@@ -101,7 +101,7 @@ pnpm preview
 - Validated float32 LoD2 sidecars with footprint-only degradation if an
   optional binary is unavailable
 - Merged tile meshes, collisions, gravity, keyboard movement and jumping
-- Batched OSM street furniture, thin-instanced trees and generated storefronts
+- Batched OSM street furniture, hardware-instanced trees and generated storefronts
 - Enterable parked cars, chase-camera driving and deterministic ambient traffic
 - Georeferenced GLB custom assets placed by longitude and latitude
 - Procedural fallback when generated map files are unavailable

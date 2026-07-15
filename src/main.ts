@@ -171,6 +171,7 @@ const vehicles = new VehicleSystem(scene, camera, engine, {
   feedbackElement: drivingFeedback,
   setWalkingEnabled: (enabled) => keyboardMovement.setEnabled(enabled),
   setDrivingEnabled: (enabled) => document.body.classList.toggle("is-driving", enabled),
+  sunShadows,
   groundShadows,
 });
 const trams = new TramSystem(scene, engine, groundShadows);

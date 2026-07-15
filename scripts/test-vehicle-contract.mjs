@@ -45,6 +45,11 @@ const modelScaling = sourceSection(
   "const MODEL_VISUAL_SCALE",
   "const MODEL_GROUND_LIFT",
 );
+const materialNormalization = sourceSection(
+  source,
+  "function normalizeVehicleMaterials",
+  "function roadAllowsMotorVehicles",
+);
 
 const expectedVehicleModels = [
   "armor",
@@ -69,6 +74,11 @@ for (const model of expectedVehicleModels) {
   );
 }
 assert.match(
+  materialNormalization,
+  /case "glass":[\s\S]*?albedoColor = new Color3\(0\.075, 0\.105, 0\.115\)/,
+  "vehicle glass must retain the darker tinted window color",
+);
+assert.match(
   source,
   /visual\.scaling\.setAll\(MODEL_VISUAL_SCALE\[model\]\)/,
   "every instantiated vehicle must use its real-world scale calibration",
@@ -77,6 +87,21 @@ assert.match(
   source,
   /width:\s*MODEL_SHADOW_SIZE\[model\]\.width\s*\*\s*visualScale[\s\S]*?length:\s*MODEL_SHADOW_SIZE\[model\]\.length\s*\*\s*visualScale/,
   "vehicle contact shadows must shrink with their calibrated model",
+);
+assert.match(
+  source,
+  /sunShadows\?\.registerDynamicCasters\(id, meshes\)/,
+  "every spawned vehicle mesh must enter the sun shadow pass",
+);
+assert.match(
+  source,
+  /sunShadows\?\.unregisterDynamicCasters\(vehicle\.id\)/,
+  "disposed vehicles must leave the sun shadow pass",
+);
+assert.match(
+  vehicleConstruction,
+  /sunShadows\s*,/,
+  "the vehicle system must receive the scene sun-shadow controller",
 );
 
 assert.match(

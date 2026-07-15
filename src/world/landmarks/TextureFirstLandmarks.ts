@@ -111,49 +111,15 @@ function addFacadePlane(
   return mesh;
 }
 
-const BRANDHORST_COLORS = [
-  "#f7db95", "#e6a968", "#dd705e", "#c8566c", "#8f506f", "#625778",
-  "#425f83", "#3e718c", "#4e8f99", "#6ca29d", "#8ab29c", "#b1bf8e",
-  "#d7c67f", "#f0b568", "#ef8f62", "#d8676f", "#a95a80", "#765e8d",
-  "#55769d", "#5a91a9", "#76a8ad", "#a0bbb0", "#c8c49b",
-] as const;
-
-function brandhorstMaterial(
-  scene: Scene,
-  name: string,
-  options: { readonly phase: number; readonly sign?: boolean },
-): StandardMaterial {
-  return dynamicMaterial(scene, name, { width: 2048, height: 1024 }, (context, width, height) => {
-    const bandHeight = height / 16;
-    for (let band = 0; band < 16; band += 1) {
-      const hue = BRANDHORST_COLORS[(band * 5 + options.phase) % BRANDHORST_COLORS.length];
-      context.fillStyle = hue;
-      context.fillRect(0, band * bandHeight, width, bandHeight + 1);
-      context.fillStyle = "rgba(20, 27, 31, 0.11)";
-      context.fillRect(0, (band + 1) * bandHeight - 3, width, 3);
-    }
-
-    const rodStep = 9;
-    for (let x = -rodStep; x < width + rodStep; x += rodStep) {
-      const index = Math.floor((x + rodStep) / rodStep);
-      const color = BRANDHORST_COLORS[(index * 7 + options.phase) % BRANDHORST_COLORS.length];
-      context.fillStyle = "rgba(15, 22, 26, 0.26)";
-      context.fillRect(x + 5, 0, 3, height);
-      context.fillStyle = color;
-      context.fillRect(x + 1, 0, 5, height);
-      context.fillStyle = "rgba(255, 255, 255, 0.28)";
-      context.fillRect(x + 1, 0, 1, height);
-    }
-
-    if (options.sign) {
-      context.fillStyle = "rgba(245, 242, 232, 0.93)";
-      context.fillRect(width * 0.20, height * 0.72, width * 0.60, height * 0.13);
-      context.fillStyle = "#25272a";
-      context.font = `600 ${Math.round(height * 0.060)}px Arial, sans-serif`;
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText("MUSEUM BRANDHORST", width * 0.5, height * 0.785);
-    }
+function brandhorstSignMaterial(scene: Scene): StandardMaterial {
+  return dynamicMaterial(scene, "brandhorst-name-sign-material", { width: 1024, height: 160 }, (context, width, height) => {
+    context.fillStyle = "#eeebe1";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#25272a";
+    context.font = `600 ${Math.round(height * 0.40)}px Arial, sans-serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("MUSEUM BRANDHORST", width * 0.5, height * 0.52);
   }, new Color3(0.18, 0.18, 0.17));
 }
 
@@ -164,18 +130,21 @@ function createMuseumBrandhorst(scene: Scene, parent: TransformNode): TransformN
   const root = new TransformNode("landmark-museum-brandhorst", scene);
   root.parent = parent;
   const interior: FacadePoint = [141.367, 365.311];
-  const longCool = brandhorstMaterial(scene, "brandhorst-long-cool-material", { phase: 3 });
-  const longWarm = brandhorstMaterial(scene, "brandhorst-long-warm-material", { phase: 11 });
-  const entrance = brandhorstMaterial(scene, "brandhorst-theresien-entrance-material", { phase: 17, sign: true });
-  const southEnd = brandhorstMaterial(scene, "brandhorst-south-end-material", { phase: 6 });
+  const marianne = getLandmarkFacadeMaterial(scene, "museum-brandhorst-marianne");
+  const tuerken = getLandmarkFacadeMaterial(scene, "museum-brandhorst-tuerken");
+  const theresien = getLandmarkFacadeMaterial(scene, "museum-brandhorst-theresien");
+  const south = getLandmarkFacadeMaterial(scene, "museum-brandhorst-south");
+  const theresienStart: FacadePoint = [165.486, 331.705];
+  const theresienEnd: FacadePoint = [148.491, 324.503];
 
   // The long western elevation faces the Marianne-von-Werefkin-Weg walkway.
-  addFacadePlane(scene, root, "brandhorst-marianne-facade", [148.491, 324.503], [117.247, 398.928], interior, 19.35, longCool);
+  addFacadePlane(scene, root, "brandhorst-marianne-facade", [148.491, 324.503], [117.247, 398.928], interior, 19.35, marianne);
   // The opposite long elevation faces Türkenstraße.
-  addFacadePlane(scene, root, "brandhorst-tuerken-facade", [134.223, 406.119], [165.486, 331.705], interior, 19.35, longWarm);
+  addFacadePlane(scene, root, "brandhorst-tuerken-facade", [134.223, 406.119], [165.486, 331.705], interior, 19.35, tuerken);
   // The short northern address elevation faces Theresienstraße.
-  addFacadePlane(scene, root, "brandhorst-theresien-facade", [165.486, 331.705], [148.491, 324.503], interior, 19.35, entrance);
-  addFacadePlane(scene, root, "brandhorst-south-facade", [117.247, 398.928], [134.223, 406.119], interior, 19.35, southEnd);
+  addFacadePlane(scene, root, "brandhorst-theresien-facade", theresienStart, theresienEnd, interior, 19.35, theresien);
+  addFacadePlane(scene, root, "brandhorst-south-facade", [117.247, 398.928], [134.223, 406.119], interior, 19.35, south);
+  addFacadeSign(scene, root, "brandhorst-theresien-name-sign", theresienStart, theresienEnd, interior, 14.45, 11.4, 1.35, brandhorstSignMaterial(scene));
   return root;
 }
 

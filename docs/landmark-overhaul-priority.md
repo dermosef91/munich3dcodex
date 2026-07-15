@@ -6,6 +6,9 @@ that were already in the reviewed manifest before this pass. The ordering first
 filters for city recognition, then deliberately moves landmarks whose existing
 Bavarian LoD2 shell can carry a facade/material overhaul to the front.
 
+The full, texture-suitability-ranked art backlog is in
+[`visual-anchor-top-50.md`](visual-anchor-top-50.md).
+
 ## Fifteen recognizable map anchors
 
 | Priority | Landmark | Runtime building ID | Recommended treatment | State |
