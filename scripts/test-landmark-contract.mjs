@@ -9,9 +9,10 @@ const manifest = JSON.parse(await readFile(
 ));
 const integratedLandmarks = manifest.landmarks.filter((landmark) => landmark.status === "integrated");
 
-const [registrySource, landmarkSource, meshSource, mainSource] = await Promise.all([
+const [registrySource, landmarkSource, previewSource, meshSource, mainSource] = await Promise.all([
   readFile(path.join(root, "src", "world", "landmarkRegistry.ts"), "utf8"),
   readFile(path.join(root, "src", "world", "LandmarkDetails.ts"), "utf8"),
+  readFile(path.join(root, "src", "world", "landmarkPreview.ts"), "utf8"),
   readFile(path.join(root, "src", "world", "meshBuilders.ts"), "utf8"),
   readFile(path.join(root, "src", "main.ts"), "utf8"),
 ]);
@@ -28,7 +29,7 @@ for (const landmark of integratedLandmarks) {
     `missing integrated landmark root ${landmark.implementation.rootNode}`,
   );
   for (const preview of landmark.previews) {
-    assert.ok(landmarkSource.includes(preview.id), `missing preview ${preview.id}`);
+    assert.ok(previewSource.includes(preview.id), `missing preview ${preview.id}`);
   }
 }
 

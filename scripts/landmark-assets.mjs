@@ -220,7 +220,7 @@ async function validate() {
     loadBuildingIndex(),
     readFile(path.join(root, "src", "world", "landmarkRegistry.ts"), "utf8"),
     readFile(path.join(root, "src", "world", "landmarkFacadeTextures.ts"), "utf8"),
-    readFile(path.join(root, "src", "world", "LandmarkDetails.ts"), "utf8"),
+    readFile(path.join(root, "src", "world", "landmarkPreview.ts"), "utf8"),
   ]);
 
   const landmarkIds = [];
@@ -308,7 +308,7 @@ async function validate() {
       }
       report(preview.fov === undefined || (Number.isFinite(preview.fov) && preview.fov >= 0.3 && preview.fov <= 2), `${previewContext} has invalid fov`);
       if (landmark.status === "integrated") {
-        report(previewSource.includes(preview.id), `${previewContext} is absent from LandmarkDetails preview specs`);
+        report(previewSource.includes(preview.id), `${previewContext} is absent from landmark preview specs`);
       }
       previewIds.push(preview.id);
     }
