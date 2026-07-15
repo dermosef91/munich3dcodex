@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { createServer } from "vite";
 
@@ -36,6 +37,23 @@ function feedWindow(controller, state, fps, duration = 1_100) {
 }
 
 try {
+  const mainSource = await readFile(path.join(root, "src/main.ts"), "utf8");
+  const frameLoopStart = mainSource.indexOf("scene.onBeforeRenderObservable.add");
+  const throttledDiagnosticsStart = mainSource.indexOf(
+    "if (now - lastHudUpdate > 200)",
+    frameLoopStart,
+  );
+  assert.ok(frameLoopStart >= 0 && throttledDiagnosticsStart > frameLoopStart);
+  assert.equal(
+    mainSource.slice(frameLoopStart, throttledDiagnosticsStart).includes("canvas.dataset.playerX"),
+    false,
+    "player diagnostics must stay outside the per-frame hot path",
+  );
+  assert.ok(
+    mainSource.slice(throttledDiagnosticsStart).includes("canvas.dataset.playerX"),
+    "player diagnostics must remain available on the throttled HUD cadence",
+  );
+
   const { AdaptivePerformanceController } = await vite.ssrLoadModule(
     "/src/performance/AdaptivePerformanceController.ts",
   );

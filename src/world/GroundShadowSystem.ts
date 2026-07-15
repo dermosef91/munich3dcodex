@@ -85,6 +85,10 @@ export class GroundShadowSystem {
   private matrixData = new Float32Array(INITIAL_CAPACITY * 16);
   private bufferInstalled = false;
   private disposed = false;
+  private readonly visible: GroundShadowRegistration[] = [];
+  private readonly scale = new Vector3();
+  private readonly translation = new Vector3();
+  private readonly matrix = new Matrix();
   visibleCount = 0;
 
   constructor(
@@ -120,36 +124,33 @@ export class GroundShadowSystem {
 
     const maxDistanceSquared = this.maxDistance * this.maxDistance;
     const camera = this.camera.position;
-    const visible: GroundShadowRegistration[] = [];
+    this.visible.length = 0;
     for (const registration of this.registrations.values()) {
       if (!registration.node.isEnabled() || registration.node.isDisposed()) continue;
       registration.node.computeWorldMatrix(true);
       const position = registration.node.getAbsolutePosition();
       const dx = position.x - camera.x;
       const dz = position.z - camera.z;
-      if (dx * dx + dz * dz <= maxDistanceSquared) visible.push(registration);
+      if (dx * dx + dz * dz <= maxDistanceSquared) this.visible.push(registration);
     }
 
-    this.ensureCapacity(visible.length);
-    const scale = new Vector3();
-    const translation = new Vector3();
-    const matrix = new Matrix();
-    for (let index = 0; index < visible.length; index += 1) {
-      const registration = visible[index];
+    this.ensureCapacity(this.visible.length);
+    for (let index = 0; index < this.visible.length; index += 1) {
+      const registration = this.visible[index];
       const position = registration.node.getAbsolutePosition();
-      scale.set(registration.width * 0.5, 1, registration.length * 0.5);
-      translation.set(position.x, registration.groundY, position.z);
+      this.scale.set(registration.width * 0.5, 1, registration.length * 0.5);
+      this.translation.set(position.x, registration.groundY, position.z);
       Matrix.ComposeToRef(
-        scale,
+        this.scale,
         registration.node.absoluteRotationQuaternion,
-        translation,
-        matrix,
+        this.translation,
+        this.matrix,
       );
-      matrix.copyToArray(this.matrixData, index * 16);
+      this.matrix.copyToArray(this.matrixData, index * 16);
     }
 
-    this.setVisibleCount(visible.length);
-    if (visible.length > 0) this.mesh.thinInstanceBufferUpdated("matrix");
+    this.setVisibleCount(this.visible.length);
+    if (this.visible.length > 0) this.mesh.thinInstanceBufferUpdated("matrix");
   }
 
   dispose(): void {

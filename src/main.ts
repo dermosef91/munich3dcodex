@@ -257,11 +257,6 @@ scene.onBeforeRenderObservable.add(() => {
   groundShadows.update();
   keyboardMovement.update();
   if (!document.hidden) adaptivePerformance.update(engine.getDeltaTime(), performance.now());
-  canvas.dataset.playerX = camera.position.x.toFixed(3);
-  canvas.dataset.playerY = camera.position.y.toFixed(3);
-  canvas.dataset.playerZ = camera.position.z.toFixed(3);
-  canvas.dataset.grounded = String(keyboardMovement.isGrounded);
-  canvas.dataset.flying = String(keyboardMovement.isFlying);
   if (keyboardMovement.isFlying !== flightModeVisible) {
     flightModeVisible = keyboardMovement.isFlying;
     document.body.classList.toggle("is-flying", flightModeVisible);
@@ -272,6 +267,11 @@ scene.onBeforeRenderObservable.add(() => {
   const now = performance.now();
   if (now - lastHudUpdate > 200) {
     lastHudUpdate = now;
+    canvas.dataset.playerX = camera.position.x.toFixed(3);
+    canvas.dataset.playerY = camera.position.y.toFixed(3);
+    canvas.dataset.playerZ = camera.position.z.toFixed(3);
+    canvas.dataset.grounded = String(keyboardMovement.isGrounded);
+    canvas.dataset.flying = String(keyboardMovement.isFlying);
     canvas.dataset.fps = engine.getFps().toFixed(1);
     canvas.dataset.shadowCasters = String(sunShadows.casterCount);
     canvas.dataset.treeShadows = String(sunShadows.treeShadowsEnabled);

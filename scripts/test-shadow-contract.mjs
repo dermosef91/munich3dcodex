@@ -209,10 +209,16 @@ try {
   assert.equal(fakeGenerator.disposed, true);
 
   const groundShadows = new groundModule.GroundShadowSystem(scene, camera, 120);
+  const reusableVisibilityBuffer = groundShadows.visible;
   const vehicle = new TransformNode("shadow-contract-vehicle", scene);
   vehicle.position.set(8, 0.05, 12);
   groundShadows.register("vehicle", vehicle, { width: 2, length: 4.6 });
   groundShadows.update();
+  assert.equal(
+    groundShadows.visible,
+    reusableVisibilityBuffer,
+    "contact shadows must reuse their visibility buffer between frames",
+  );
   const contactBatch = scene.getMeshByName("ground-contact-shadow-batch");
   assert.ok(contactBatch, "contact-shadow batch must exist");
   assert.equal(contactBatch.renderingGroupId, 0, "contact shadows must retain opaque-scene depth occlusion");
