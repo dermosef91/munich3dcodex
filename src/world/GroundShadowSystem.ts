@@ -127,7 +127,23 @@ export class GroundShadowSystem {
     this.visible.length = 0;
     for (const registration of this.registrations.values()) {
       if (!registration.node.isEnabled() || registration.node.isDisposed()) continue;
-      registration.node.computeWorldMatrix(true);
+
+      // Vehicle and tram anchors are ordinary unparented transform nodes, so
+      // their local translation is already their world position. Rejecting a
+      // distant root here avoids touching its world matrix at all. Keep the
+      // general world-space path for parented, pivoted, or infinite-distance
+      // registrations so future callers cannot be culled in the wrong space.
+      if (
+        !registration.node.parent
+        && !registration.node.isUsingPivotMatrix()
+        && !registration.node.infiniteDistance
+      ) {
+        const position = registration.node.position;
+        const dx = position.x - camera.x;
+        const dz = position.z - camera.z;
+        if (dx * dx + dz * dz > maxDistanceSquared) continue;
+      }
+
       const position = registration.node.getAbsolutePosition();
       const dx = position.x - camera.x;
       const dz = position.z - camera.z;

@@ -106,6 +106,7 @@ pnpm preview
 - Adaptive render resolution with a tree-shadow fallback when frame time remains constrained
 - Progressive startup that makes the nearest streamed world playable before dynamically imported vehicles and detail assets finish
 - Distance-aware ambient traffic that preserves nearby behaviour without scanning far-away cars for collisions every frame
+- Distance-culled vehicle contact-shadow transforms with exact full-rate updates near the player
 - Hysteretic storefront detail LOD that keeps nearby streets rich while far blocks stay cheap to render
 - Enterable parked cars, chase-camera driving and deterministic ambient traffic
 - Georeferenced GLB custom assets placed by longitude and latitude

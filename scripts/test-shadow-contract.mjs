@@ -224,6 +224,14 @@ try {
   const reusableVisibilityBuffer = groundShadows.visible;
   const vehicle = new TransformNode("shadow-contract-vehicle", scene);
   vehicle.position.set(8, 0.05, 12);
+  const originalVehicleComputeWorldMatrix = vehicle.computeWorldMatrix.bind(vehicle);
+  let vehicleWorldMatrixCalls = 0;
+  let forcedVehicleWorldMatrixCalls = 0;
+  vehicle.computeWorldMatrix = (force = false, activeCamera = null) => {
+    vehicleWorldMatrixCalls += 1;
+    if (force) forcedVehicleWorldMatrixCalls += 1;
+    return originalVehicleComputeWorldMatrix(force, activeCamera);
+  };
   groundShadows.register("vehicle", vehicle, { width: 2, length: 4.6 });
   groundShadows.update();
   assert.equal(
@@ -235,10 +243,38 @@ try {
   assert.ok(contactBatch, "contact-shadow batch must exist");
   assert.equal(contactBatch.renderingGroupId, 0, "contact shadows must retain opaque-scene depth occlusion");
   assert.equal(contactBatch.thinInstanceCount, 1, "one nearby vehicle needs one contact-shadow instance");
+  assert.equal(
+    forcedVehicleWorldMatrixCalls,
+    0,
+    "contact shadows must rely on Babylon's dirty tracking instead of forcing matrix rebuilds",
+  );
 
+  vehicleWorldMatrixCalls = 0;
   vehicle.position.x = 250;
   groundShadows.update();
   assert.equal(contactBatch.thinInstanceCount, 0, "far contact shadows must be distance culled");
+  assert.equal(
+    vehicleWorldMatrixCalls,
+    0,
+    "far unparented anchors must be rejected before any world-matrix work",
+  );
+
+  const parent = new TransformNode("shadow-contract-parent", scene);
+  parent.position.x = 250;
+  const parentedVehicle = new TransformNode("shadow-contract-parented-vehicle", scene);
+  parentedVehicle.parent = parent;
+  parentedVehicle.position.set(-242, 0.05, 0);
+  groundShadows.register("parented-vehicle", parentedVehicle, { width: 2, length: 4.6 });
+  groundShadows.update();
+  assert.equal(
+    contactBatch.thinInstanceCount,
+    1,
+    "parented anchors must retain exact world-space distance culling",
+  );
+  groundShadows.unregister("parented-vehicle");
+  parent.dispose(false, false);
+
+  vehicleWorldMatrixCalls = 0;
   vehicle.position.x = 8;
   vehicle.setEnabled(false);
   groundShadows.update();
@@ -246,6 +282,10 @@ try {
   vehicle.setEnabled(true);
   groundShadows.update();
   assert.equal(contactBatch.thinInstanceCount, 1);
+  assert.ok(
+    vehicleWorldMatrixCalls > 0,
+    "a nearby anchor that moves back into range must refresh its contact shadow immediately",
+  );
   groundShadows.unregister("vehicle");
   groundShadows.update();
   assert.equal(contactBatch.thinInstanceCount, 0, "unregistering must remove the contact shadow");
