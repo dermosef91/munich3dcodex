@@ -19,7 +19,8 @@ export type LandmarkFacadeTextureId =
   | "museum-brandhorst-marianne"
   | "museum-brandhorst-tuerken"
   | "museum-brandhorst-theresien"
-  | "museum-brandhorst-south";
+  | "museum-brandhorst-south"
+  | "bayerische-staatsbibliothek-ludwigstrasse";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -107,6 +108,11 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "museum-brandhorst-south.png",
     roughness: 0.58,
     specularIntensity: 0.44,
+  },
+  "bayerische-staatsbibliothek-ludwigstrasse": {
+    file: "bayerische-staatsbibliothek-ludwigstrasse.png",
+    roughness: 0.91,
+    specularIntensity: 0.18,
   },
 };
 

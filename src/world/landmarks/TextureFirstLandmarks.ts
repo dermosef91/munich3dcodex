@@ -90,6 +90,7 @@ function addFacadePlane(
   interior: FacadePoint,
   height: number,
   material: Material,
+  outwardOffset = 0.075,
 ): Mesh {
   const frame = facadeFrame(start, end, interior);
   const mesh = MeshBuilder.CreatePlane(name, {
@@ -100,7 +101,7 @@ function addFacadePlane(
   mesh.parent = parent;
   mesh.position.copyFrom(
     frame.center
-      .add(frame.outward.scale(0.075))
+      .add(frame.outward.scale(outwardOffset))
       .add(new Vector3(0, height * 0.5, 0)),
   );
   // Babylon planes face local -Z; turn the painted side toward the street.
@@ -172,65 +173,6 @@ function createAltePinakothek(scene: Scene, parent: TransformNode): TransformNod
   return root;
 }
 
-function staatsbibliothekMaterial(scene: Scene): StandardMaterial {
-  return dynamicMaterial(scene, "staatsbibliothek-ludwigstrasse-material", { width: 2048, height: 1024 }, (context, width, height) => {
-    context.fillStyle = "#a85237";
-    context.fillRect(0, 0, width, height);
-    context.strokeStyle = "rgba(91, 43, 31, 0.36)";
-    context.lineWidth = 2;
-    for (let y = 8; y < height; y += 18) {
-      context.beginPath();
-      context.moveTo(0, y);
-      context.lineTo(width, y);
-      context.stroke();
-    }
-
-    context.fillStyle = "#b99b73";
-    context.fillRect(0, height * 0.88, width, height * 0.12);
-    for (const y of [height * 0.24, height * 0.48, height * 0.72, height * 0.87]) {
-      context.fillStyle = "rgba(212, 184, 137, 0.82)";
-      context.fillRect(0, y, width, 8);
-    }
-
-    const bays = 31;
-    const bayWidth = width / bays;
-    for (let bay = 0; bay < bays; bay += 1) {
-      const centerX = (bay + 0.5) * bayWidth;
-      context.fillStyle = "rgba(205, 176, 132, 0.70)";
-      context.fillRect(centerX - 3, 0, 6, height * 0.88);
-      for (const floorTop of [0.075, 0.30, 0.54, 0.76]) {
-        const windowWidth = bayWidth * 0.46;
-        const windowHeight = height * 0.13;
-        const left = centerX - windowWidth * 0.5;
-        const top = height * floorTop;
-        context.fillStyle = "#d2b887";
-        context.fillRect(left - 6, top - 6, windowWidth + 12, windowHeight + 12);
-        context.fillStyle = "#263136";
-        context.fillRect(left, top, windowWidth, windowHeight);
-        context.fillStyle = "rgba(183, 211, 215, 0.14)";
-        context.fillRect(left + windowWidth * 0.09, top + 4, windowWidth * 0.11, windowHeight - 8);
-      }
-    }
-
-    // Friedrich von Gärtner's central portal and broad stair are the main
-    // cadence break in the otherwise extremely long Ludwigstraße elevation.
-    context.fillStyle = "#c9ad80";
-    context.fillRect(width * 0.435, height * 0.48, width * 0.13, height * 0.42);
-    for (const offset of [-0.035, 0, 0.035]) {
-      const centerX = width * (0.5 + offset);
-      context.fillStyle = "#202729";
-      context.fillRect(centerX - width * 0.013, height * 0.61, width * 0.026, height * 0.29);
-      context.fillStyle = "rgba(209, 187, 147, 0.84)";
-      context.fillRect(centerX - width * 0.017, height * 0.58, width * 0.034, height * 0.035);
-    }
-    for (let step = 0; step < 6; step += 1) {
-      const inset = step * width * 0.007;
-      context.fillStyle = step % 2 === 0 ? "#bba37e" : "#a88f6c";
-      context.fillRect(width * 0.40 + inset, height * (0.91 + step * 0.014), width * 0.20 - inset * 2, height * 0.016);
-    }
-  });
-}
-
 function createBayerischeStaatsbibliothek(scene: Scene, parent: TransformNode): TransformNode {
   const existing = scene.getTransformNodeByName("landmark-bayerische-staatsbibliothek");
   if (existing) return existing;
@@ -247,7 +189,8 @@ function createBayerischeStaatsbibliothek(scene: Scene, parent: TransformNode): 
     [625.555, 319.632],
     interior,
     24.0,
-    staatsbibliothekMaterial(scene),
+    getLandmarkFacadeMaterial(scene, "bayerische-staatsbibliothek-ludwigstrasse"),
+    0.45,
   );
   return root;
 }

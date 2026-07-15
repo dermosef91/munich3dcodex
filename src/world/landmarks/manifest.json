@@ -681,7 +681,7 @@
         "mode": "preserve",
         "targetBuildingIds": [-52412001],
         "replacementBuildingIds": [],
-        "note": "Preserve the Bavarian LoD2 library shell and its semantic roof geometry; add one thin non-colliding procedural sheet to the approximately 150 metre Ludwigstrasse frontage."
+        "note": "Preserve the Bavarian LoD2 library shell and its semantic roof geometry; add one thin non-colliding bitmap sheet to the approximately 150 metre Ludwigstrasse frontage."
       },
       "previews": [
         {
@@ -691,7 +691,18 @@
           "fov": 0.92
         }
       ],
-      "textures": [],
+      "textures": [
+        {
+          "id": "bayerische-staatsbibliothek-ludwigstrasse",
+          "file": "bayerische-staatsbibliothek-ludwigstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 4096,
+          "minimumHeight": 664,
+          "roughness": 0.91,
+          "specularIntensity": 0.18,
+          "promptSummary": "Deterministic rectified Ludwigstrasse elevation at the true long-facade aspect ratio, with red blank brick, thirty-one bays, sandstone courses, arched windows, and the central three-door portal and stair."
+        }
+      ],
       "references": [
         {
           "url": "https://www.bsb-muenchen.de/en/about-us/portrait/library-building/",
@@ -704,7 +715,7 @@
         "method": "procedural",
         "reviewStatus": "needs-user-review",
         "pixelsEmbedded": false,
-        "note": "Original procedural blank-brick facade art records the long Gärtner elevation, rhythmic arched openings, and central portal without embedding reference photography."
+        "note": "One offline-generated bitmap facade sheet records the long Gärtner elevation, rhythmic arched openings, and central portal without embedding reference photography."
       }
     },
     {
