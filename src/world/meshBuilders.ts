@@ -9,6 +9,7 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { VertexData } from "@babylonjs/core/Meshes/mesh.vertexData";
 import type { Scene } from "@babylonjs/core/scene";
+import { publicUrl } from "../publicUrl";
 import earcut from "earcut";
 import { getBuildingFacade, type BuildingFacadeDefinition } from "./facadeRegistry";
 import {
@@ -1141,7 +1142,7 @@ function createCustomFacadeMaterials(
   front.backFaceCulling = true;
 
   const texture = new Texture(
-    facade.definition.textureUrl,
+    publicUrl(facade.definition.textureUrl),
     scene,
     false,
     true,
@@ -1165,7 +1166,7 @@ function createCustomFacadeMaterials(
   sides.backFaceCulling = true;
 
   const sideTexture = new Texture(
-    facade.definition.textureUrl,
+    publicUrl(facade.definition.textureUrl),
     scene,
     false,
     true,
@@ -1810,7 +1811,7 @@ function buildGreens(tile: MunichTile, scene: Scene, materials: SharedMaterials)
 
 function repeatingTexture(scene: Scene, textureUrl: string): Texture {
   const texture = new Texture(
-    textureUrl,
+    publicUrl(textureUrl),
     scene,
     false,
     true,

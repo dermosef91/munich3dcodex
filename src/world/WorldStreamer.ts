@@ -11,10 +11,7 @@ import {
 import { loadTreeAssets, type TreeAssetRenderer } from "./treeAssets";
 import type { ParkingLayout } from "./parkingLayout";
 import type { MunichManifest, MunichTile, TileManifestEntry } from "./types";
-
-function publicUrl(path: string): string {
-  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
-}
+import { publicUrl } from "../publicUrl";
 
 type StatusCallback = (message: string, loaded: number, total: number) => void;
 type WorldPosition = Pick<Vector3, "x" | "z">;

@@ -2,6 +2,7 @@ import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import type { Scene } from "@babylonjs/core/scene";
 import { lonLatToWorld } from "./world/geo";
+import { publicUrl } from "./publicUrl";
 
 export interface CustomAssetPlacement {
   name: string;
@@ -21,9 +22,10 @@ export async function loadCustomAssets(scene: Scene): Promise<void> {
   if (customAssets.length === 0) return;
   await import("@babylonjs/loaders/glTF");
   await Promise.all(customAssets.map(async (asset) => {
-    const separator = asset.file.lastIndexOf("/");
-    const rootUrl = asset.file.slice(0, separator + 1);
-    const fileName = asset.file.slice(separator + 1);
+    const fileUrl = publicUrl(asset.file);
+    const separator = fileUrl.lastIndexOf("/");
+    const rootUrl = fileUrl.slice(0, separator + 1);
+    const fileName = fileUrl.slice(separator + 1);
     const result = await SceneLoader.ImportMeshAsync(null, rootUrl, fileName, scene);
     const anchor = new TransformNode(`custom-${asset.name}`, scene);
     anchor.position.copyFrom(lonLatToWorld(asset.lon, asset.lat, asset.elevation ?? 0));

@@ -5,6 +5,7 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { VertexData } from "@babylonjs/core/Meshes/mesh.vertexData";
 import type { Scene } from "@babylonjs/core/scene";
+import { publicUrl } from "../publicUrl";
 import earcut from "earcut";
 import type {
   MunichTile,
@@ -1412,7 +1413,7 @@ export function buildStreetSurfaceDetailGeometry(
 }
 
 function detailTexture(scene: Scene, url: string, transparentDecal: boolean): Texture {
-  const texture = new Texture(url, scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
+  const texture = new Texture(publicUrl(url), scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
   texture.wrapU = transparentDecal ? Texture.CLAMP_ADDRESSMODE : Texture.WRAP_ADDRESSMODE;
   texture.wrapV = transparentDecal ? Texture.CLAMP_ADDRESSMODE : Texture.WRAP_ADDRESSMODE;
   texture.anisotropicFilteringLevel = 8;

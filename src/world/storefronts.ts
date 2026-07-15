@@ -7,6 +7,7 @@ import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import type { Scene } from "@babylonjs/core/scene";
+import { publicUrl } from "../publicUrl";
 import type {
   BuildingFeature,
   BusinessCategory,
@@ -345,7 +346,7 @@ function customStorefrontMaterial(
   emissiveStrength = 0.08,
 ): StandardMaterial {
   const material = new StandardMaterial(`storefront-custom-material-${business.id}`, scene);
-  const texture = new Texture(url, scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
+  const texture = new Texture(publicUrl(url), scene, false, true, Texture.TRILINEAR_SAMPLINGMODE);
   // The exterior plane runs in the inverse U direction of a canvas texture,
   // matching the orientation correction used by generated storefront signs.
   texture.uScale = -1;
