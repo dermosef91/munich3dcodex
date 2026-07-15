@@ -70,7 +70,7 @@ def brandhorst_sheet(
 def generate_brandhorst() -> None:
     brandhorst_sheet("museum-brandhorst-marianne.png", 3200, 768, 3)
     brandhorst_sheet("museum-brandhorst-tuerken.png", 3200, 768, 11)
-    brandhorst_sheet("museum-brandhorst-theresien.png", 976, 1024, 17, entrance=True)
+    brandhorst_sheet("museum-brandhorst-theresien.png", 1536, 1024, 17, entrance=True)
     brandhorst_sheet("museum-brandhorst-south.png", 976, 1024, 6)
 
 

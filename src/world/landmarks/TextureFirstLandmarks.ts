@@ -130,21 +130,22 @@ function createMuseumBrandhorst(scene: Scene, parent: TransformNode): TransformN
   const root = new TransformNode("landmark-museum-brandhorst", scene);
   root.parent = parent;
   const interior: FacadePoint = [141.367, 365.311];
+  const headInterior: FacadePoint = [158.769, 321.336];
   const marianne = getLandmarkFacadeMaterial(scene, "museum-brandhorst-marianne");
   const tuerken = getLandmarkFacadeMaterial(scene, "museum-brandhorst-tuerken");
   const theresien = getLandmarkFacadeMaterial(scene, "museum-brandhorst-theresien");
   const south = getLandmarkFacadeMaterial(scene, "museum-brandhorst-south");
-  const theresienStart: FacadePoint = [165.486, 331.705];
-  const theresienEnd: FacadePoint = [148.491, 324.503];
+  const theresienStart: FacadePoint = [143.761, 304.361];
+  const theresienEnd: FacadePoint = [174.759, 317.492];
 
   // The long western elevation faces the Marianne-von-Werefkin-Weg walkway.
   addFacadePlane(scene, root, "brandhorst-marianne-facade", [148.491, 324.503], [117.247, 398.928], interior, 19.35, marianne);
   // The opposite long elevation faces Türkenstraße.
   addFacadePlane(scene, root, "brandhorst-tuerken-facade", [134.223, 406.119], [165.486, 331.705], interior, 19.35, tuerken);
   // The short northern address elevation faces Theresienstraße.
-  addFacadePlane(scene, root, "brandhorst-theresien-facade", theresienStart, theresienEnd, interior, 19.35, theresien);
+  addFacadePlane(scene, root, "brandhorst-theresien-facade", theresienStart, theresienEnd, headInterior, 23.3, theresien);
   addFacadePlane(scene, root, "brandhorst-south-facade", [117.247, 398.928], [134.223, 406.119], interior, 19.35, south);
-  addFacadeSign(scene, root, "brandhorst-theresien-name-sign", theresienStart, theresienEnd, interior, 14.45, 11.4, 1.35, brandhorstSignMaterial(scene));
+  addFacadeSign(scene, root, "brandhorst-theresien-name-sign", theresienStart, theresienEnd, headInterior, 15.8, 14.0, 1.45, brandhorstSignMaterial(scene));
   return root;
 }
 

@@ -531,15 +531,15 @@
       },
       "shell": {
         "mode": "preserve",
-        "targetBuildingIds": [28026817],
+        "targetBuildingIds": [28026817, -633166994],
         "replacementBuildingIds": [],
-        "note": "Preserve the Bavarian LoD2 museum shell; add thin non-colliding facade planes aligned to Theresienstrasse, Tuerkenstrasse, the Marianne-von-Werefkin-Weg, and the south end."
+        "note": "Preserve both Bavarian LoD2 museum volumes; add thin non-colliding facade planes to the long main shell, the taller Theresienstrasse entrance head, and the south end."
       },
       "previews": [
         {
           "id": "museum-brandhorst",
-          "position": [174, 4.2, 303],
-          "target": [157, 9.5, 329],
+          "position": [163.33, 4.2, 297.45],
+          "target": [158, 11.5, 311],
           "fov": 0.94
         }
       ],
@@ -568,7 +568,7 @@
           "id": "museum-brandhorst-theresien",
           "file": "museum-brandhorst-theresien.png",
           "status": "integrated",
-          "minimumWidth": 976,
+          "minimumWidth": 1536,
           "minimumHeight": 1024,
           "roughness": 0.56,
           "specularIntensity": 0.46,
