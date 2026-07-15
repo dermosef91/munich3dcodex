@@ -843,6 +843,91 @@
       }
     },
     {
+      "id": "pinakothek-der-moderne",
+      "label": "Pinakothek der Moderne",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-pinakothek-der-moderne"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [10053440],
+        "replacementBuildingIds": [],
+        "note": "Preserve the complete Bavarian LoD2 museum shell; add four thin non-colliding bitmap planes to its public concrete elevations."
+      },
+      "previews": [
+        {
+          "id": "pinakothek-der-moderne",
+          "position": [-74.791, 4.6, 388.312],
+          "target": [-48.033, 12.2, 399.946],
+          "fov": 1.05
+        }
+      ],
+      "textures": [
+        {
+          "id": "pinakothek-der-moderne-marianne",
+          "file": "pinakothek-der-moderne-marianne.png",
+          "status": "integrated",
+          "minimumWidth": 4096,
+          "minimumHeight": 720,
+          "roughness": 0.87,
+          "specularIntensity": 0.20,
+          "promptSummary": "Deterministic long Kunstareal elevation with fair-faced concrete panels, a restrained horizontal glazing band, and a central dark opening."
+        },
+        {
+          "id": "pinakothek-der-moderne-tuerkenstrasse",
+          "file": "pinakothek-der-moderne-tuerkenstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 1952,
+          "minimumHeight": 720,
+          "roughness": 0.83,
+          "specularIntensity": 0.26,
+          "promptSummary": "Deterministic east elevation with pale formwork panels, corner glazing, a secondary canopy, and no temporary exhibition graphics."
+        },
+        {
+          "id": "pinakothek-der-moderne-gabelsbergerstrasse",
+          "file": "pinakothek-der-moderne-gabelsbergerstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 4096,
+          "minimumHeight": 720,
+          "roughness": 0.86,
+          "specularIntensity": 0.22,
+          "promptSummary": "Deterministic south elevation with long pale concrete fields, sparse seams, service glazing, and one dark access bay."
+        },
+        {
+          "id": "pinakothek-der-moderne-barerstrasse",
+          "file": "pinakothek-der-moderne-barerstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 1952,
+          "minimumHeight": 720,
+          "roughness": 0.80,
+          "specularIntensity": 0.30,
+          "promptSummary": "Deterministic Barerstrasse address facade with a broad concrete canopy, full-height blue-charcoal glazing, slender pale columns, and a blank permanent-sign band."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.pinakothek-der-moderne.de/architektur-des-gebaeudes/",
+          "publisher": "Pinakothek der Moderne",
+          "usage": "official-building-architecture-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        },
+        {
+          "url": "https://www.pinakothek.de/en/pinakothek-der-moderne",
+          "publisher": "Bayerische Staatsgemaeldesammlungen",
+          "usage": "official-museum-and-building-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "Four offline-generated elevation sheets reproduce the permanent concrete and glazing language; the exact museum wordmark is procedural and no reference pixels are embedded."
+      }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",

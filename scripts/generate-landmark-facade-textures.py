@@ -233,12 +233,80 @@ def generate_haus_der_kunst() -> None:
     haus_der_kunst_sheet("haus-der-kunst-prinzregentenstrasse-outer-wing.png", 728, 768, 4)
 
 
+def pinakothek_der_moderne_sheet(file_name: str, width: int, height: int, variant: str) -> None:
+    """Render one fair-faced-concrete elevation of the modern-art museum."""
+    image = Image.new("RGB", (width, height), "#d8d7d1")
+    draw = ImageDraw.Draw(image)
+    concrete = "#d8d7d1"
+    concrete_light = "#e7e5df"
+    concrete_shadow = "#b9b9b4"
+    seam = "#aaa9a4"
+    glass = "#29383d"
+    glass_light = "#465b62"
+
+    # Rectangular formwork/panel rhythm is intentionally low contrast.
+    panel_x = max(96, width // 18)
+    panel_y = max(72, height // 8)
+    for x in range(0, width, panel_x):
+        draw.line((x, 0, x, height), fill=seam, width=1)
+    for y in range(0, height, panel_y):
+        draw.line((0, y, width, y), fill=seam, width=1)
+    draw.rectangle((0, round(height * 0.900), width, height), fill=concrete_shadow)
+    draw.line((0, round(height * 0.895), width, round(height * 0.895)), fill=concrete_light, width=4)
+
+    if variant == "barerstrasse":
+        # Address facade: deep glazed hall beneath a broad concrete canopy.
+        draw.rectangle((round(width * 0.08), round(height * 0.355), round(width * 0.92), round(height * 0.885)), fill=glass)
+        draw.rectangle((round(width * 0.035), round(height * 0.285), round(width * 0.965), round(height * 0.390)), fill=concrete_light)
+        draw.rectangle((round(width * 0.035), round(height * 0.382), round(width * 0.965), round(height * 0.410)), fill=concrete_shadow)
+        for axis in range(1, 8):
+            x = round(width * (0.08 + axis * 0.105))
+            draw.rectangle((x - 7, round(height * 0.390), x + 7, round(height * 0.895)), fill=concrete)
+            draw.line((x - 5, round(height * 0.410), x - 5, round(height * 0.885)), fill=concrete_light, width=2)
+        for x in range(round(width * 0.10), round(width * 0.92), max(35, width // 15)):
+            draw.line((x, round(height * 0.430), x, round(height * 0.875)), fill=glass_light, width=2)
+        draw.rectangle((round(width * 0.18), round(height * 0.075), round(width * 0.82), round(height * 0.235)), fill=concrete_light)
+    elif variant == "marianne":
+        # Long Kunstareal face: monolithic walls cut by a horizontal glass band.
+        draw.rectangle((round(width * 0.07), round(height * 0.515), round(width * 0.93), round(height * 0.755)), fill=glass)
+        draw.rectangle((round(width * 0.04), round(height * 0.455), round(width * 0.96), round(height * 0.535)), fill=concrete_light)
+        for axis in range(13):
+            x = round(width * (0.08 + axis * 0.07))
+            draw.rectangle((x - 5, round(height * 0.525), x + 5, round(height * 0.765)), fill=concrete)
+        draw.rectangle((round(width * 0.44), round(height * 0.445), round(width * 0.56), round(height * 0.895)), fill="#253237")
+    elif variant == "tuerkenstrasse":
+        draw.rectangle((round(width * 0.55), round(height * 0.295), round(width * 0.94), round(height * 0.875)), fill=glass)
+        draw.rectangle((round(width * 0.49), round(height * 0.245), round(width * 0.97), round(height * 0.340)), fill=concrete_light)
+        for axis in range(5):
+            x = round(width * (0.58 + axis * 0.08))
+            draw.rectangle((x - 6, round(height * 0.330), x + 6, round(height * 0.895)), fill=concrete)
+        draw.rectangle((round(width * 0.13), round(height * 0.580), round(width * 0.36), round(height * 0.740)), fill=glass)
+    else:  # gabelsbergerstrasse
+        draw.rectangle((round(width * 0.12), round(height * 0.590), round(width * 0.88), round(height * 0.755)), fill=glass)
+        for axis in range(10):
+            x = round(width * (0.14 + axis * 0.08))
+            draw.rectangle((x - 5, round(height * 0.575), x + 5, round(height * 0.780)), fill=concrete)
+        draw.rectangle((round(width * 0.71), round(height * 0.470), round(width * 0.82), round(height * 0.895)), fill="#253237")
+
+    output = TEXTURE_ROOT / file_name
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_pinakothek_der_moderne() -> None:
+    pinakothek_der_moderne_sheet("pinakothek-der-moderne-marianne.png", 4096, 720, "marianne")
+    pinakothek_der_moderne_sheet("pinakothek-der-moderne-tuerkenstrasse.png", 1952, 720, "tuerkenstrasse")
+    pinakothek_der_moderne_sheet("pinakothek-der-moderne-gabelsbergerstrasse.png", 4096, 720, "gabelsbergerstrasse")
+    pinakothek_der_moderne_sheet("pinakothek-der-moderne-barerstrasse.png", 1952, 720, "barerstrasse")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recipe", choices=(
         "museum-brandhorst",
         "bayerische-staatsbibliothek",
         "haus-der-kunst",
+        "pinakothek-der-moderne",
     ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
@@ -247,6 +315,8 @@ def main() -> None:
         generate_staatsbibliothek()
     elif args.recipe == "haus-der-kunst":
         generate_haus_der_kunst()
+    elif args.recipe == "pinakothek-der-moderne":
+        generate_pinakothek_der_moderne()
 
 
 if __name__ == "__main__":

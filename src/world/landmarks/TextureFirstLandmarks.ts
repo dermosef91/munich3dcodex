@@ -27,6 +27,7 @@ export const MUSEUM_BRANDHORST_BUILDING_ID = 28_026_817;
 export const ALTE_PINAKOTHEK_BUILDING_ID = 4_647_135;
 export const BAYERISCHE_STAATSBIBLIOTHEK_BUILDING_ID = -52_412_001;
 export const HAUS_DER_KUNST_BUILDING_ID = 150_797_531;
+export const PINAKOTHEK_DER_MODERNE_BUILDING_ID = 10_053_440;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -216,6 +217,44 @@ function createHausDerKunst(scene: Scene, parent: TransformNode): TransformNode 
   return root;
 }
 
+function pinakothekDerModerneSignMaterial(scene: Scene): StandardMaterial {
+  const material = dynamicMaterial(scene, "pinakothek-der-moderne-sign-material", { width: 1536, height: 192 }, (context, width, height) => {
+    context.fillStyle = "#e1e0da";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#303436";
+    context.font = `600 ${Math.round(height * 0.40)}px Arial, sans-serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("PINAKOTHEK DER MODERNE", width * 0.5, height * 0.52);
+  }, new Color3(0.12, 0.12, 0.12));
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
+}
+
+function createPinakothekDerModerne(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-pinakothek-der-moderne");
+  if (existing) return existing;
+
+  const root = new TransformNode("landmark-pinakothek-der-moderne", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [17.945, 427.781];
+  const marianne = getLandmarkFacadeMaterial(scene, "pinakothek-der-moderne-marianne");
+  const tuerken = getLandmarkFacadeMaterial(scene, "pinakothek-der-moderne-tuerkenstrasse");
+  const gabelsberger = getLandmarkFacadeMaterial(scene, "pinakothek-der-moderne-gabelsbergerstrasse");
+  const barer = getLandmarkFacadeMaterial(scene, "pinakothek-der-moderne-barerstrasse");
+  const barerStart: FacadePoint = [-61.213, 431.371];
+  const barerEnd: FacadePoint = [-34.852, 368.520];
+
+  addFacadePlane(scene, root, "pinakothek-der-moderne-marianne-facade", [-34.852, 368.520], [97.102, 424.164], interior, 25.15, marianne, 0.14);
+  addFacadePlane(scene, root, "pinakothek-der-moderne-tuerken-facade", [97.102, 424.164], [70.719, 487.043], interior, 25.15, tuerken, 0.14);
+  addFacadePlane(scene, root, "pinakothek-der-moderne-gabelsberger-facade", [70.719, 487.043], [-61.213, 431.371], interior, 25.15, gabelsberger, 0.14);
+  addFacadePlane(scene, root, "pinakothek-der-moderne-barer-facade", barerStart, barerEnd, interior, 25.15, barer, 0.14);
+  addFacadeSign(scene, root, "pinakothek-der-moderne-wordmark", barerStart, barerEnd, interior, 5.4, 17.0, 1.2, pinakothekDerModerneSignMaterial(scene));
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -389,6 +428,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createAltePinakothek(scene, root);
   createBayerischeStaatsbibliothek(scene, root);
   createHausDerKunst(scene, root);
+  createPinakothekDerModerne(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

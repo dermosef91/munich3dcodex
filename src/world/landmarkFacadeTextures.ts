@@ -23,7 +23,11 @@ export type LandmarkFacadeTextureId =
   | "bayerische-staatsbibliothek-ludwigstrasse"
   | "haus-der-kunst-prinzregentenstrasse-main"
   | "haus-der-kunst-prinzregentenstrasse-inner-wing"
-  | "haus-der-kunst-prinzregentenstrasse-outer-wing";
+  | "haus-der-kunst-prinzregentenstrasse-outer-wing"
+  | "pinakothek-der-moderne-marianne"
+  | "pinakothek-der-moderne-tuerkenstrasse"
+  | "pinakothek-der-moderne-gabelsbergerstrasse"
+  | "pinakothek-der-moderne-barerstrasse";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -131,6 +135,26 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "haus-der-kunst-prinzregentenstrasse-outer-wing.png",
     roughness: 0.90,
     specularIntensity: 0.18,
+  },
+  "pinakothek-der-moderne-marianne": {
+    file: "pinakothek-der-moderne-marianne.png",
+    roughness: 0.87,
+    specularIntensity: 0.20,
+  },
+  "pinakothek-der-moderne-tuerkenstrasse": {
+    file: "pinakothek-der-moderne-tuerkenstrasse.png",
+    roughness: 0.83,
+    specularIntensity: 0.26,
+  },
+  "pinakothek-der-moderne-gabelsbergerstrasse": {
+    file: "pinakothek-der-moderne-gabelsbergerstrasse.png",
+    roughness: 0.86,
+    specularIntensity: 0.22,
+  },
+  "pinakothek-der-moderne-barerstrasse": {
+    file: "pinakothek-der-moderne-barerstrasse.png",
+    roughness: 0.80,
+    specularIntensity: 0.30,
   },
 };
 
