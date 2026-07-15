@@ -75,6 +75,10 @@ const PLAYER_CAMERA_LATERAL_SHIFT = 0.12;
 const PLAYER_CAMERA_MAX_FOV_INCREASE = 0.055;
 const MAPPED_PARKED_CAR_BUDGET = 8;
 const CURBSIDE_PARKED_CAR_BUDGET = 5;
+// Cars beyond the longest sun-shadow range still advance smoothly along their
+// routes, but they do not need the quadratic neighbour-avoidance scan until
+// they are close enough for the player to see or interact with the result.
+const TRAFFIC_AVOIDANCE_DISTANCE_METERS = 240;
 // Keep a modest visible buffer between neighbouring parking slots without
 // making normal curbside parking appear unusually sparse.
 const PARKED_CAR_CLEARANCE_METERS = 4.8;
@@ -542,6 +546,7 @@ export class VehicleSystem {
   update(): void {
     if (!this.assetsReady) return;
     const deltaSeconds = Math.min(this.engine.getDeltaTime() / 1_000, 0.05);
+    const now = performance.now();
     if (this.interactionRequested) {
       this.interactionRequested = false;
       if (this.controlled) this.tryExitVehicle();
@@ -549,7 +554,12 @@ export class VehicleSystem {
     }
 
     for (const vehicle of this.vehicles) {
-      if (vehicle.kind === "traffic") this.updateTrafficVehicle(vehicle, deltaSeconds);
+      if (vehicle.kind !== "traffic") continue;
+      const dx = vehicle.anchor.position.x - this.camera.position.x;
+      const dz = vehicle.anchor.position.z - this.camera.position.z;
+      const checksNearbyTraffic = dx * dx + dz * dz
+        <= TRAFFIC_AVOIDANCE_DISTANCE_METERS * TRAFFIC_AVOIDANCE_DISTANCE_METERS;
+      this.updateTrafficVehicle(vehicle, deltaSeconds, now, checksNearbyTraffic);
     }
     if (this.controlled) this.updatePlayerVehicle(this.controlled, deltaSeconds);
     this.updateHint();
@@ -801,10 +811,14 @@ export class VehicleSystem {
     vehicle.anchor.dispose(false, false);
   }
 
-  private updateTrafficVehicle(vehicle: VehicleInstance, deltaSeconds: number): void {
+  private updateTrafficVehicle(
+    vehicle: VehicleInstance,
+    deltaSeconds: number,
+    now: number,
+    checksNearbyTraffic: boolean,
+  ): void {
     const route = vehicle.route;
     if (!route || vehicle.routeDistance === undefined || !vehicle.travelDirection) return;
-    const now = performance.now();
     if (vehicle.respawnAt !== undefined) {
       if (now < vehicle.respawnAt) return;
       vehicle.respawnAt = undefined;
@@ -823,7 +837,8 @@ export class VehicleSystem {
     const laneOffset = Math.min(1.75, Math.max(0.7, route.width * 0.22));
     const lookX = lookSample.x - lookDirectionZ * laneOffset;
     const lookZ = lookSample.z + lookDirectionX * laneOffset;
-    const blocked = this.wouldOverlapVehicle(vehicle, lookX, lookZ, 4.4);
+    const blocked = checksNearbyTraffic
+      && this.wouldOverlapVehicle(vehicle, lookX, lookZ, 4.4);
     vehicle.speed = moveToward(
       vehicle.speed,
       blocked ? 0 : vehicle.cruiseSpeed ?? route.targetSpeed,

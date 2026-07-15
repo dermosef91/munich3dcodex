@@ -39,6 +39,12 @@ const chaseCamera = sourceSection(
   "private nearestParkedVehicle",
 );
 const hintUpdate = sourceSection(source, "private updateHint", "private axis");
+const vehicleUpdate = sourceSection(source, "  update(): void {", "  prepareForTeleport");
+const trafficUpdate = sourceSection(
+  source,
+  "private updateTrafficVehicle",
+  "private updatePlayerVehicle",
+);
 const vehicleConstruction = sourceSection(mainSource, "new VehicleSystem", "const trams");
 const modelScaling = sourceSection(
   source,
@@ -102,6 +108,31 @@ assert.match(
   vehicleConstruction,
   /sunShadows\s*,/,
   "the vehicle system must receive the scene sun-shadow controller",
+);
+const trafficAvoidanceDistance = numericConstant("TRAFFIC_AVOIDANCE_DISTANCE_METERS");
+assert.ok(
+  trafficAvoidanceDistance >= 180 && trafficAvoidanceDistance <= 300,
+  "ambient traffic avoidance must retain a generous nearby interaction radius",
+);
+assert.match(
+  vehicleUpdate,
+  /dx \* dx \+ dz \* dz[\s\S]*?TRAFFIC_AVOIDANCE_DISTANCE_METERS \* TRAFFIC_AVOIDANCE_DISTANCE_METERS/,
+  "ambient traffic must use a squared camera-distance gate before neighbour scans",
+);
+assert.match(
+  vehicleUpdate,
+  /updateTrafficVehicle\(vehicle, deltaSeconds, now, checksNearbyTraffic\)/,
+  "all traffic must keep its full-rate route update while receiving the nearby-avoidance gate",
+);
+assert.match(
+  trafficUpdate,
+  /const blocked = checksNearbyTraffic[\s\S]*?&& this\.wouldOverlapVehicle\(/,
+  "quadratic traffic avoidance must run only inside the nearby interaction radius",
+);
+assert.doesNotMatch(
+  trafficUpdate,
+  /performance\.now\(\)/,
+  "traffic vehicles must share one frame timestamp",
 );
 
 assert.match(
