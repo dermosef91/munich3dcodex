@@ -1013,6 +1013,61 @@
       }
     },
     {
+      "id": "museum-fuenf-kontinente",
+      "label": "Museum Fünf Kontinente",
+      "status": "integrated",
+      "implementation": {
+        "sourceFile": "src/world/landmarks/TextureFirstLandmarks.ts",
+        "rootNode": "landmark-museum-fuenf-kontinente"
+      },
+      "shell": {
+        "mode": "preserve",
+        "targetBuildingIds": [25695553],
+        "replacementBuildingIds": [],
+        "note": "Preserve the Bavarian LoD2 museum shell; add one thin non-colliding bitmap sheet across the public Maximilianstrasse elevation."
+      },
+      "previews": [
+        {
+          "id": "museum-fuenf-kontinente",
+          "position": [1034.460, 4.6, 1454.007],
+          "target": [1024.701, 14.0, 1488.273],
+          "fov": 0.95
+        }
+      ],
+      "textures": [
+        {
+          "id": "museum-fuenf-kontinente-maximilianstrasse",
+          "file": "museum-fuenf-kontinente-maximilianstrasse.png",
+          "status": "integrated",
+          "minimumWidth": 2048,
+          "minimumHeight": 1352,
+          "roughness": 0.91,
+          "specularIntensity": 0.18,
+          "promptSummary": "Deterministic Romanesque-revival Maximilianstrasse elevation with warm brick, pale sandstone courses, eleven arcaded bays, paired arched windows, a geometric frieze, and a monumental central portal."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://www.museum-fuenf-kontinente.de/museum/ueber-uns/geschichte-des-museums",
+          "publisher": "Museum Fünf Kontinente",
+          "usage": "official-museum-history-and-building-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        },
+        {
+          "url": "https://museen-in-bayern.de/en/museums/museum-details/museum-fuenf-kontinente",
+          "publisher": "Landesstelle für die nichtstaatlichen Museen in Bayern",
+          "usage": "official-museum-profile-and-building-reference",
+          "license": "Copyrighted official reference; reference-only, no source pixels embedded"
+        }
+      ],
+      "provenance": {
+        "method": "mixed",
+        "reviewStatus": "needs-user-review",
+        "pixelsEmbedded": false,
+        "note": "One offline-generated facade sheet restores the characteristic brick-and-sandstone arcade rhythm; the exact museum name remains procedural and no reference pixels are embedded."
+      }
+    },
+    {
       "id": "asamkirche",
       "label": "Asamkirche (Sankt Johann Nepomuk)",
       "status": "integrated",

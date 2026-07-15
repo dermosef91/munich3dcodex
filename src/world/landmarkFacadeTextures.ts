@@ -31,7 +31,8 @@ export type LandmarkFacadeTextureId =
   | "nsdoku-briennerstrasse"
   | "nsdoku-west"
   | "nsdoku-north"
-  | "nsdoku-east";
+  | "nsdoku-east"
+  | "museum-fuenf-kontinente-maximilianstrasse";
 
 interface LandmarkFacadeTextureSpec {
   readonly file: string;
@@ -179,6 +180,11 @@ const LANDMARK_FACADE_TEXTURES: Readonly<Record<LandmarkFacadeTextureId, Landmar
     file: "nsdoku-east.png",
     roughness: 0.88,
     specularIntensity: 0.20,
+  },
+  "museum-fuenf-kontinente-maximilianstrasse": {
+    file: "museum-fuenf-kontinente-maximilianstrasse.png",
+    roughness: 0.91,
+    specularIntensity: 0.18,
   },
 };
 

@@ -371,6 +371,103 @@ def generate_nsdoku() -> None:
     nsdoku_sheet("nsdoku-east.png", "east")
 
 
+def museum_fuenf_kontinente_sheet() -> None:
+    """Render the arcaded Maximilianstrasse museum elevation."""
+    width, height = 2048, 1352
+    image = Image.new("RGB", (width, height), "#a96f4e")
+    draw = ImageDraw.Draw(image)
+    brick = "#a96f4e"
+    brick_dark = "#824e39"
+    stone = "#d0b78e"
+    stone_light = "#ead6ad"
+    stone_shadow = "#a78c67"
+    glass = "#283438"
+
+    brick_h = 16
+    brick_w = 44
+    for y in range(0, height, brick_h):
+        draw.line((0, y, width, y), fill=brick_dark, width=1)
+        offset = 0 if (y // brick_h) % 2 == 0 else brick_w // 2
+        for x in range(offset, width, brick_w):
+            draw.line((x, y, x, min(height, y + brick_h)), fill="#925d43", width=1)
+
+    # Heavy Romanesque courses and a small geometric frieze define the silhouette.
+    for fraction in (0.09, 0.31, 0.57, 0.86):
+        y = round(height * fraction)
+        draw.rectangle((0, y, width, y + 18), fill=stone_shadow)
+        draw.line((0, y, width, y), fill=stone_light, width=5)
+    draw.rectangle((0, round(height * 0.91), width, height), fill=stone_shadow)
+    draw.rectangle((0, 0, width, round(height * 0.055)), fill=stone)
+    for x in range(18, width, 54):
+        y = round(height * 0.115)
+        draw.polygon(((x, y), (x + 16, y - 13), (x + 32, y), (x + 16, y + 13)), fill=stone_light)
+
+    bays = 11
+    bay_width = width / bays
+    for bay in range(bays):
+        center_x = round((bay + 0.5) * bay_width)
+        pier = max(12, round(bay_width * 0.10))
+        draw.rectangle((center_x - pier // 2, round(height * 0.12), center_x + pier // 2, round(height * 0.91)), fill=stone_shadow)
+        draw.line((center_x - pier // 2 + 3, round(height * 0.12), center_x - pier // 2 + 3, round(height * 0.91)), fill=stone_light, width=4)
+
+        # Paired upper arched windows.
+        for dx in (-0.18, 0.18):
+            window_center = round(center_x + bay_width * dx)
+            window_width = round(bay_width * 0.23)
+            left = window_center - window_width // 2
+            right = window_center + window_width // 2
+            top = round(height * 0.17)
+            bottom = round(height * 0.29)
+            radius = window_width // 2
+            draw.rectangle((left - 7, top - 7, right + 7, bottom + 7), fill=stone)
+            draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+            draw.rectangle((left, top + radius, right, bottom), fill=glass)
+
+        # Tall middle-storey arched opening.
+        window_width = round(bay_width * 0.42)
+        left = center_x - window_width // 2
+        right = center_x + window_width // 2
+        top = round(height * 0.36)
+        bottom = round(height * 0.55)
+        radius = window_width // 2
+        draw.rectangle((left - 10, top - 10, right + 10, bottom + 10), fill=stone)
+        draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+        draw.rectangle((left, top + radius, right, bottom), fill=glass)
+        draw.line((center_x, top + 8, center_x, bottom - 5), fill="#607278", width=4)
+
+        # Ground-floor arcade.
+        arch_width = round(bay_width * 0.58)
+        left = center_x - arch_width // 2
+        right = center_x + arch_width // 2
+        top = round(height * 0.64)
+        bottom = round(height * 0.90)
+        radius = arch_width // 2
+        draw.rectangle((left - 12, top - 12, right + 12, bottom + 6), fill=stone)
+        draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill=glass)
+        draw.rectangle((left, top + radius, right, bottom), fill=glass)
+
+    # Monumental central entry interrupts the regular arcade.
+    center = width // 2
+    portal_width = round(bay_width * 0.92)
+    left = center - portal_width // 2
+    right = center + portal_width // 2
+    top = round(height * 0.58)
+    bottom = round(height * 0.92)
+    radius = portal_width // 2
+    draw.rectangle((left - 18, top - 18, right + 18, bottom + 8), fill=stone_light)
+    draw.pieslice((left, top, right, top + radius * 2), 180, 360, fill="#202a2d")
+    draw.rectangle((left, top + radius, right, bottom), fill="#202a2d")
+    draw.line((center, top + 10, center, bottom), fill="#68797d", width=6)
+
+    output = TEXTURE_ROOT / "museum-fuenf-kontinente-maximilianstrasse.png"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
+def generate_museum_fuenf_kontinente() -> None:
+    museum_fuenf_kontinente_sheet()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("recipe", choices=(
@@ -379,6 +476,7 @@ def main() -> None:
         "haus-der-kunst",
         "pinakothek-der-moderne",
         "ns-dokumentationszentrum",
+        "museum-fuenf-kontinente",
     ))
     args = parser.parse_args()
     if args.recipe == "museum-brandhorst":
@@ -391,6 +489,8 @@ def main() -> None:
         generate_pinakothek_der_moderne()
     elif args.recipe == "ns-dokumentationszentrum":
         generate_nsdoku()
+    elif args.recipe == "museum-fuenf-kontinente":
+        generate_museum_fuenf_kontinente()
 
 
 if __name__ == "__main__":

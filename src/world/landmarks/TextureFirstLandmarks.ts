@@ -29,6 +29,7 @@ export const BAYERISCHE_STAATSBIBLIOTHEK_BUILDING_ID = -52_412_001;
 export const HAUS_DER_KUNST_BUILDING_ID = 150_797_531;
 export const PINAKOTHEK_DER_MODERNE_BUILDING_ID = 10_053_440;
 export const NSDOKU_BUILDING_ID = 280_336_045;
+export const MUSEUM_FUENF_KONTINENTE_BUILDING_ID = 25_695_553;
 export const HOFBRAEUHAUS_BUILDING_ID = 1_273_939_826;
 export const ASAMKIRCHE_BUILDING_ID = 47_515_468;
 
@@ -289,6 +290,36 @@ function createNsdoku(scene: Scene, parent: TransformNode): TransformNode {
   return root;
 }
 
+function museumFuenfKontinenteSignMaterial(scene: Scene): StandardMaterial {
+  const material = dynamicMaterial(scene, "museum-fuenf-kontinente-sign-material", { width: 1536, height: 180 }, (context, width, height) => {
+    context.fillStyle = "#d6bf98";
+    context.fillRect(0, 0, width, height);
+    context.fillStyle = "#3e3329";
+    context.font = `600 ${Math.round(height * 0.36)}px Georgia, serif`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText("MUSEUM FÜNF KONTINENTE", width * 0.5, height * 0.52);
+  }, new Color3(0.08, 0.07, 0.06));
+  const texture = material.diffuseTexture as Texture;
+  texture.uScale = -1;
+  texture.uOffset = 1;
+  return material;
+}
+
+function createMuseumFuenfKontinente(scene: Scene, parent: TransformNode): TransformNode {
+  const existing = scene.getTransformNodeByName("landmark-museum-fuenf-kontinente");
+  if (existing) return existing;
+
+  const root = new TransformNode("landmark-museum-fuenf-kontinente", scene);
+  root.parent = parent;
+  const interior: FacadePoint = [1021.322, 1500.188];
+  const start: FacadePoint = [1003.803, 1481.467];
+  const end: FacadePoint = [1045.599, 1495.078];
+  addFacadePlane(scene, root, "museum-fuenf-kontinente-maximilianstrasse-facade", start, end, interior, 29.0, getLandmarkFacadeMaterial(scene, "museum-fuenf-kontinente-maximilianstrasse"), 0.45);
+  addFacadeSign(scene, root, "museum-fuenf-kontinente-wordmark", start, end, interior, 4.0, 17.5, 0.85, museumFuenfKontinenteSignMaterial(scene));
+  return root;
+}
+
 function hofbraeuhausSignMaterial(scene: Scene): StandardMaterial {
   const material = dynamicMaterial(scene, "hofbraeuhaus-sign-material", { width: 1024, height: 192 }, (context, width, height) => {
     context.fillStyle = "#f1ead5";
@@ -464,6 +495,7 @@ export function createTextureFirstLandmarks(scene: Scene, parent: TransformNode)
   createHausDerKunst(scene, root);
   createPinakothekDerModerne(scene, root);
   createNsdoku(scene, root);
+  createMuseumFuenfKontinente(scene, root);
   createHofbraeuhaus(scene, root);
   createAsamkirche(scene, root);
   return root;

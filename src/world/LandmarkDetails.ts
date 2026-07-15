@@ -72,6 +72,7 @@ export type LandmarkPreviewId =
   | "haus-der-kunst"
   | "pinakothek-der-moderne"
   | "ns-dokumentationszentrum"
+  | "museum-fuenf-kontinente"
   | "hofbraeuhaus"
   | "asamkirche";
 
@@ -105,6 +106,7 @@ const LANDMARK_PREVIEW_SPECS: Readonly<Record<LandmarkPreviewId, {
   "haus-der-kunst": { position: [1017.466, 4.6, 826.098], target: [1025.852, 8.4, 797.892], fov: 1.10 },
   "pinakothek-der-moderne": { position: [-74.791, 4.6, 388.312], target: [-48.033, 12.2, 399.946], fov: 1.05 },
   "ns-dokumentationszentrum": { position: [-329.060, 4.6, 652.549], target: [-323.602, 13.6, 639.396], fov: 1.20 },
+  "museum-fuenf-kontinente": { position: [1034.460, 4.6, 1454.007], target: [1024.701, 14.0, 1488.273], fov: 0.95 },
   hofbraeuhaus: { position: [563.98, 4.2, 1491.94], target: [577.54, 10.2, 1481.55], fov: 0.96 },
   asamkirche: { position: [-161.6, 4.1, 1762.21], target: [-173.7, 11.4, 1769.17], fov: 0.90 },
 };
